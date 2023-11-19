@@ -1,0 +1,21 @@
+:root{
+    --mainText:#060640;
+    --backGround:#EFFAFD;
+    --secondary:#CCE4FB;
+    --styling1:#4A8BDF;
+    --styling2:#A0006D;
+}
+.main{
+    width: 100%;
+    background-color: #EFFAFD;
+    flex: 1;
+    display: flex;
+}
+.firstContainer{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.main *{
+    margin: 0;
+}

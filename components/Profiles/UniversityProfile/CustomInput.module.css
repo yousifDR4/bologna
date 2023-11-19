@@ -1,0 +1,75 @@
+ .form{
+    margin-top: 2rem;
+}
+.add p{
+   color:#4A8BDF;
+   font-family: GraphikLight; 
+   display: inline-block;
+}
+ .add img{
+    vertical-align:-0.4rem!important;
+    margin-right: 0.5rem!important;
+}
+.add:hover p{
+    text-decoration: underline;
+}
+.input{
+    display: flex;
+    width: 100%;
+    text-align: start;
+}
+.input div{
+    flex: 1;
+}
+.input div input{
+    border: 1px solid #6B6C6D;
+    height: 3rem;
+    border-radius: 6px;
+    width: 100%;
+    font-family: GraphikLight;
+    color:var(--mainText);
+    font-size: 1.2rem;
+}
+.input div input::placeholder{
+    color:#6B6C6D;
+    font-family: GraphikThin;
+    font-size: medium;
+}
+.input  .errorText{
+    color:red;
+    font-size: small;
+    font-family: GraphikLight;
+    }
+.input  select{
+margin-left: 0.5rem;
+height: 2rem;
+    }
+ .form > button:nth-of-type(2){
+        background-color: #fff;
+        border: 1px solid var(--styling1);
+        color:var(--styling1);
+        width: 6rem;
+        height: 1.5rem;
+
+        cursor: pointer;
+    }
+.form >  button:first-of-type{
+        background-color: #fff;
+        border: 1px solid #b9bbbd;
+        color:#959696;
+        width: 6rem;
+        height: 1.5rem;
+        margin-right: 0.5rem;
+        cursor: pointer;
+    }
+ .form > button:disabled{
+        border: 1px solid #b9bbbd;
+        color:#959696;
+    }
+.form > button{
+    margin-top: 2rem!important;
+    
+}
+.form{
+    text-align: end;
+}

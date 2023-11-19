@@ -1,0 +1,205 @@
+@font-face {
+    font-family:Graphik ;
+    src: url(../../Fonts/GraphikMedium.otf);
+}
+@font-face {
+    font-family: GraphikLight;
+    src: url(../../Fonts/GraphikLight.otf);
+}
+@font-face {
+    font-family: GraphikThin;
+    src: url(../../Fonts/GraphikExtralight.otf);
+}
+.container{
+    margin: 1rem 0;
+    width: 100%;
+    padding-top: 3rem;
+}
+.container form{
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 450px;
+    margin: 0 auto;
+    box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
+    height: fit-content;
+}
+.container form h3{
+    font-family: Graphik;
+    color:#4A8BDF;
+    text-align: center;
+}
+.container form label:first-of-type{
+    margin-top: 8px;
+}
+.container form label{
+    font-family: GraphikLight;
+    display: inline-block;
+    margin: 20px 0 3px 0;
+    color: #6B6C6D;
+  
+}
+
+.container form input,.container form select{
+border: 1px solid #6B6C6D;
+border-radius: 15px;
+height: 2.3rem;
+padding: 0 0.5rem ;
+margin-bottom: 4px;
+width: 100%;
+font-family: GraphikThin;
+color:#6B6C6D;
+}
+.container form select{
+    text-align: center;
+    font-size: 95%;
+}
+.container input::placeholder{
+    color:#6B6C6D;
+    font-family: GraphikThin;
+    font-size: medium;
+}
+
+.container .star{
+    color: red;
+}
+.container form select option{
+    color: #6B6C6D;
+
+}
+.container form  .errorText{
+color:red;
+font-size: small;
+font-family: GraphikLight;
+}
+.container .button{
+    text-align: center;
+}
+.container form .button button{
+    background-color:#4A8BDF ;
+    color: white;
+    margin: 40px 0 20px 0;
+    border: 1px solid #6B6C6D;
+    border-radius: 15px;
+width: 45%;
+height: 2.4rem;
+font-family: Graphik;
+}
+.container form .button button:hover{
+    color:#4A8BDF;
+    background-color: white;
+    transition: all 0.1s ease-in;
+}
+.container form .button p{
+    color: #6B6C6D;
+    font-family: GraphikThin;
+    font-size: 80%;
+}
+.container form .button a{
+    color:#4D59CA;
+    font-size: 100%;
+}
+.container form .button :disabled{
+    background-color: #B8BFC6;
+    color: white;
+    border: none;
+    
+    }
+.container form .button button:disabled:hover{
+      background-color: #B8BFC6;
+      border: none;
+      box-shadow: none;
+      cursor: not-allowed;
+      color:#fff;
+    }
+.or{
+    color: #7f8b99;
+    overflow: hidden;
+    text-align: center;
+    margin-bottom: 36px;
+    font-size: 1.2rem;
+}
+.or::before, .or::after{
+    background-color: #d0d6dd;
+    color: #d0d6dd;
+    content: "";
+    display: inline-block;
+    height: 1px;
+    position: relative;
+    vertical-align: middle;
+    width: 100%;
+}
+.or::before{
+    left: -10px;
+    margin-left: -100%;
+}
+.or::after{
+    margin-right: -100%;
+    right: -10px;
+}
+.googlebtn button{
+    background-color: #fff;
+    border:1px solid #B8BFC6;
+    width: 100%;
+    height: 2.4rem;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.googlebtn button:hover{
+    border-color: #4A8BDF;
+}
+.googlebtn img{
+height: 1rem;
+width: 1rem;
+vertical-align: middle;
+margin-right: 4px;
+}
+.googlebtn p{
+    display: inline;
+}
+.bttmtext{
+    margin-top: 1.5rem;
+    width: 100%;
+    text-align: center;
+}
+.bttmtext p{
+    color: #607c96;
+}
+@media (max-width:600px) {
+    .container{
+        margin-top: 2px;
+        padding-top: 0;
+    }
+    .container form{
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+
+    }
+    .container form h3{
+        font-size: 120%;
+    }
+    .container form label{
+        font-size: 120%;
+    }
+    .container form input,.container form select{
+        height: 2.4rem;
+        width:100%;
+    }
+  .container form select{
+    font-size: 120%;
+  }
+    .container form input::placeholder{
+        font-size: 110%;
+    }
+    .container .form button{
+        width: 12rem;
+        height: 2.7rem;
+     
+        font-size: 120%;
+    }
+    .googlebtn button{
+        width: 100%;
+    }
+}
+

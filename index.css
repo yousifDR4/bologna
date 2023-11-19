@@ -1,0 +1,21 @@
+* {
+  box-sizing:border-box;
+}
+@font-face {
+  font-family:Graphik ;
+  src: url(./Fonts/GraphikMedium.otf);
+}
+@font-face {
+  font-family: GraphikLight;
+  src: url(./Fonts/GraphikLight.otf);
+}
+h1,h2,h3,h4,h5{
+font-family: Graphik;
+}
+p{
+  font-family: GraphikLight;
+}
+body {
+  margin: 0;
+  color:#060640;
+}

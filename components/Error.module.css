@@ -1,0 +1,25 @@
+.main{
+    width: 100%;
+    height: calc(100vh - 70px);
+    background-color: #EFFAFD;
+    display: flex;
+    align-items: center;
+    justify-content: center ;
+    flex-direction: column;
+   gap:1rem;
+}
+.main *{
+    margin: 0;
+}
+.main .line{
+    height: 10px;
+    width: 15rem;
+    background-color: #060640;
+}
+.main h1{
+    margin-top: 0;
+    font-size: 7rem;
+}
+.main p{
+    font-size: 1.3rem;
+}

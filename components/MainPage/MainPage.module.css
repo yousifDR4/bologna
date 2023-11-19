@@ -1,0 +1,43 @@
+.mainPage{
+    text-align: center;
+    padding-top: 23vh;
+    width: 100%;
+    background-image: url("../../Images/4901186.png"),url("../../Images/4901198.png");
+    background-repeat: no-repeat,no-repeat;
+    background-position: bottom 5% right 5%,bottom 5% left 5%;
+    background-size:max(30rem,29.5%);
+    box-sizing: border-box;
+    
+}
+.mainPage div{
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.mainPage p{
+    font-size: 1.4rem;
+    max-width: 40ch;
+}
+.mainPage h1{
+    font-size: 3.4rem;
+}
+@media (max-width:1050px) {
+    .mainPage h1,.mainPage p{
+        backdrop-filter: blur(0.06rem);
+    }
+    .mainPage{
+        background-image: url("../../Images/4901186.png"),url("../../Images/4901198.png");
+        background-repeat: no-repeat,no-repeat;
+        background-position: top 5% right 5%,bottom 5% left 5%;
+        
+    }
+}
+@media (max-width:650px) {
+    .mainPage{
+        background-image: url("../../Images/4901198.png");
+        background-repeat: no-repeat;
+        background-position: center bottom 20%;
+        background-size: 25rem;
+    }
+}
+
