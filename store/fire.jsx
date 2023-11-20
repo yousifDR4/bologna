@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup,GoogleAuthProvider,deleteUser,updateEmail, getAdditionalUserInfo } from 'firebase/auth';
-import { collection,doc,getDoc,query,where,getFirestore,getDocs, updateDoc, setDoc, addDoc, deleteDoc } from 'firebase/firestore';
+import { collection,doc,getDoc,query,where,getFirestore,getDocs, updateDoc, setDoc, addDoc, deleteDoc, arrayUnion } from 'firebase/firestore';
 import {getStorage,ref }from "firebase/storage"
 import { setId } from './getandset';
 const firebaseConfig = {
@@ -84,16 +84,11 @@ console.log(JSON.stringify(info));
   const k=await res.json()
    return k;
 }
+
 export const getprofile=async ()=>{
-  try{
 const q=query(collection(db,"users"),where("uid","==",auth.currentUser.uid));
 const data=await getDocs(q);
-console.log(data.docs[0].data());
 return data.docs[0].data();
-  }
-  catch(e){
-    console.log(e);
-  }
 }
 export const update_user_profile=async (info)=>{
   try{
@@ -107,30 +102,24 @@ await setDoc(userdoc,info,{"merge":true});
     return e.code;
   }
 }
-export const getsubject=async (info)=>{
-  try{
-    const q=doc(db,SubjectPath(info));
-   const subject=await getDoc(q);
-   return subject;
-  }
-  catch(e){
-   return e;
-  }
+
+const SubjectPath=(info)=>{
+  const{universities_id,college_id,department_id,subject_id}=info;
+  const path=`universities/${universities_id}/colleges/${college_id}/department/${department_id}/subjects /${subject_id}`;
+  return path;
 }
+
 export const Addsubject=async (info)=>{
-  const q=doc(db,SubjectPath(info));
-  await setDoc(q,info,{"merge":true});
-  
+  const q=collection(db,"subjects");
+  const id=await addDoc(q,info);
+  updateDoc(doc(db,"users",auth.currentUser.uid),{
+   subject_id:arrayUnion(id)
+  })
 }
 export const UpdateSubject=async (info)=>{
-  const q=doc(db,SubjectPath(info));
-  try{
+  const q=doc(db,"subjects",info.id);
   await setDoc(q,info,{"merge":false});
-  return "ok";
-  }
-  catch (e){
-    return e;
-  }
+
 }
 const adduserinfo=(info)=>{
   console.log(info);
