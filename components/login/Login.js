@@ -117,8 +117,6 @@ const Login=()=>{
       console.log(k);
     dispatchRedux(onLogin(k));
       setloginstate(true);
-
-     
       }
       catch(e){
         console.log(e);

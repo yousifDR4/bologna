@@ -80,6 +80,7 @@ export const creatuser= async(info)=>{
 
 
 console.log(JSON.stringify(info));
+
 try{
  const res= await fetch ("http://localhost:4000/create",{method:"POST",
    headers: {

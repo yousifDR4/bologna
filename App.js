@@ -10,6 +10,7 @@ import UniversityAccounts from './components/universityAccounts/UniversityAccoun
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, getprofile } from './store/fire.jsx';
 import { onLogin, selectUid, useUid } from './store/auth-slice.js';
+import CollegeProfile from './components/Profiles/CollegeProfile/CollegeProfile.js';
 let firstInitilize=true;
 function App() {
   const profile=useSelector(state=>state.profile.profile);
@@ -54,6 +55,10 @@ function App() {
         {
           path: "/Universities",
           element:<UniversityAccounts/>
+        },
+        {
+          path: "/CollegeProfile",
+          element:<CollegeProfile/>
         }
     ]
    }

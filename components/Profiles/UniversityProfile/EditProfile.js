@@ -40,8 +40,8 @@ const EditProfile=(probs)=>{
         else{
             setBannerPicture(URL.createObjectURL(event.target.files[0]));
             wimgRef.current=event.target.files[0]
-            typeRef.current[0]="bannerPicture";
-            typeRef.current[1]="wimg";
+            typeRef.current[2]="bannerPicture";
+            typeRef.current[3]="wimg";
             console.log(typeRef.current);
             setImagesValid((prev)=> {return{...prev,bannerPicture:true,bannerPictureTouched:true}});
         }
@@ -63,15 +63,15 @@ if(profile.bannerPicture!==""){
         e.preventDefault();
         console.log(imgref.current.name);
         console.log(typeRef.current);
-        const name= typeRef.current[1]==="img"?imgref.current:wimgRef.current;
+        if(imagesValid.profilePictureTouched){
+        const name= imgref.current;
         const storegRef=ref(storage,`${typeRef.current[0]}/${auth.currentUser.uid}/${name.name}`)
         const uploadtask= uploadBytesResumable(storegRef,name);
-        if(hasuplaod.current[0]||hasuplaod.current[1]){
-            const url=(typeRef.current[0]==="bannerPicture"&&hasuplaod.current[1])?profile.bannerPicture:profile.profilePicture;
+        if(hasuplaod.current[0]){
+            const url=(hasuplaod.current[1])?profile.profilePicture:"";
             console.log(typeRef.current[0],hasuplaod.current[1]);
-            const act=(typeRef.current[0]==="bannerPicture"&& hasuplaod.current[1])||(typeRef.current[0]==="profilePicture"&&hasuplaod.current[0]);
-           
-            if(act){ 
+            const act=(typeRef.current[0]==="profilePicture"&&hasuplaod.current[0]);
+            if(act && url !== ""){ 
             console.log(url);
             console.log(act);
             console.log(hasuplaod.current,"up");
@@ -92,16 +92,46 @@ if(profile.bannerPicture!==""){
         },()=>{
          getDownloadURL(uploadtask.snapshot.ref).then((res)=>{
              console.log(res);
-             if(imagesValid.profilePictureTouched){
-                dispatch(profileActions.setProfileValue({type:"profilePicture",value:res}));}
-                if(imagesValid.bannerPictureTouched){
-                    dispatch(profileActions.setProfileValue({type:"bannerPicture",value:res})); 
-                }
-        
+             dispatch(profileActions.setProfileValue({type:"profilePicture",value:res}));
              setDoc(doc(db,"users",auth.currentUser.uid),{[typeRef.current[0]]:res},{merge:true}).then()
          })
-        })
-       
+        })}
+
+        if(imagesValid.bannerPictureTouched){        
+        const name= wimgRef.current;
+        const storegRef=ref(storage,`${typeRef.current[2]}/${auth.currentUser.uid}/${name.name}`)
+        const uploadtask= uploadBytesResumable(storegRef,name);
+        if(hasuplaod.current[1]){
+            const url=hasuplaod.current[1]?profile.bannerPicture:"";
+            console.log(typeRef.current[2],hasuplaod.current[1]);
+            const act=(typeRef.current[2]==="bannerPicture"&& hasuplaod.current[1]);
+           
+            if(act && url !== ""){ 
+            console.log(url);
+            console.log(act);
+            console.log(hasuplaod.current,"up");
+        const deleteRef=ref(storage,url);
+        console.log(deleteRef);
+        deleteObject(deleteRef).then(()=>{
+            console.log(deleteRef);
+        
+        }).catch((e)=>{
+             console.log(e);   
+
+        });}
+
+        }
+        uploadtask.on('state_changed',(Snapshot)=>{
+         console.log(Snapshot.bytesTransferred/Snapshot.totalBytes);
+        },(e)=>{
+        },()=>{
+         getDownloadURL(uploadtask.snapshot.ref).then((res)=>{
+             console.log(res);
+             dispatch(profileActions.setProfileValue({type:"bannerPicture",value:res}));
+             setDoc(doc(db,"users",auth.currentUser.uid),{[typeRef.current[2]]:res},{merge:true}).then()
+         })
+        })}
+
         probs.showEdit(false);
     }
     const cancelHandler=()=>{

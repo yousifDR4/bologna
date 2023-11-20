@@ -1,0 +1,161 @@
+
+.container{
+    width: 100%;
+}
+.container form{
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
+  padding: 0.9rem 0.7rem;
+  width: 100%;
+  padding: 1rem 2rem 1rem 2rem;
+}
+.container .closeBtn{
+    display: none;
+}
+.container form h3{
+    font-family: Graphik;
+    color:var(--styling1);
+    text-align: center;
+}
+.container form label:first-of-type{
+    margin-top: 8px;
+}
+.container form label{
+    font-family: GraphikLight;
+    display: inline-block;
+    margin: 20px 0 3px 0;
+    color: #6B6C6D;
+  
+}
+
+.container form input,.container form select{
+border: 1px solid #6B6C6D;
+border-radius: 15px;
+height: 1.86rem;
+padding: 0 0.5rem ;
+width: 100%;
+font-family: GraphikThin;
+color:#6B6C6D;
+}
+.container form select{
+    text-align: center;
+    font-size: 95%;
+}
+.container form textarea{
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-family: GraphikThin;
+color:#6B6C6D;
+overflow: auto;
+width: 100%;
+    padding: 0.3rem 0.5rem;
+}
+.container input::placeholder{
+    color:#6B6C6D;
+    font-family: GraphikThin;
+    font-size: medium;
+}
+
+.container .star{
+    color: red;
+}
+.container form select option{
+    color: #6B6C6D;
+
+}
+.container form  .errorText{
+color:red;
+font-size: small;
+font-family: GraphikLight;
+margin-bottom: 0;
+}
+.container .button{
+    text-align: center;
+}
+.container form button{
+    background-color:var(--styling1) ;
+    color: white;
+    margin: 40px 0 20px 0;
+    border: 1px solid #6B6C6D;
+    border-radius: 15px;
+width: 9rem;
+height: 2.2rem;
+font-family: Graphik;
+}
+.container form button:hover{
+    color:var(--styling1);
+    background-color: white;
+}
+.container form .button p{
+    color: #6B6C6D;
+    font-family: GraphikThin;
+    font-size: 80%;
+}
+.container form .button a{
+    color:var(--styling1);
+    font-size: 100%;
+}
+.container form button:disabled{
+    background-color: #B8BFC6;
+    color: white;
+    border: none;
+    
+    }
+.container form button:disabled:hover{
+      background-color: #B8BFC6;
+      border: none;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+@media (max-width:600px) {
+    .container{
+        margin-top: 2px;
+    }
+    .container form{
+        width: 95%;
+        margin: 0 auto;
+        box-shadow: none;
+    }
+    .container .closeBtn{
+        border: none;
+        display: block;
+        background: none;
+        width: fit-content;
+        height: fit-content;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        left: 90%;
+        top: 3%;
+    }
+    .container .closeBtn img{
+ 
+        width:1rem;
+        height: 1rem;
+        
+    }
+    .container form h3{
+        font-size: 120%;
+    }
+    .container form label{
+        font-size: 120%;
+    }
+    .container form input,.container form select{
+        height: 2.4rem;
+
+    }
+  .container form select{
+    font-size: 120%;
+  }
+    .container form input::placeholder{
+        font-size: 110%;
+    }
+    .container form button{
+        width: 12rem;
+        height: 2.7rem;
+     
+        font-size: 120%;
+    }
+}
+

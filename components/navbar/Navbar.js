@@ -23,6 +23,7 @@ const Navbar=()=>{
     const accountType=useSelector(state=> state.auth.accountType);
     const navigate=useNavigate();
     const isUniversityAccount=isLoggedIn ? accountType === 'University': false;
+    const isCollegeAccount=isLoggedIn ? accountType === 'College': false;
     const dispatch=useDispatch();
     const showAsideListHandler=()=>{
         setShowAsideList((state)=> !state);
@@ -61,6 +62,7 @@ return(
                 <li><Link to="/">How it works</Link></li>
                 <li><Link to="/Universities">Universities using it</Link></li>
                {isUniversityAccount && <li><Link to="/UniversityProfile">University Profile</Link></li>}
+               {isCollegeAccount && <li><Link to="/CollegeProfile">College Profile</Link></li>}
                {!isLoggedIn && <li><Link to="/Login">Login</Link></li>}
             </div>
            <div> 
@@ -75,6 +77,7 @@ return(
                 <li><Link to="/" onClick={showAsideListHandler}><img src={question} alt=""/> what's APS</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/" onClick={showAsideListHandler}><img src={idea} alt=""/> How it works</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/> Colleges using it</Link><div className={classes.innerLine}/></li>
+                {isCollegeAccount && <li><Link to="/CollegeProfile">College Profile</Link></li>}
                {isUniversityAccount && <li><Link to="/UniversityProfile">University Profile</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>
