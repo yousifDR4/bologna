@@ -35,6 +35,22 @@
     display: block;
 
   }
+ .addCollege{
+    display: none;
+}
+ .addCollege.active{
+    display:block;
+    position: fixed;
+    z-index: 15;
+    width: 100vw;
+    border-radius: 10rem;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%,-50%);
+    width: 100vw;
+    max-width: 35rem; 
+    padding:0 3rem 0 3rem;
+}
 .editProfile{
     position: absolute;
     width: 35%;
@@ -272,6 +288,18 @@ border-radius: 20px;
 width: 80%;
 max-width: 1600px;
 box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+min-height: 4rem;
+}
+.colleges li:last-child{
+    background-color:#EFFAFD;
+    box-shadow: none;
+    border: 1px solid var(--styling1);
+    color: var(--styling1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    cursor: pointer;
 }
 .colleges img{
     width: 8rem;

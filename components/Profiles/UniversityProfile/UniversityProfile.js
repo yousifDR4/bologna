@@ -1,4 +1,5 @@
 import classes from "./UniversityProfile.module.css";
+import AddCollege from "./AddCollege.js";
 import defaultProfilePicture from "../../../Images/profilePicutre.jpg";
 import alkawarizmiPicture from "../../../Images/Alkhawarzimi.jpg";
 import location from "../../../Images/location.png";
@@ -30,6 +31,7 @@ const UniversityProfile = () => {
   const [activatedSection, setActivatedSection] = useState("overview");
   const [showEdit, setShowEdit] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
+  const [showAddCollege,setShowAddCollege]=useState(false);
   const isCollegeActivated = activatedList === "colleges";
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
@@ -55,6 +57,15 @@ const UniversityProfile = () => {
   }, [auth.currentUser]);
   return (
     <>
+    {showAddCollege && <div className={`${showAddCollege?classes.active:""} ${classes.addCollege}`}>
+    <AddCollege/>
+    </div>}
+    {showAddCollege && (
+        <div
+          className={classes.backDrop}
+          onClick={() => setShowAddCollege(false)}
+        ></div>
+      )}
       {showEdit && (
         <div className={classes.editProfile}>
           <EditProfile
@@ -138,6 +149,7 @@ const UniversityProfile = () => {
                       </div>
                     </li>
                   ))}
+                  <li title="add a college!" onClick={()=>setShowAddCollege(true)}>+</li>
                 </ul>
               </div>
             )}
