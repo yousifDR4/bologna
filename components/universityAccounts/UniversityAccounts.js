@@ -5,12 +5,15 @@ import search from "../../Images/search.png";
 import AddUniversity from "./AddUniversity";
 import {db,auth} from "../../store/fire";
 import{getDocs,where,collection,query, doc} from"firebase/firestore";
+import { useSelector } from "react-redux";
 const universities=[];
 const UniversityAccounts=()=>{
     const [university,setUniversity]=useState(universities);
+    const [showAddUniversity,setShowAddUniversity]=useState(false);
     const [initalUniversityValue,setInitialUniversityValue]=useState(universities);
     const [searchValue,setSearchValue]=useState();
     const[debouncedSearchValue,setDebouncedSearchValue]=useState(searchValue);
+    const accountType=useSelector(state=>state.auth.accountType);
     useEffect(()=>{
         const f=()=>{
      const q=query(collection(db,"users"),where("accountType","==","University"))
@@ -54,9 +57,15 @@ const UniversityAccounts=()=>{
     } 
     return(
         <main className={classes.main}>
-        <div className={classes.addUniversity}>
+       {accountType === "Admin" && <div className={`${classes.addUniversity} ${
+                  showAddUniversity === true ? classes.active : ""
+                }`}>
             <AddUniversity/>
-        </div>
+        </div>}
+        {showAddUniversity && <div className={classes.backDrop} onClick={()=>setShowAddUniversity(false)}/>}
+      {accountType === "Admin" && <button className={classes.addUniversityButton} onClick={()=>setShowAddUniversity(true)}>
+            +
+        </button>}
         <div className={classes.universities}>
         <div className={classes.searchBar}> <div><img src={search}/></div><input type="text" value={searchValue} onChange={searchChangeHandler} placeholder="search university..."></input> </div>
         <ul >

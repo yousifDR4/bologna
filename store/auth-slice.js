@@ -26,10 +26,31 @@ const authSlice=createSlice({
 });
 export const onLogin=(profile)=>{
     if(profile.accountType==="University"){
-    const {name,accountType,uid,email, details ,website,facebook,instagram,twitter,profilePicture,bannerPicture,location,Colleges_id}=profile;
+    const {name,accountType,uid,email, details ,website,facebook,instagram,twitter,profilePicture,bannerPicture,location,Colleges_id,userName}=profile;
     return async (dispatch)=>{
     dispatch(authSlice.actions.logIn({accountType,uid}));
-    dispatch(profileActions.setProfile({name:name?name:"",email:email?email:"",details:details?details:"",website:website?website:"",facebook:facebook?facebook:"",instagram:instagram?instagram:"",twitter:twitter?twitter:"",profilePicture:profilePicture?profilePicture:"",bannerPicture:bannerPicture?bannerPicture:"",location:location?location:"",Colleges_id:Colleges_id?Colleges_id:[]}));
+    dispatch(profileActions.setProfile({name:name?name:"",userName:userName?userName:"",email:email?email:"",details:details?details:"",website:website?website:"",facebook:facebook?facebook:"",instagram:instagram?instagram:"",twitter:twitter?twitter:"",profilePicture:profilePicture?profilePicture:"",bannerPicture:bannerPicture?bannerPicture:"",location:location?location:"",Colleges_id:Colleges_id?Colleges_id:[]}));
+}
+}
+if(profile.accountType==="College"){
+    const {name,accountType,uid,email, details ,website,facebook,instagram,twitter,profilePicture,bannerPicture,location,Departments_id,userName}=profile;
+    return async (dispatch)=>{
+    dispatch(authSlice.actions.logIn({accountType,uid}));
+    dispatch(profileActions.setProfile({name:name?name:"",userName:userName?userName:"",email:email?email:"",details:details?details:"",website:website?website:"",facebook:facebook?facebook:"",instagram:instagram?instagram:"",twitter:twitter?twitter:"",profilePicture:profilePicture?profilePicture:"",bannerPicture:bannerPicture?bannerPicture:"",location:location?location:"",Departments_id:Departments_id?Departments_id:[]}));
+}
+}
+if(profile.accountType==="Department"){
+    const {name,accountType,uid,email, details ,website,facebook,instagram,twitter,profilePicture,bannerPicture,location,userName}=profile;
+    return async (dispatch)=>{
+    dispatch(authSlice.actions.logIn({accountType,uid}));
+    dispatch(profileActions.setProfile({name:name?name:"",userName:userName?userName:"",email:email?email:"",details:details?details:"",website:website?website:"",facebook:facebook?facebook:"",instagram:instagram?instagram:"",twitter:twitter?twitter:"",profilePicture:profilePicture?profilePicture:"",bannerPicture:bannerPicture?bannerPicture:"",location:location?location:""}));
+}
+}
+if(profile.accountType==="Admin"){
+    const {accountType,uid,email}=profile;
+    return async (dispatch)=>{
+    dispatch(authSlice.actions.logIn({accountType,uid}));
+    dispatch(profileActions.setProfile({email:email?email:""}));
 }
 }
 

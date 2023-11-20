@@ -10,9 +10,21 @@
 .main div .form{
     height: 30rem;
 }
+.main  .backDrop{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 11;
+    background: rgba(119, 117, 117,0.5);
+  }
 .main .addUniversity{
     width: 30%;
     max-width: 22rem;
+}
+.main .addUniversityButton{
+    display: none;
 }
 .universities{
     display: flex;
@@ -21,6 +33,7 @@
     margin: 0;
     padding: 0;
 }
+
  .searchBar{
     display: flex;
     align-items: center;
@@ -93,4 +106,66 @@ box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 
 .universities span:nth-of-type(2){
     margin-top: 6px;
     margin-left: 0;
+}
+@media (max-width:720px) {
+    .main{
+        margin-left: 0;
+    }
+    .main   .addUniversityButton{
+        position: fixed;
+      width: 65px;
+      height: 65px;
+      background-color: #4D59CA;
+      border: none;
+      border-radius: 50%;
+      right: 15px;
+     bottom: 20px;
+      margin: auto;
+      color: white;
+      line-height: 65px;
+      text-align: center;
+      font-size: 23px;
+      z-index: 9;
+      box-shadow: 0 10px 25px -5px rgba(44, 179, 240, 0.6);
+      cursor: pointer;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+    display: inline-block;
+    }
+    .main .addUniversityButton:hover{
+        color: #4D59CA;
+        background-color: white;
+        border:1px solid #4D59CA;
+    }
+    .main .addUniversity{
+        display: none;
+    }
+    .main .addUniversity.active{
+        display:block;
+        position: fixed;
+        z-index: 15;
+        width: 100vw;
+        border-radius: 10rem;
+        left: 50%;
+        top: 45%;
+        transform: translate(-50%,-50%);
+        max-width: 100vw;
+        padding:0 3rem 0 3rem;
+    }
+   .universities{
+    padding:0rem  1rem 0 1rem;
+   }
+    .universities ul{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .universities ul li{
+        width: 100%;
+    }
+}
+@media (max-width:400px) {
+    .main .addUniversity.active{
+        padding:0 1rem 0 1rem;
+    }
 }

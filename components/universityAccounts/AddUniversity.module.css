@@ -1,9 +1,14 @@
 
+.container{
+    width: 100%;
+}
 .container form{
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
   padding: 0.9rem 0.7rem;
+  width: 100%;
+  padding: 1rem 2rem 1rem 2rem;
 }
 .container .closeBtn{
     display: none;

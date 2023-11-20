@@ -105,6 +105,7 @@ await setDoc(userdoc,info,{"merge":true});
 
 
 
+
 export const Addsubject=async (info)=>{
   const q=collection(db,"subjects");
   const id=await addDoc(q,info);
@@ -117,6 +118,7 @@ export const UpdateSubject=async (info)=>{
   await setDoc(q,info,{"merge":false});
 
 }
+
 const adduserinfo=(info)=>{
   console.log(info);
  const docref=doc(db,"users",info.uid)
