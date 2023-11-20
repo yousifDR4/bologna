@@ -80,29 +80,34 @@ const AddCollege = (probs) => {
     e.preventDefault();
     let creationType="";
     if(state.email.includes("@") && state.email.includes(".com")){
-      creationType="email";
+      creationType="emailandpassword";
     }
     else{
       creationType="username";
     }
-    // try {
-    //   const IdToken = await getIdToken(auth.currentUser);
+    try {
+      const IdToken = await getIdToken(auth.currentUser);
 
-    //   const info = {
-    //     email: state.email,
-    //     password: state.password,
-    //     createType: "emailandpassword",
-    //     name: state.name,
-    //     accountType: "College",
-    //     IdToken: IdToken,
-    //     path: { University_id:auth.currentUser.uid },
-    //   };
-    //   console.log(info);
-    //   const k = await creatuser(info);
-    //   console.log(k);
-    // } catch (e) {
-    //   console.log(e);
-    // }
+      const info = {
+        email: state.email,
+        password: state.password,
+        createType: "emailandpassword",
+        name: state.name,
+        accountType: "College",
+        IdToken: IdToken,
+        path: { University_id:auth.currentUser.uid },
+        createType : creationType
+      };
+      console.log(info);
+      const k = await creatuser(info);
+      if(k===200)
+      console.log("add");
+    else{
+      console.log("already in use");
+    }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
