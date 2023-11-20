@@ -86,9 +86,15 @@ console.log(JSON.stringify(info));
 }
 
 export const getprofile=async ()=>{
+  try{
 const q=query(collection(db,"users"),where("uid","==",auth.currentUser.uid));
 const data=await getDocs(q);
+console.log(data.docs[0].data());
 return data.docs[0].data();
+  }
+  catch(e){
+    console.log(e);
+  }
 }
 export const update_user_profile=async (info)=>{
   try{
