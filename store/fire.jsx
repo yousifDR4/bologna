@@ -77,7 +77,7 @@ export const creatuser= async(info)=>{
   
   
 console.log(JSON.stringify(info));
- const res= await fetch ("http://localhost:4000/create",{method:"POST",
+ const res= await fetch ("https://my-server-zlbh.onrender.com/create",{method:"POST",
    headers: {
    'Content-Type': "application/json"},body: JSON.stringify(info)})
    

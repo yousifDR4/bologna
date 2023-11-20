@@ -80,29 +80,29 @@ const AddDepartment = (probs) => {
     e.preventDefault();
     let creationType="";
     if(state.email.includes("@") && state.email.includes(".com")){
-      creationType="email";
+      creationType="emailandpassword";
     }
     else{
       creationType="username";
     }
-    // try {
-    //   const IdToken = await getIdToken(auth.currentUser);
+    try {
+      const IdToken = await getIdToken(auth.currentUser);
 
-    //   const info = {
-    //     email: state.email,
-    //     password: state.password,
-    //     createType: "emailandpassword",
-    //     name: state.name,
-    //     accountType: "College",
-    //     IdToken: IdToken,
-    //     path: { University_id:auth.currentUser.uid },
-    //   };
-    //   console.log(info);
-    //   const k = await creatuser(info);
-    //   console.log(k);
-    // } catch (e) {
-    //   console.log(e);
-    // }
+      const info = {
+        email: state.email,
+        password: state.password,
+        createType: creationType,
+        name: state.name,
+        accountType: "Department",
+        IdToken: IdToken,
+        path: { University_id:"7KRIHVqmeWVmQUltlbU9NUwMnx53".uid,College_id:auth.currentUser },
+      };
+      console.log(info);
+      const k = await creatuser(info);
+      console.log(k);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

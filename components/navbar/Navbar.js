@@ -74,6 +74,7 @@ return(
                 <li><Link to="/" onClick={showAsideListHandler}><img src={question} alt=""/> what's APS</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/" onClick={showAsideListHandler}><img src={idea} alt=""/> How it works</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/> Colleges using it</Link><div className={classes.innerLine}/></li>
+                {isCollegeAccount && <li><Link to="/CollegeProfile">College Profile</Link></li>}
                {isUniversityAccount && <li><Link to="/UniversityProfile">University Profile</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>
