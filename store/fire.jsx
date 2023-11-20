@@ -103,11 +103,7 @@ await setDoc(userdoc,info,{"merge":true});
   }
 }
 
-const SubjectPath=(info)=>{
-  const{universities_id,college_id,department_id,subject_id}=info;
-  const path=`universities/${universities_id}/colleges/${college_id}/department/${department_id}/subjects /${subject_id}`;
-  return path;
-}
+
 
 export const Addsubject=async (info)=>{
   const q=collection(db,"subjects");
