@@ -1,5 +1,5 @@
-import classes from "./UniversityProfile.module.css";
-import AddCollege from "./AddCollege.js";
+import classes from "./CollegeProfile.module.css";
+import AddDepartment from "./AddDepartment.js";
 import defaultProfilePicture from "../../../Images/profilePicutre.jpg";
 import alkawarizmiPicture from "../../../Images/Alkhawarzimi.jpg";
 import location from "../../../Images/location.png";
@@ -11,10 +11,10 @@ import email from "../../../Images/email.png";
 import edit from "../../../Images/pencil.png";
 import options from "../../../Images/option.png";
 import { useEffect, useState } from "react";
-import EditProfile from "./EditProfile";
-import CustomInput from "./CustomInput";
+import EditProfile from "../UniversityProfile/EditProfile";
+import CustomInput from "../UniversityProfile/CustomInput";
 import { useSelector } from "react-redux";
-import AboutComponent from "./AboutComponent";
+import AboutComponent from "../UniversityProfile/AboutComponent";
 import { auth, db } from "../../../store/fire";
 import {
   collection, 
@@ -25,45 +25,45 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
-const UniversityProfile = () => {
+const CollegeProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
   const [activatedList, setActivatedList] = useState("colleges");
   const [activatedSection, setActivatedSection] = useState("overview");
   const [showEdit, setShowEdit] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
-  const [showAddCollege,setShowAddCollege]=useState(false);
-  const isCollegeActivated = activatedList === "colleges";
+  const [showAddDepartment,setShowAddDepartment]=useState(false);
+  const isDepartmentActivated = activatedList === "colleges";
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
-  const [colleges, setColleges] = useState([]);
-  useEffect(() => {
-    const f = async () => {
-      if (!auth.currentUser) return;
-      try {
+  const [departments, setDepartments] = useState([]);
+//   useEffect(() => {
+//     const f = async () => {
+//       if (!auth.currentUser) return;
+//       try {
       
        
-        const q= query(collection(db,"users"),where("uid","in",profile.Colleges_id)) 
-        const colleges=await getDocs(q);
-        const data=colleges.docs.map((college)=>college.data());
-        console.log(data);
-        setColleges(data);
-       }
-       catch (e) {
-        console.log("has no Colleges");
-      }
-    };
-    f();
-  }, [auth.currentUser]);
+//         const q= query(collection(db,"users"),where("uid","in",profile.Colleges_id)) 
+//         const colleges=await getDocs(q);
+//         const data=colleges.docs.map((college)=>college.data());
+//         console.log(data);
+//         setColleges(data);
+//        }
+//        catch (e) {
+//         console.log("has no Colleges");
+//       }
+//     };
+//     f();
+//   }, [auth.currentUser]);
   return (
     <>
-    {showAddCollege && <div className={`${showAddCollege?classes.active:""} ${classes.addCollege}`}>
-    <AddCollege/>
+    {showAddDepartment && <div className={`${showAddDepartment?classes.active:""} ${classes.addDepartment}`}>
+    <AddDepartment/>
     </div>}
-    {showAddCollege && (
+    {showAddDepartment && (
         <div
           className={classes.backDrop}
-          onClick={() => setShowAddCollege(false)}
+          onClick={() => setShowAddDepartment(false)}
         ></div>
       )}
       {showEdit && (
@@ -126,9 +126,9 @@ const UniversityProfile = () => {
             <ul className={classes.navigators}>
               <li
                 onClick={() => setActivatedList("colleges")}
-                className={isCollegeActivated ? classes.activated : ``}
+                className={isDepartmentActivated ? classes.activated : ``}
               >
-                Colleges
+                Department
               </li>
               <li
                 onClick={() => setActivatedList("about")}
@@ -137,16 +137,16 @@ const UniversityProfile = () => {
                 About
               </li>
             </ul>
-            {isCollegeActivated && (
-              <div className={classes.collegesContainer}>
-                <ul className={classes.colleges}>
-                <li title="add a college!" onClick={()=>setShowAddCollege(true)}>+</li>
-                  {colleges.map((college) => (
-                    <li key={college.uid}>
+            {isDepartmentActivated && (
+              <div className={classes.deptsContainer}>
+                <ul className={classes.depts}>
+                <li title="add a department!" onClick={()=>setShowAddDepartment(true)}>+</li>
+                  {departments.map((dept) => (
+                    <li key={dept.uid}>
                       <img src={alkawarizmiPicture} alt="" />
                       <div>
-                        <p>{college.name}</p> <span>@{college.uid}</span> <br />
-                        <span>{college.university}</span>
+                        <p>{dept.name}</p> <span>@{dept.uid}</span> <br />
+                        <span>{dept.university}</span>
                       </div>
                     </li>
                   ))}
@@ -262,4 +262,4 @@ const UniversityProfile = () => {
     </>
   );
 };
-export default UniversityProfile;
+export default CollegeProfile;

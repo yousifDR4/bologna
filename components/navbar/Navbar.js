@@ -22,6 +22,7 @@ const Navbar=()=>{
     const accountType=useSelector(state=> state.auth.accountType);
     const navigate=useNavigate();
     const isUniversityAccount=isLoggedIn ? accountType === 'University': false;
+    const isCollegeAccount=isLoggedIn ? accountType === 'College': false;
     const dispatch=useDispatch();
     const showAsideListHandler=()=>{
         setShowAsideList((state)=> !state);
@@ -58,6 +59,7 @@ return(
                 <li><Link to="/">How it works</Link></li>
                 <li><Link to="/Universities">Universities using it</Link></li>
                {isUniversityAccount && <li><Link to="/UniversityProfile">University Profile</Link></li>}
+               {isCollegeAccount && <li><Link to="/CollegeProfile">College Profile</Link></li>}
                {!isLoggedIn && <li><Link to="/Login">Login</Link></li>}
             </div>
            <div> 

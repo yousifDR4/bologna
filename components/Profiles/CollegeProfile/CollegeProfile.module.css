@@ -35,10 +35,10 @@
     display: block;
 
   }
- .addCollege{
+ .addDepartment{
     display: none;
 }
- .addCollege.active{
+ .addDepartment.active{
     display:block;
     position: fixed;
     z-index: 15;
@@ -165,7 +165,7 @@ background-color: #fff;
     background-color: #EFFAFD;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
 }
-.collegesContainer{
+.deptsContainer{
     padding-top: 4rem;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
 }
@@ -269,7 +269,7 @@ margin-right: 0.2rem;
 .socials a:hover{
     color:var(--styling1);
 }
-.colleges{
+.depts{
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -279,7 +279,7 @@ margin-right: 0.2rem;
     margin: 0;
     padding: 0;
 }
-.colleges li{
+.depts li{
 display: flex;
 background: #fff;
 padding: 0.5rem;
@@ -290,7 +290,7 @@ max-width: 1600px;
 box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 min-height: 4rem;
 }
-.colleges li:first-child{
+.depts li:first-child{
     background-color:#EFFAFD;
     box-shadow: none;
     border: 1px solid var(--styling1);
@@ -301,24 +301,24 @@ min-height: 4rem;
     padding: 0;
     cursor: pointer;
 }
-.colleges img{
+.depts img{
     width: 8rem;
     height: 8rem;
     border-radius: 50%;
     margin-right: 1rem;
     margin-left: 2rem;
 }
-.colleges p, .colleges span{
+.depts p, .colleges span{
     font-family: Graphik;
     margin-top: 1.3rem;
     display: inline-block;
 }
-.colleges span{
+.depts span{
     color: #6B6C6D;
     margin-left: 6px;
     font-family: GraphikLight;
 }
-.colleges span:nth-of-type(2){
+.depts span:nth-of-type(2){
     margin-top: 6px;
     margin-left: 0;
 }
@@ -350,10 +350,10 @@ min-height: 4rem;
     padding: 0;
   
     }
-    .colleges li{
+    .depts li{
         width: 95%;
     }
-    .colleges span{
+    .depts span{
         margin-top: 2px;
     }
     .aboutContainer{
