@@ -37,8 +37,8 @@ function reducer(state, action) {
 const AddUniversity = (probs) => {
   const [state, dispatch] = useReducer(reducer, intilistate);
   const inputsValid = {
-    email: state.email.includes("@"),
-    password: state.password.trim() !== "",
+    email: state.email.trim() !== "",
+    password: state.password.length > 7,
     name: state.name.trim() !== "",
   };
   const [formIsValid, setFormIsValid] = useState(false);
@@ -60,6 +60,14 @@ const AddUniversity = (probs) => {
   };
 
   function onchange(e) {
+    let creationType="";
+    if(state.email.includes("@") && state.email.includes(".com")){
+      creationType="email";
+    }
+    else{
+      creationType="username";
+    }
+    console.log(creationType);
     const action = {
       type: "input",
       input: e.target.name,
@@ -70,6 +78,13 @@ const AddUniversity = (probs) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    let creationType="";
+    if(state.email.includes("@") && state.email.includes(".com")){
+      creationType="email";
+    }
+    else{
+      creationType="username";
+    }
     try {
       const IdToken = await getIdToken(auth.currentUser);
 
@@ -95,7 +110,7 @@ const AddUniversity = (probs) => {
       <form action="" className=" form">
         <h3>Add University</h3>
         <label htmlFor="email">
-          Email<span className={classes.star}>*</span>
+          Email or Username<span className={classes.star}>*</span>
         </label>
         <input
           type="email"
@@ -107,10 +122,10 @@ const AddUniversity = (probs) => {
           value={state.email}
         />
         {!inputsValid.email && state.emailtouched && (
-          <p className={classes.errorText}>email must be valid!</p>
+          <p className={classes.errorText}>Email or username must be valid!</p>
         )}
         <label className="text">
-          password<span className={classes.star}>*</span>
+          Password<span className={classes.star}>*</span>
         </label>
         <input
           name="password"
@@ -118,12 +133,13 @@ const AddUniversity = (probs) => {
           onChange={onchange}
           onBlur={blurHandler}
           value={state.password}
+          placeholder="more than 7 characters.."
         />
         {!inputsValid.password && state.passwordtouched && (
           <p className={classes.errorText}>password must not be empty!</p>
         )}
         <label className="text">
-          name<span className={classes.star}>*</span>
+          Name<span className={classes.star}>*</span>
         </label>
         <input
           name="name"
@@ -132,7 +148,7 @@ const AddUniversity = (probs) => {
           onBlur={blurHandler}
           value={state.name}
         />
-        {!inputsValid.password && state.passwordtouched && (
+        {!inputsValid.name && state.nametouched && (
           <p className={classes.errorText}>name must not be empty!</p>
         )}
         <div className={classes.button}>

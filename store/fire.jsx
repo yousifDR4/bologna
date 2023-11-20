@@ -107,31 +107,31 @@ await setDoc(userdoc,info,{"merge":true});
     return e.code;
   }
 }
-export const getsubject=async (info)=>{
-  try{
-    const q=doc(db,SubjectPath(info));
-   const subject=await getDoc(q);
-   return subject;
-  }
-  catch(e){
-   return e;
-  }
-}
-export const Addsubject=async (info)=>{
-  const q=doc(db,SubjectPath(info));
-  await setDoc(q,info,{"merge":true});
+// export const getsubject=async (info)=>{
+//   try{
+//     const q=doc(db,SubjectPath(info));
+//    const subject=await getDoc(q);
+//    return subject;
+//   }
+//   catch(e){
+//    return e;
+//   }
+// }
+// export const Addsubject=async (info)=>{
+//   const q=doc(db,SubjectPath(info));
+//   await setDoc(q,info,{"merge":true});
   
-}
-export const UpdateSubject=async (info)=>{
-  const q=doc(db,SubjectPath(info));
-  try{
-  await setDoc(q,info,{"merge":false});
-  return "ok";
-  }
-  catch (e){
-    return e;
-  }
-}
+// }
+// export const UpdateSubject=async (info)=>{
+//   const q=doc(db,SubjectPath(info));
+//   try{
+//   await setDoc(q,info,{"merge":false});
+//   return "ok";
+//   }
+//   catch (e){
+//     return e;
+//   }
+// }
 const adduserinfo=(info)=>{
   console.log(info);
  const docref=doc(db,"users",info.uid)
