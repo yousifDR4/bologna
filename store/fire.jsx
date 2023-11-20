@@ -84,7 +84,6 @@ console.log(JSON.stringify(info));
   const k=await res.json()
    return k;
 }
-
 export const getprofile=async ()=>{
   try{
 const q=query(collection(db,"users"),where("uid","==",auth.currentUser.uid));
@@ -107,12 +106,6 @@ await setDoc(userdoc,info,{"merge":true});
   catch(e){
     return e.code;
   }
-}
-
-const SubjectPath=(info)=>{
-  const{universities_id,college_id,department_id,subject_id}=info;
-  const path=`universities/${universities_id}/colleges/${college_id}/department/${department_id}/subjects /${subject_id}`;
-  return path;
 }
 export const getsubject=async (info)=>{
   try{
