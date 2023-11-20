@@ -95,7 +95,9 @@ const AddDepartment = (probs) => {
         name: state.name,
         accountType: "Department",
         IdToken: IdToken,
-        path: { University_id:"7KRIHVqmeWVmQUltlbU9NUwMnx53".uid,College_id:auth.currentUser },
+        path:
+         { University_id:"7KRIHVqmeWVmQUltlbU9NUwMnx53",
+        College_id:auth.currentUser.uid },
       };
       console.log(info);
       const k = await creatuser(info);
