@@ -80,7 +80,6 @@ export const creatuser= async(info)=>{
 
 
 console.log(JSON.stringify(info));
-
 try{
  const res= await fetch ("http://localhost:4000/create",{method:"POST",
    headers: {
@@ -111,10 +110,6 @@ await setDoc(userdoc,info,{"merge":true});
     return e.code;
   }
 }
-
-
-
-
 export const Addsubject=async (info)=>{
   const q=collection(db,"subjects");
   const id=await addDoc(q,info);
