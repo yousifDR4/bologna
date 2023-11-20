@@ -25,6 +25,7 @@ const authSlice=createSlice({
     }
 });
 export const onLogin=(profile)=>{
+    console.log(profile.accountType,111111111);
     if(profile.accountType==="University"){
     const {name,accountType,uid,email, details ,website,facebook,instagram,twitter,profilePicture,bannerPicture,location,Colleges_id,userName}=profile;
     return async (dispatch)=>{

@@ -81,15 +81,15 @@ export const creatuser= async(info)=>{
 
 console.log(JSON.stringify(info));
 try{
- const res= await fetch ("https://my-server-zlbh.onrender.com/create",{method:"POST",
+ const res= await fetch ("http://localhost:4000/create",{method:"POST",
    headers: {
    'Content-Type': "application/json"},body: JSON.stringify(info)})
-   
+   console.log(res.status);
   const k=await res.json()
    return k;
 }
 catch (e){
-  return "e";
+  return 500;
 }
 }
 

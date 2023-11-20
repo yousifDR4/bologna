@@ -12,6 +12,7 @@ import idea from "../../Images/idea.png";
 import { profileActions } from "../../store/profile-slice";
 import { auth, getprofile } from "../../store/fire";
 import { onAuthStateChanged } from "firebase/auth";
+let reF=true;
 const Navbar=()=>{
 
     const dispatchRedux=useDispatch();
@@ -37,11 +38,13 @@ const Navbar=()=>{
     const uid = useSelector(selectuid);
     onAuthStateChanged(auth,async(user)=>{
         console.log(location.pathname);
-      if(user){
+      if(user&&reF){
         if((user.uid!==uid && uid===null)&& location.pathname!=="/Login"){
             console.log("inside",location.pathname);
+            console.log("onauthstatechange");
       const k=await getprofile()
       dispatchRedux(onLogin(k));
+      reF=false;
         }
       }
     },[])

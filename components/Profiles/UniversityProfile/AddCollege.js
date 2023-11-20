@@ -91,7 +91,7 @@ const AddCollege = (probs) => {
       const info = {
         email: state.email,
         password: state.password,
-        createType: "emailandpassword",
+        createType :creationType,
         name: state.name,
         accountType: "College",
         IdToken: IdToken,
@@ -100,6 +100,7 @@ const AddCollege = (probs) => {
       };
       console.log(info);
       const k = await creatuser(info);
+      console.log(k);
       if(k===200)
       console.log("add");
     else{
