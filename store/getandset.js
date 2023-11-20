@@ -9,6 +9,7 @@ export const getunv=async()=>{
 }
 export const setId=async (info)=>{
 const {universities_id,Colleges_id,accountType}=info;
+console.log(info,"info");
 console.log(info);
 switch (accountType) {
     case "University":{

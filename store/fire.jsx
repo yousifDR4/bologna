@@ -52,6 +52,7 @@ else{
     console.log(temp2);
    await setId(temp2)
     console.log(temp2);
+    console.log("work");
      adduserinfo({...temp2,uid:temp1.uid});
    await deleteDoc(doc(db,"users",students.docs[0].id))
   }
@@ -75,14 +76,22 @@ export async function signinWithUsername(username) {
 }
 export const creatuser= async(info)=>{
   
-  
+  https://my-server-zlbh.onrender.com
+
+
 console.log(JSON.stringify(info));
- const res= await fetch ("https://my-server-zlbh.onrender.com/create",{method:"POST",
+
+try{
+ const res= await fetch ("http://localhost:4000/create",{method:"POST",
    headers: {
    'Content-Type': "application/json"},body: JSON.stringify(info)})
-   
+   console.log(res.status);
   const k=await res.json()
    return k;
+}
+catch (e){
+  return 500;
+}
 }
 
 export const getprofile=async ()=>{
