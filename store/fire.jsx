@@ -3,7 +3,6 @@ import { getAuth, signInWithPopup,GoogleAuthProvider,deleteUser,updateEmail, get
 import { collection,doc,getDoc,query,where,getFirestore,getDocs, updateDoc, setDoc, addDoc, deleteDoc, arrayUnion } from 'firebase/firestore';
 import {getStorage,ref }from "firebase/storage"
 import { setId } from './getandset';
-
 const firebaseConfig = {
   apiKey : process.env.REACT_APP_apiKey,
   authDomain : process.env.REACT_APP_authDomain,
@@ -85,7 +84,7 @@ export const creatuser= async(info)=>{
 
 console.log(JSON.stringify(info));
 try{
- const res= await fetch ("http://localhost:4000/create",{method:"POST",
+ const res= await fetch ( process.env.REACT_APP_url,{method:"POST",
    headers: {
    'Content-Type': "application/json"},body: JSON.stringify(info)})
    console.log(res.status);
