@@ -25,6 +25,7 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
+import { useFetch } from "../../../hooks/useFetch.jsx";
 const UniversityProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
   const [activatedList, setActivatedList] = useState("colleges");
@@ -36,25 +37,8 @@ const UniversityProfile = () => {
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
-  const [colleges, setColleges] = useState([]);
-  useEffect(() => {
-    const f = async () => {
-      if (!auth.currentUser) return;
-      try {
-      
-       
-        const q= query(collection(db,"users"),where("uid","in",profile.Colleges_id)) 
-        const colleges=await getDocs(q);
-        const data=colleges.docs.map((college)=>college.data());
-        console.log(data);
-        setColleges(data);
-       }
-       catch (e) {
-        console.log("has no Colleges");
-      }
-    };
-    f();
-  }, [auth.currentUser]);
+  const {data:colleges,load,error}=useFetch(profile.Colleges_id);
+  console.log(load);
   return (
     <>
     {showAddCollege && <div className={`${showAddCollege?classes.active:""} ${classes.addCollege}`}>
