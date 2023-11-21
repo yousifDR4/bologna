@@ -3,14 +3,18 @@ import { getAuth, signInWithPopup,GoogleAuthProvider,deleteUser,updateEmail, get
 import { collection,doc,getDoc,query,where,getFirestore,getDocs, updateDoc, setDoc, addDoc, deleteDoc, arrayUnion } from 'firebase/firestore';
 import {getStorage,ref }from "firebase/storage"
 import { setId } from './getandset';
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDsvuaRLVbper6mlttMm4nX2KTUWg63v9Q",
-  authDomain: "bola-82857.firebaseapp.com",
-  projectId: "bola-82857",
-  storageBucket: "bola-82857.appspot.com",
-  messagingSenderId: "769132993839",
-  appId: "1:769132993839:web:337cd155f3c2a6105615da"
+  apiKey : process.env.REACT_APP_apiKey,
+  authDomain : process.env.REACT_APP_authDomain,
+  projectId : process.env.REACT_APP_projectId,
+ storageBucket : process.env.REACT_APP_storageBucket,
+  messagingSenderId : process.env.REACT_APP_messagingSenderId,
+  appId : process.env.REACT_APP_appId,
 };
+
+console.log(firebaseConfig);
+
  
 // Initialize Firebase
 const app=initializeApp(firebaseConfig);
