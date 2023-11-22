@@ -15,11 +15,11 @@ useEffect(() => {
         let data=colleges.docs.map((college)=>college.data());
         console.log(data);
         setData(data);
-        setload(false);
        }
        catch (e) {
         setError(true)
       }
+      setload(false);
     };
     f();
     
