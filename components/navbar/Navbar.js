@@ -12,6 +12,7 @@ import idea from "../../Images/idea.png";
 import { profileActions } from "../../store/profile-slice";
 import { auth, getprofile } from "../../store/fire";
 import { onAuthStateChanged } from "firebase/auth";
+import { onSnapshot } from "firebase/firestore";
 let reF=true;
 const Navbar=()=>{
 
@@ -50,6 +51,9 @@ const Navbar=()=>{
         }
       }
     },[])
+
+ 
+      
 return(
 <>
 <div className={backdrop} onClick={showAsideListHandler}/>

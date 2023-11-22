@@ -37,7 +37,8 @@ const CollegeProfile = () => {
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
-  const {data:departments,load,error}=useFetch(profile.Departments_id);
+  const {data:departments,load,error}=useFetch(profile.Department_id);
+  console.log(profile.Department_id);
   return (
     <>
     {showAddDepartment && <div className={`${showAddDepartment?classes.active:""} ${classes.addDepartment}`}>

@@ -63,46 +63,43 @@ const Login=()=>{
 
     const onSubmit=async (e)=>{ //emailAdress => state.emailaddress , password => state.password
       e.preventDefault(); 
-      try {
+      
         await setPersistence(auth, browserLocalPersistence);
+       
         if (state.emailaddress.includes("@")){
+          try{
+          console.log(state.emailaddress);
         await signInWithEmailAndPassword(auth,state.emailaddress,state.password);
-        const user=await getprofile(auth.currentUser);
+        const user=await getprofile();
         console.log(user);
         dispatchRedux(onLogin(user));
+        setloginstate(true);
         }
-          else{
+      
+      catch(e){
+        setloginstate(false)
+      }
+    }
+    else{
+          
             console.log(11);
         const {email} = await signinWithUsername(state.emailaddress);
           if (email !== null) {
               console.log('User email:', email);
           console.log("username:",state.emailaddress);
-          await signInWithEmailAndPassword(auth,email,state.password)
-          let profile=await getprofile();
+           await signInWithEmailAndPassword(auth,email,state.password);
+           const profile=await getprofile();
+          console.log(profile);
           dispatchRedux(onLogin(profile));
-                 return;
+          setloginstate(true);
           }
-          else {
-              console.log('User not found');
-          }
-          }
+               
+        }
+          
       }
-      catch(e){
-        if(e.code==="auth/invalid-login-credentials")
-        console.log("wrong email or password");
-      setuseer("wrong email or password");
-      }
-      // try{
-        
-      //   const user=await getprofile(auth.currentUser);
-      //   console.log(user); 
-      //   dispatchRedux(onLogin(user));
-      //   navigate("/");
-      // }
-      // catch(error){
+      
 
-      // }
-    }
+    
     const signInwithGoogle= async(e)=>{
       e.preventDefault();
       try{
@@ -124,7 +121,8 @@ const Login=()=>{
    useEffect(()=>{
     if((auth.currentUser!==null)&& loginstate===true){
       console.log(11111);
-    navigate("/");
+  
+    navigate("/")
     }
    },[loginstate])
 

@@ -80,7 +80,7 @@ const AddUniversity = (probs) => {
     e.preventDefault();
     let creationType="";
     if(state.email.includes("@") && state.email.includes(".com")){
-      creationType="email";
+      creationType="emailandpassword";
     }
     else{
       creationType="username";
@@ -91,11 +91,10 @@ const AddUniversity = (probs) => {
       const info = {
         email: state.email,
         password: state.password,
-        createType: "emailandpassword",
+        createType: creationType,
         name: state.name,
-        accountType: "College",
+        accountType: "University",
         IdToken: IdToken,
-        path: { University_id:auth.currentUser.uid },
       };
       console.log(info);
       const k = await creatuser(info);

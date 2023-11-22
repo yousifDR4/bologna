@@ -15,15 +15,15 @@ useEffect(() => {
         let data=colleges.docs.map((college)=>college.data());
         console.log(data);
         setData(data);
+       
        }
        catch (e) {
         setError(true)
       }
       setload(false);
     };
+    setload(false);
     f();
-    
   }, [auth.currentUser,arr]);
-  return{data,load,error}
-
+  return{data,load,error,setData}
 }
