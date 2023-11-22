@@ -101,11 +101,7 @@ const AddCollege = (probs) => {
       console.log(info);
       const k = await creatuser(info);
       console.log(k);
-      if(k===200)
-      console.log("add");
-    else{
-      console.log("already in use");
-    }
+    
     } catch (e) {
       console.log(e);
     }

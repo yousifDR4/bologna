@@ -1,13 +1,16 @@
 import { and, collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../store/fire";
 import { useEffect, useState } from "react";
+
 export const useFetch = (grade) => {
   const [data, setData] = useState([]);
-  const [load, setload] = useState(false);
+  const [load, setLoad] = useState(false);
   const [error, setError] = useState(false);
+
   useEffect(() => {
-    const f = async () => {
-      setload(true);
+    let isMounted = true; // Flag to check if the component is still mounted
+    const fetchData = async () => {
+      setLoad(true);
       if (!auth.currentUser) return;
       try {
         const q = query(
@@ -17,15 +20,29 @@ export const useFetch = (grade) => {
             where("grade", "==", grade)
           )
         );
+
         const docs = await getDocs(q);
-        const temp = docs.docs.map((doc) => doc.data());
-        setData(temp);
-        setload(false);
+        // Only update state if the component is still mounted
+        if (isMounted) {
+          const temp = docs.docs.map((doc) => doc.data());
+          setData(temp);
+          setLoad(false);
+        }
       } catch (e) {
-        setError(true);
+        // Only update state if the component is still mounted
+        if (isMounted) {
+          setError(true);
+        }
       }
     };
-    f();
-  }, [auth.currentUser, id]);
+    fetchData();
+
+    // Cleanup function
+    return () => {
+      isMounted = false; // Component is unmounting, update the flag
+      // Additional cleanup code if needed, e.g., unsubscribe from a subscription
+    };
+  }, [auth.currentUser, grade]);
+
   return { data, load, error };
 };

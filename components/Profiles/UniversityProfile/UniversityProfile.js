@@ -26,6 +26,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useFetch } from "../../../hooks/useFetch.jsx";
+import { useStudensts } from "../../../hooks/useStudents.jsx";
 const UniversityProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
   const [activatedList, setActivatedList] = useState("colleges");
@@ -37,8 +38,10 @@ const UniversityProfile = () => {
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
-  const {data:colleges,load,error}=useFetch(profile.Colleges_id);
+  const {data:colleges,load,error,setData}=useFetch(profile.Colleges_id);
   console.log(load);
+  const{data:mod}=useStudensts(colleges)
+  console.log(mod);
   return (
     <>
     {showAddCollege && <div className={`${showAddCollege?classes.active:""} ${classes.addCollege}`}>

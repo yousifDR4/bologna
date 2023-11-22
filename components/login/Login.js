@@ -70,6 +70,7 @@ const Login=()=>{
         const user=await getprofile(auth.currentUser);
         console.log(user);
         dispatchRedux(onLogin(user));
+
         }
           else{
             console.log(11);
@@ -77,10 +78,14 @@ const Login=()=>{
           if (email !== null) {
               console.log('User email:', email);
           console.log("username:",state.emailaddress);
-          await signInWithEmailAndPassword(auth,email,state.password)
-          let profile=await getprofile();
+
+           await signInWithEmailAndPassword(auth,email,state.password);
+           const profile=await getprofile();
+          console.log(profile);
           dispatchRedux(onLogin(profile));
-                 return;
+          setloginstate(true);
+               
+
           }
           else {
               console.log('User not found');
