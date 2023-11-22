@@ -20,6 +20,7 @@ useEffect(() => {
        catch (e) {
         setError(true)
       }
+      setload(false);
     };
     setload(false);
     f();

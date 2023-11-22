@@ -13,11 +13,11 @@ useEffect(() => {
         const temp=await getDoc(doc(db,"users",id));
         let data=temp.data()
         setData(data);
-        setload(false);
        }
        catch (e) {
         setError(true)
       }
+      setload(false);
     };
     f();
   }, [auth.currentUser,id]);
