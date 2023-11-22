@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from "react";
 import { auth, creatuser } from "../../../store/fire";
 import classes from "./AddDepartment.module.css";
 import { getIdToken } from "firebase/auth";
-
+import { onSnapshot, query, where } from "firebase/firestore";
 const intilistate = {
   email: "",
   emailtouched: false,
@@ -58,14 +58,12 @@ const AddDepartment = (probs) => {
     };
     dispatch(action);
   };
-
   function onchange(e) {
-    let creationType="";
-    if(state.email.includes("@") && state.email.includes(".com")){
-      creationType="email";
-    }
-    else{
-      creationType="username";
+    let creationType = "";
+    if (state.email.includes("@") && state.email.includes(".com")) {
+      creationType = "email";
+    } else {
+      creationType = "username";
     }
     console.log(creationType);
     const action = {
@@ -78,12 +76,11 @@ const AddDepartment = (probs) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    let creationType="";
-    if(state.email.includes("@") && state.email.includes(".com")){
-      creationType="emailandpassword";
-    }
-    else{
-      creationType="username";
+    let creationType = "";
+    if (state.email.includes("@") && state.email.includes(".com")) {
+      creationType = "emailandpassword";
+    } else {
+      creationType = "username";
     }
     try {
       const IdToken = await getIdToken(auth.currentUser);
@@ -95,9 +92,10 @@ const AddDepartment = (probs) => {
         name: state.name,
         accountType: "Department",
         IdToken: IdToken,
-        path:
-         { University_id:"7KRIHVqmeWVmQUltlbU9NUwMnx53",
-        College_id:auth.currentUser.uid },
+        path: {
+          University_id: "7KRIHVqmeWVmQUltlbU9NUwMnx53",
+          College_id: auth.currentUser.uid,
+        },
       };
       console.log(info);
       const k = await creatuser(info);

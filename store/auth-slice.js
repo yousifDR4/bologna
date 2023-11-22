@@ -34,10 +34,10 @@ export const onLogin=(profile)=>{
 }
 }
 if(profile.accountType==="College"){
-    const {name,accountType,uid,email, details ,website,facebook,instagram,twitter,profilePicture,bannerPicture,location,Departments_id,userName}=profile;
+    const {name,accountType,uid,email, details ,website,facebook,instagram,twitter,profilePicture,bannerPicture,location,Department_id,userName}=profile;
     return async (dispatch)=>{
     dispatch(authSlice.actions.logIn({accountType,uid}));
-    dispatch(profileActions.setProfile({name:name?name:"",userName:userName?userName:"",email:email?email:"",details:details?details:"",website:website?website:"",facebook:facebook?facebook:"",instagram:instagram?instagram:"",twitter:twitter?twitter:"",profilePicture:profilePicture?profilePicture:"",bannerPicture:bannerPicture?bannerPicture:"",location:location?location:"",Departments_id:Departments_id?Departments_id:[]}));
+    dispatch(profileActions.setProfile({name:name?name:"",userName:userName?userName:"",email:email?email:"",details:details?details:"",website:website?website:"",facebook:facebook?facebook:"",instagram:instagram?instagram:"",twitter:twitter?twitter:"",profilePicture:profilePicture?profilePicture:"",bannerPicture:bannerPicture?bannerPicture:"",location:location?location:"",Department_id:Department_id?Department_id:[]}));
 }
 }
 if(profile.accountType==="Department"){
