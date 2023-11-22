@@ -121,7 +121,7 @@ const Login=()=>{
    useEffect(()=>{
     if((auth.currentUser!==null)&& loginstate===true){
       console.log(11111);
-      console.log(1);
+  
     navigate("/")
     }
    },[loginstate])
