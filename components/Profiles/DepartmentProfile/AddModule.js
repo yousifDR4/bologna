@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useReducer } from "react";
-import { auth, creatuser } from "../../../store/fire";
+import React, { useState, useEffect, useReducer, cloneElement } from "react";
+import { auth, creatuser, db } from "../../../store/fire";
 import classes from "./AddModule.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
-
+import { addDoc, arrayUnion, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 const intilistate = {
   name: "",
   nametouched: false,
   describtion: "",
   describtiontouched: false,
-  ECTS:"",
-  ECTStouched:false
+  ECTS: "",
+  ECTStouched: false,
 };
 function reducer(state, action) {
   let newstate = {};
@@ -36,17 +36,17 @@ function reducer(state, action) {
 }
 
 const AddModule = (probs) => {
-  const {course}=probs;
+  const { course, level } = probs;
   const [state, dispatch] = useReducer(reducer, intilistate);
   const inputsValid = {
     describtion: state.describtion.trim() !== "",
     name: state.name.trim() !== "",
-    ECTS: state.ECTS.trim() !== ""
+    ECTS: state.ECTS.trim() !== "",
   };
   const [formIsValid, setFormIsValid] = useState(false);
-  const profile=useSelector(state=>state.profile.profile);
+  const profile = useSelector((state) => state.profile.profile);
   useEffect(() => {
-    if (inputsValid.email && inputsValid.password && inputsValid.name) {
+    if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name) {
       setFormIsValid(true);
     } else {
       setFormIsValid(false);
@@ -73,27 +73,18 @@ const AddModule = (probs) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     // course is variable indicating course number with values 1 or 2
+    const info = {
+      name: state.name,
+      describtion: state.describtion,
+      ECTS: state.ECTS,
+      level: level,
+      Deprartment_id: auth.currentUser.uid,
+      course:course
+    };
+    const id=await addDoc(collection(db,"subjects"), info);
+  await updateDoc(doc(db,"users",auth.currentUser.uid), {subjects_id:arrayUnion(id)} )
     
-    // try {
-    //   const IdToken = await getIdToken(auth.currentUser);
-
-    //   const info = {
-    //     email: state.email,
-    //     password: state.password,
-    //     createType: creationType,
-    //     name: state.name,
-    //     accountType: "Department",
-    //     IdToken: IdToken,
-    //     path: { University_id:profile.University_id,College_id:auth.currentUser.uid },
-    //   };
-    //   console.log(info);
-    //   const k = await creatuser(info);
-    //   console.log(k);
-    // } catch (e) {
-    //   console.log(e);
-    // }
   };
-
   return (
     <div className={`${classes.container} ${probs.className}`}>
       <form action="" className=" form">
