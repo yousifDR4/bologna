@@ -31,7 +31,6 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_messagingSenderId,
   appId: process.env.REACT_APP_appId,
 };
-console.log(firebaseConfig);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
@@ -94,11 +93,9 @@ export async function signinWithUsername(username) {
   }
 }
 export const creatuser = async (info) => {
-  //my-server-zlbh.onrender.com
-
-  https: console.log(JSON.stringify(info));
+   console.log(JSON.stringify(info));
   try {
-    const res = await fetch(process.env.REACT_APP_url, {
+    const res = await fetch("http://localhost:4000/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
