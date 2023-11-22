@@ -70,7 +70,6 @@ const Login=()=>{
         const user=await getprofile(auth.currentUser);
         console.log(user);
         dispatchRedux(onLogin(user));
-        navigate("/");
         }
           else{
             console.log(11);
@@ -78,9 +77,9 @@ const Login=()=>{
           if (email !== null) {
               console.log('User email:', email);
           console.log("username:",state.emailaddress);
-          const profile=await signInWithEmailAndPassword(auth,email,state.password)
+          await signInWithEmailAndPassword(auth,email,state.password)
+          let profile=await getprofile();
           dispatchRedux(onLogin(profile));
-          navigate("/");
                  return;
           }
           else {
@@ -125,7 +124,7 @@ const Login=()=>{
    useEffect(()=>{
     if((auth.currentUser!==null)&& loginstate===true){
       console.log(11111);
-    navigate("/")
+    navigate("/");
     }
    },[loginstate])
 

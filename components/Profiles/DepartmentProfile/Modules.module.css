@@ -1,0 +1,22 @@
+.modulesList{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap:1.4rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-bottom: 1rem;
+}
+.modulesList > li:first-child{
+    color:var(--styling1);
+    border:1px solid var(--styling1);
+    width: 80%;
+    min-height: 4rem;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

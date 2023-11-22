@@ -11,6 +11,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth, getprofile } from './store/fire.jsx';
 import { onLogin, selectUid, useUid } from './store/auth-slice.js';
 import CollegeProfile from './components/Profiles/CollegeProfile/CollegeProfile.js';
+import DepartmentProfile from './components/Profiles/DepartmentProfile/DepartmentProfile.js';
 let firstInitilize=true;
 function App() {
   const profile=useSelector(state=>state.profile.profile);
@@ -59,6 +60,10 @@ function App() {
         {
           path: "/CollegeProfile",
           element:<CollegeProfile/>
+        },
+        {
+          path: "/DepartmentProfile",
+          element:<DepartmentProfile/>
         }
     ]
    }
