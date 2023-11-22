@@ -40,18 +40,18 @@ return(
            <div>
                  <h4>First Course</h4>
                 <ul>
-                {firstCourseModules.map((module)=>{
+                {firstCourseModules ? firstCourseModules.length >0 ?firstCourseModules.map((module)=>{
                     return <li key={module.name}>{module.name}</li>
-                })}
+                }):"":""}
                  <li onClick={()=>addModuleHanlder("1")}>+</li>
                 </ul>
             </div>
             <div>
                  <h4>Second Course</h4>
                 <ul>
-                {secondCourseModules.map((module)=>{
+                { secondCourseModules? secondCourseModules.length>0 ?secondCourseModules.map((module)=>{
                     return <li key={module.name}>{module.name}</li>
-                })}
+                }):"":""}
                 <li onClick={()=>addModuleHanlder("2")}>+</li>
                 </ul>
             </div>
