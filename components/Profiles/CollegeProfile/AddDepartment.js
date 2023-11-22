@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from "react";
 import { auth, creatuser } from "../../../store/fire";
 import classes from "./AddDepartment.module.css";
 import { getIdToken } from "firebase/auth";
+import { useSelector } from "react-redux";
 
 const intilistate = {
   email: "",
@@ -42,7 +43,7 @@ const AddDepartment = (probs) => {
     name: state.name.trim() !== "",
   };
   const [formIsValid, setFormIsValid] = useState(false);
-
+  const profile=useSelector(state=>state.profile.profile);
   useEffect(() => {
     if (inputsValid.email && inputsValid.password && inputsValid.name) {
       setFormIsValid(true);
@@ -95,9 +96,7 @@ const AddDepartment = (probs) => {
         name: state.name,
         accountType: "Department",
         IdToken: IdToken,
-        path:
-         { University_id:"7KRIHVqmeWVmQUltlbU9NUwMnx53",
-        College_id:auth.currentUser.uid },
+        path: { University_id:profile.University_id,College_id:auth.currentUser.uid },
       };
       console.log(info);
       const k = await creatuser(info);
