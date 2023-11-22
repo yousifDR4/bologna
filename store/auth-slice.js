@@ -41,14 +41,14 @@ export const onLogin = (profile) => {
       bannerPicture,
       location,
       Colleges_id,
-      userName,
+      username,
     } = profile;
     return async (dispatch) => {
       dispatch(authSlice.actions.logIn({ accountType, uid }));
       dispatch(
         profileActions.setProfile({
           name: name ? name : "",
-          userName: userName ? userName : "",
+          username:  username ?  username : "",
           email: email ? email : "",
           details: details ? details : "",
           website: website ? website : "",
@@ -78,7 +78,7 @@ export const onLogin = (profile) => {
       bannerPicture,
       location,
       Department_id,
-      userName,
+      username,
       University_id,
     } = profile;
     return async (dispatch) => {
@@ -86,7 +86,7 @@ export const onLogin = (profile) => {
       dispatch(
         profileActions.setProfile({
           name: name ? name : "",
-          userName: userName ? userName : "",
+          username:  username ?  username : "",
           email: email ? email : "",
           details: details ? details : "",
           website: website ? website : "",
@@ -116,14 +116,14 @@ export const onLogin = (profile) => {
       profilePicture,
       bannerPicture,
       location,
-      userName,
+      username,
     } = profile;
     return async (dispatch) => {
       dispatch(authSlice.actions.logIn({ accountType, uid }));
       dispatch(
         profileActions.setProfile({
           name: name ? name : "",
-          userName: userName ? userName : "",
+          username:  username ?  username: "",
           email: email ? email : "",
           details: details ? details : "",
           website: website ? website : "",

@@ -79,7 +79,9 @@ const Login=()=>{
           if (email !== null) {
               console.log('User email:', email);
           console.log("username:",state.emailaddress);
-          const profile=await signInWithEmailAndPassword(auth,email,state.password)
+           await signInWithEmailAndPassword(auth,email,state.password);
+           const profile=await getprofile();
+          console.log(profile);
           dispatchRedux(onLogin(profile));
           setloginstate(true);
                
