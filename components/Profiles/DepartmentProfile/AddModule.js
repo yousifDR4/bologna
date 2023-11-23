@@ -3,7 +3,15 @@ import { auth, creatuser, db } from "../../../store/fire";
 import classes from "./AddModule.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
-import { addDoc, arrayUnion, collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+const profile = useSelector((state) => state.profile.profile);
 const intilistate = {
   name: "",
   nametouched: false,
@@ -73,17 +81,25 @@ const AddModule = (probs) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     // course is variable indicating course number with values 1 or 2
+    try{
     const info = {
       name: state.name,
       describtion: state.describtion,
       ECTS: state.ECTS,
       level: level,
       Deprartment_id: auth.currentUser.uid,
-      course:course
+      course: course,
+      University_id:profile.University_id,
+      College_id:profile.College_id,
     };
-    const id=await addDoc(collection(db,"subjects"), info);
-  await updateDoc(doc(db,"users",auth.currentUser.uid), {subjects_id:arrayUnion(id)} )
-    
+    const id = await addDoc(collection(db, "subjects"), info);
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      subjects_id: arrayUnion(id),
+    });
+  }
+  catch(e){
+    console.log(e);
+  }
   };
   return (
     <div className={`${classes.container} ${probs.className}`}>
