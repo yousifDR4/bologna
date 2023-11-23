@@ -10,10 +10,17 @@ const Modules=(probs)=>{
     useEffect(()=>{
         if (!auth.currentUser) return; 
      const f=async()=>{
-      
+        try{
             const level=(await getDoc(doc(db,"users",auth.currentUser.uid))).get("levels");
-            setLevels(level)
+            if (level) {
+             setLevels(level)
             console.log(level);
+            }
+            
+        }
+        catch(e){
+
+        }
      }
      f();
     },[auth.currentUser])

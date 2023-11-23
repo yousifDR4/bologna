@@ -57,6 +57,7 @@ const LevelModule = (probs) => {
     console.log("noor is right");
   
     const f = async () => {
+      try{
       const q1 = query(
         collection(db, "subjects"),
         and(where("level", "==", level), where("course", "==", "1"))
@@ -72,6 +73,10 @@ const LevelModule = (probs) => {
       console.log(d2);
       setfirstCourseModules(d1);
       setsecondCourseModules(d2);
+      }
+      catch(e){
+     console.log(e);
+      }
     };
     f();
   }, []);
