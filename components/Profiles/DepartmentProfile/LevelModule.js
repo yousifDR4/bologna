@@ -1,7 +1,7 @@
 import AddModule from "./AddModule";
 import classes from "./LevelModules.module.css";
 import { useEffect, useState } from "react";
-import { and, collection, getDocs, query, where } from "firebase/firestore";
+import { and, collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../store/fire";
 import downArrow from "../../../Images/downArrow.png";
 var special = ['zeroth','First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
@@ -36,9 +36,9 @@ const LevelModule = (probs) => {
         and(where("level", "==", level), where("course", "==", "2"))
       );
       const [docs1, docs2] = await Promise.all([getDocs(q1), getDocs(q2)]);
-      let d1 = docs1.docs.map((doc) => doc.data());
+      let d1 = docs1.docs.map((doc) => ({...doc.data(),id:doc.id}));
       console.log(d1);
-      let d2 = docs2.docs.map((doc) => doc.data());
+      let d2 = docs2.docs.map((doc) => ({...doc.data(),id:doc.id}));
       console.log(d2);
       setfirstCourseModules(d1);
       setsecondCourseModules(d2);

@@ -11,6 +11,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+
 const intilistate = {
   name: "",
   nametouched: false,
