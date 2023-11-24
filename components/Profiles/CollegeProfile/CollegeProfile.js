@@ -1,5 +1,6 @@
 import classes from "./CollegeProfile.module.css";
 import AddDepartment from "./AddDepartment.js";
+import Loader from "../../UI/Loader/Loader.js";
 import defaultProfilePicture from "../../../Images/profilePicutre.jpg";
 import alkawarizmiPicture from "../../../Images/Alkhawarzimi.jpg";
 import location from "../../../Images/location.png";
@@ -29,6 +30,7 @@ import { useFetch } from "../../../hooks/useFetch.jsx";
 const CollegeProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
   const [activatedList, setActivatedList] = useState("colleges");
+  const loaded = useSelector((state) => state.profile.loaded);
   const [activatedSection, setActivatedSection] = useState("overview");
   const [showEdit, setShowEdit] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
@@ -39,10 +41,17 @@ const CollegeProfile = () => {
   const isContactSelected = activatedSection === "contact";
   const {data:departments,load,error}=useFetch(profile.Department_id);
   console.log(profile.Department_id);
+  if(!loaded){
+    return(
+      <>
+      <Loader/>
+      </>
+    )}
+  else{
   return (
     <>
     {showAddDepartment && <div className={`${showAddDepartment?classes.active:""} ${classes.addDepartment}`}>
-    <AddDepartment/>
+    <AddDepartment showAddDepartment={setShowAddDepartment}/>
     </div>}
     {showAddDepartment && (
         <div
@@ -245,5 +254,5 @@ const CollegeProfile = () => {
       </div>
     </>
   );
-};
+};}
 export default CollegeProfile;

@@ -6,9 +6,11 @@ import AddUniversity from "./AddUniversity";
 import {db,auth} from "../../store/fire";
 import{getDocs,where,collection,query, doc} from"firebase/firestore";
 import { useSelector } from "react-redux";
+import Loader from "../UI/Loader/Loader";
 const universities=[];
 const UniversityAccounts=()=>{
     const [university,setUniversity]=useState(universities);
+    const [loading,setLoading]=useState(true);
     const [showAddUniversity,setShowAddUniversity]=useState(false);
     const [initalUniversityValue,setInitialUniversityValue]=useState(universities);
     const [searchValue,setSearchValue]=useState();
@@ -24,6 +26,7 @@ const UniversityAccounts=()=>{
             return;
             setInitialUniversityValue(s)
             setUniversity(s)
+            setLoading(false);
         })
         }
         f();
@@ -55,6 +58,12 @@ const UniversityAccounts=()=>{
     const searchChangeHandler=(e)=>{
         setSearchValue(e.target.value);
     } 
+    if(loading){
+        return(
+            <Loader/>
+        )
+    }
+    else{
     return(
         <main className={classes.main}>
        {accountType === "Admin" && <div className={`${classes.addUniversity} ${
@@ -79,6 +88,6 @@ const UniversityAccounts=()=>{
      </ul>
      </div>
      </main>
-    );
+    );}
 }
 export default UniversityAccounts;

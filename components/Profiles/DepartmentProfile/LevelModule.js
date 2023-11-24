@@ -3,38 +3,9 @@ import classes from "./LevelModules.module.css";
 import { useEffect, useState } from "react";
 import { and, collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../store/fire";
-var special = [
-  "zeroth",
-  "First",
-  "Second",
-  "Third",
-  "Fourth",
-  "Fifth",
-  "Sixth",
-  "Seventh",
-  "Eighth",
-  "Ninth",
-  "tenth",
-  "eleventh",
-  "twelfth",
-  "thirteenth",
-  "fourteenth",
-  "fifteenth",
-  "sixteenth",
-  "seventeenth",
-  "eighteenth",
-  "nineteenth",
-];
-var deca = [
-  "twent",
-  "thirt",
-  "fort",
-  "fift",
-  "sixt",
-  "sevent",
-  "eight",
-  "ninet",
-];
+import downArrow from "../../../Images/downArrow.png";
+var special = ['zeroth','First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
+var deca = ['twent', 'thirt', 'fort', 'fift', 'sixt', 'sevent', 'eight', 'ninet'];
 function stringifyNumber(n) {
   if (n < 20) return special[n];
   if (n % 10 === 0) return deca[Math.floor(n / 10) - 2] + "ieth";
@@ -54,8 +25,6 @@ const LevelModule = (probs) => {
   };
 
   useEffect(() => {
-    console.log("noor is right");
-  
     const f = async () => {
       try{
       const q1 = query(
@@ -82,38 +51,22 @@ const LevelModule = (probs) => {
   }, []);
   return (
     <>
-      <div
-        className={`${showAddModule ? classes.active : ""} ${
-          classes.addModule
-        }`}
-      >
-        <AddModule course={course} level={probs.level} />{" "}
-      </div>
-      {showAddModule && (
-        <div
-          className={classes.backDrop}
-          onClick={() => setShowAddModule(false)}
-        />
-      )}
-      <li
-        className={classes.level}
-        onClick={() => setShowModules((prev) => !prev)}
-      >
-        <h3>{level_title + " Level Modules"}</h3>
-        {showModules && (
-          <div className={classes.coursesContainer}>
-            <div>
-              <h4>First Course</h4>
-              <ul>
-                {firstCourseModules
-                  ? firstCourseModules.length > 0
-                    ? firstCourseModules.map((module) => {
-                        return <li key={module.name}>{module.name}</li>;
-                      })
-                    : ""
-                  : ""}
-                <li onClick={() => addModuleHanlder("1")}>+</li>
-              </ul>
+  <div className={`${showAddModule? classes.active:""} ${classes.addModule}`}><AddModule course={course} level={level} showAddModule={setShowAddModule}/> </div>
+   {showAddModule && <div className={classes.backDrop} onClick={()=>setShowAddModule(false)}/>}
+    <li className={classes.level} >
+        <span onClick={()=>setShowModules((prev)=>!prev)}>
+            <h3 >{level_title + " Level Modules"}</h3>
+            <img src={downArrow} className={`${showModules ? classes.active :""}`}/>
+        </span>
+        {showModules && <div className={classes.coursesContainer}>
+           <div>
+                 <h4>First Course</h4>
+                <ul>
+                {firstCourseModules ? firstCourseModules.length >0 ?firstCourseModules.map((module)=>{
+                    return <li key={module.name}>{module.name}</li>
+                }):"":""}
+                 <li onClick={()=>addModuleHanlder("1")}>+</li>
+                </ul>
             </div>
             <div>
               <h4>Second Course</h4>
@@ -128,8 +81,7 @@ const LevelModule = (probs) => {
                 <li onClick={() => addModuleHanlder("2")}>+</li>
               </ul>
             </div>
-          </div>
-        )}
+          </div>}
       </li>
     </>
   );

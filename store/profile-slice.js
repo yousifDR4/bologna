@@ -3,11 +3,12 @@ import { auth } from "./fire";
 const init={}
 const profileSlice=createSlice({
     name:"profile",
-    initialState:{profile:init},
+    initialState:{profile:init,loaded:false},
     reducers:{
         setProfile(state,action){
             console.log("entereed");
             state.profile=action.payload;
+            state.loaded=true;
             console.log(state.profile);
         },
         setProfileValue(state,action){
@@ -20,7 +21,7 @@ const profileSlice=createSlice({
         logOut(state){
             state.profile=init;
             console.log(state.profile);
-        
+            state.loaded=false;
         }
     }
 });

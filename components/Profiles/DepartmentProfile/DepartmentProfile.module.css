@@ -85,8 +85,7 @@
 .upperBanner{
     width: 100%;
     background-color: #EFFAFD;
-    max-height: 25vh;
-    min-height: 20vh;
+    height: 25vh;
 }
 .upperBanner img{
     object-fit: cover;
