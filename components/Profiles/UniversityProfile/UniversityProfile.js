@@ -39,9 +39,7 @@ const UniversityProfile = () => {
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
   const {data:colleges,load,error,setData}=useFetch(profile.Colleges_id);
-  console.log(load);
-  const{data:mod}=useStudensts(colleges)
-  console.log(mod);
+  console.log(profile);
   return (
     <>
     {showAddCollege && <div className={`${showAddCollege?classes.active:""} ${classes.addCollege}`}>

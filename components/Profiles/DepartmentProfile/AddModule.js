@@ -11,7 +11,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-const profile = useSelector((state) => state.profile.profile);
+
 const intilistate = {
   name: "",
   nametouched: false,
@@ -44,6 +44,7 @@ function reducer(state, action) {
 }
 
 const AddModule = (probs) => {
+
   const { course, level } = probs;
   const [state, dispatch] = useReducer(reducer, intilistate);
   const inputsValid = {
