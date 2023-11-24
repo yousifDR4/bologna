@@ -16,6 +16,7 @@ import CustomInput from "../UniversityProfile/CustomInput.js";
 import { useSelector } from "react-redux";
 import AboutComponent from "../UniversityProfile/AboutComponent.js";
 import { auth, db } from "../../../store/fire.jsx";
+import Loader from "../../UI/Loader/Loader.js";
 import {
   collection, 
   query,
@@ -28,6 +29,7 @@ import {
 import Modules from "./Modules.js";
 const DepartmentProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
+  const loaded = useSelector((state) => state.profile.loaded);
   const [activatedList, setActivatedList] = useState("modules");
   const [activatedSection, setActivatedSection] = useState("overview");
   const [showEdit, setShowEdit] = useState(false);
@@ -38,18 +40,18 @@ const DepartmentProfile = () => {
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
   const [modules, setDepartments] = useState([]);
-
-  return (
+if(!loaded){
+  return(
     <>
-    {/* {showAddModule && <div className={`${showAddModule?classes.active:""} ${classes.addModule}`}>
-    <AddModule/>
-    </div>}
-    {showAddModule && (
-        <div
-          className={classes.backDrop}
-          onClick={() => setShowAddModule(false)}
-        ></div>
-      )} */}
+    <Loader/>
+    </>
+  )
+}
+else{
+  return (
+<>
+   <>
+   </>
       {showEdit && (
         <div className={classes.editProfile}>
           <EditProfile
@@ -234,5 +236,5 @@ const DepartmentProfile = () => {
       </div>
     </>
   );
-};
+};};
 export default DepartmentProfile;

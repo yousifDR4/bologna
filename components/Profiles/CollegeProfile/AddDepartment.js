@@ -104,6 +104,11 @@ const AddDepartment = (probs) => {
     } catch (e) {
       console.log(e);
     }
+    const action={
+      type:"reset"
+    };
+    dispatch(action);
+    probs.showAddDepartment(false);
   };
 
   return (

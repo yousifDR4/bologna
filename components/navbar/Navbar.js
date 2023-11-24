@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import classes from "./Navbar.module.css";
 import menu from "../../Images/menu.png"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {  useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from 'react-redux';
 import { authActions, onLogin, selectUid, selectuid } from "../../store/auth-slice";
@@ -14,8 +14,9 @@ import { auth, getprofile } from "../../store/fire";
 import { onAuthStateChanged } from "firebase/auth";
 import { onSnapshot } from "firebase/firestore";
 let reF=true;
+let x=true;
 const Navbar=()=>{
-
+    const [loading,setLoading]=useState(true);
     const dispatchRedux=useDispatch();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -48,12 +49,14 @@ const Navbar=()=>{
       const k=await getprofile()
       dispatchRedux(onLogin(k));
       reF=false;
+      setLoading(false)
         }
       }
-    },[])
-
- 
-      
+      else if(reF){
+        setLoading(false);
+        reF=false;
+      }
+    },[])  
 return(
 <>
 <div className={backdrop} onClick={showAsideListHandler}/>
@@ -69,7 +72,7 @@ return(
                {isUniversityAccount && <li><Link to="/UniversityProfile">University Profile</Link></li>}
                {isCollegeAccount && <li><Link to="/CollegeProfile">College Profile</Link></li>}
                {isDepartmentAccount && <li><Link to="/DepartmentProfile">Department Profile</Link></li>}
-               {!isLoggedIn && <li><Link to="/Login">Login</Link></li>}
+               {!loading && !isLoggedIn && <li><Link to="/Login">Login</Link></li>}
             </div>
            <div> 
                 <li className={classes.line}></li>
@@ -84,6 +87,7 @@ return(
                 <li><Link to="/" onClick={showAsideListHandler}><img src={idea} alt=""/> How it works</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/> Colleges using it</Link><div className={classes.innerLine}/></li>
                 {isCollegeAccount && <li><Link to="/CollegeProfile">College Profile</Link></li>}
+                {isDepartmentAccount && <li><Link to="/DepartmentProfile">Department Profile</Link></li>}
                {isUniversityAccount && <li><Link to="/UniversityProfile">University Profile</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>

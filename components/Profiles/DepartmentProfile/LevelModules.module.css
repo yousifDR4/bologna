@@ -27,6 +27,7 @@
 .level{
 background: #fff;
 padding: 0.5rem;
+padding-left: 0.8rem;
 border-radius: 20px;
 width: 80%;
 max-width: 1600px;
@@ -35,6 +36,27 @@ min-height: 4rem;
 display: flex;
 justify-content: center;
 flex-direction: column;
+}
+.level span{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+}
+.level span img{
+    width: 2rem;
+    height: 2rem;
+}
+.level span img.active{
+    -moz-transform: scale(-1, -1);
+    -o-transform: scale(-1, -1);
+    -webkit-transform: scale(-1, -1);
+    transform: scale(-1, -1)
+}
+.level h3{
+    height: 100%;
+    width: 100%;
 }
 .level .coursesContainer{
     display: flex;
@@ -75,6 +97,7 @@ flex-direction: column;
 .coursesContainer div ul li:last-child{
     border-color: var(--styling1);
     color: var(--styling1);
+    cursor: pointer;
 }
 @media (max-width:1250px) {
     .coursesContainer div ul{

@@ -5,6 +5,7 @@
     gap: 1rem;
     margin-top: 2rem;
     padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .main div .form{
@@ -32,6 +33,7 @@
     width: 100%;
     margin: 0;
     padding: 0;
+    max-width: 1200px;
 }
 
  .searchBar{
@@ -82,7 +84,6 @@ background: #fff;
 padding: 0.5rem;
 align-items:flex-start;
 border-radius: 20px;
-width: 80%;
 max-width: 1600px;
 box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 }
@@ -110,6 +111,7 @@ box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 
 @media (max-width:720px) {
     .main{
         margin-left: 0;
+        padding: 0;
     }
     .main   .addUniversityButton{
         position: fixed;
