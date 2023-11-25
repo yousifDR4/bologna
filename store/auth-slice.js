@@ -77,7 +77,7 @@ export const onLogin = (profile) => {
       profilePicture,
       bannerPicture,
       location,
-      Department_id,
+      Departments_id,
       username,
       University_id,
     } = profile;
@@ -96,7 +96,7 @@ export const onLogin = (profile) => {
           profilePicture: profilePicture ? profilePicture : "",
           bannerPicture: bannerPicture ? bannerPicture : "",
           location: location ? location : "",
-          Department_id: Department_id ? Department_id : [],
+          Departments_id: Departments_id ? Departments_id : [],
           University_id:University_id?University_id:[]
         })
       );
@@ -117,6 +117,8 @@ export const onLogin = (profile) => {
       bannerPicture,
       location,
       username,
+      University_id,
+      College_id,
     } = profile;
     return async (dispatch) => {
       dispatch(authSlice.actions.logIn({ accountType, uid }));
@@ -133,6 +135,8 @@ export const onLogin = (profile) => {
           profilePicture: profilePicture ? profilePicture : "",
           bannerPicture: bannerPicture ? bannerPicture : "",
           location: location ? location : "",
+          University_id:University_id? University_id:"",
+          College_id:College_id?College_id:"",
         })
       );
     };

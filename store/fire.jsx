@@ -113,8 +113,7 @@ export const creatuser = async (info) => {
 export const getprofile = async () => {
   const q = query(
     collection(db, "users"),
-    where("uid", "==", auth.currentUser.uid)
-  );
+    where("uid", "==", auth.currentUser.uid));
   const data = await getDocs(q);
   return data.docs[0].data();
 };

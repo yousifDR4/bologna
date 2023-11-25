@@ -33,10 +33,10 @@ function reducer(state, action) {
       newstate = {
         name: "",
         nametouched: false,
-        ECTS: "",
-        ECTStouched: false,
-        describtion: "",
-        describtiontouched: false,
+        email: "",
+        emailtouched: false,
+        password: "",
+        passwordtouched: false,
       };
     default:
   }
@@ -44,8 +44,8 @@ function reducer(state, action) {
 }
 
 const AddModule = (probs) => {
-  const profile = useSelector((state) => state.profile.profile);
-  const { course, level,showAddModule } = probs;
+
+  const { course, level } = probs;
   const [state, dispatch] = useReducer(reducer, intilistate);
   const inputsValid = {
     describtion: state.describtion.trim() !== "",
@@ -53,6 +53,7 @@ const AddModule = (probs) => {
     ECTS: state.ECTS.trim() !== "",
   };
   const [formIsValid, setFormIsValid] = useState(false);
+  const profile = useSelector((state) => state.profile.profile);
   useEffect(() => {
     if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name) {
       setFormIsValid(true);
@@ -92,7 +93,7 @@ const AddModule = (probs) => {
       University_id:profile.University_id,
       College_id:profile.College_id,
     };
-    console.log(info);
+    console.log();
     const id = await addDoc(collection(db, "subjects"), info);
     await updateDoc(doc(db, "users", auth.currentUser.uid), {
       subjects_id: arrayUnion(id),
@@ -101,11 +102,6 @@ const AddModule = (probs) => {
   catch(e){
     console.log(e);
   }
-  const action = {
-    type: "reset",
-  };
-  dispatch(action);
-  showAddModule(false);
   };
   return (
     <div className={`${classes.container} ${probs.className}`}>
