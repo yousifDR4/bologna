@@ -8,6 +8,7 @@ import { getDocs, where, collection, query, doc } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
+import Myloader from "../UI/Loader/Myloader";
 const universities = [];
 
 const UniversityAccounts = () => {
@@ -133,7 +134,7 @@ const UniversityAccounts = () => {
                 </div>
               </li>
             ))}
-            {myload && <Loader />}
+            {myload && <Myloader />}
           </ul>
         </div>
       </main>
