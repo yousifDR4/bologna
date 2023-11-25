@@ -57,6 +57,12 @@ export async function valiedemail(email) {
   console.log(email);
   try {
     const students = await getDocs(q);
+    const uidexist=students.docs[0].data().uid?students.docs[0].data().uid:"";
+    if(uidexist!==""){
+      await deleteUser(auth.currentUser);
+      return null;
+
+    }
     console.log(students.docs[0].data());
     if (students.docs.length === 0) {
       console.log("hhh");
