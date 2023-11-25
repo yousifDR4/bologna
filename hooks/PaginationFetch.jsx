@@ -43,9 +43,9 @@ export const PaginationFetch = (collectionType, nextdoc) => {
 const [nextdoc, setNextdoc] = useState(null);
 const [students,setStudents]=useState([])
 useEffect(() => {
- if(data.length>0 ){
+ if(data.length>0 )
 setStudents ((prev)=>[...prev,data])
+if(data.length===5)
 setNextdoc(data[4]);
- }
  
 }, [setNextdoc]);
