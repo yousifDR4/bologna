@@ -16,20 +16,19 @@ const UniversityAccounts = () => {
   const [showAddUniversity, setShowAddUniversity] = useState(false);
   const [initalUniversityValue, setInitialUniversityValue] =
     useState(universities);
-  const [searchValue, setSearchValue] = useState();
+  const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
-  const { data,load:myload } = usePaginationFetch(nextdoc, fetchRef.current);
-  useEffect(()=>{
-    console.log(myload);
-  },[myload])
+  const { data, load: myload } = usePaginationFetch(nextdoc, fetchRef.current);
+
   useEffect(() => {
     const f = async () => {
       try {
         if (data.length > 0) {
-            console.log(myload);
+          console.log(myload);
+
           const s = data.map((doc) => {
             return {
               ...doc.data(),
@@ -37,31 +36,24 @@ const UniversityAccounts = () => {
               name: doc.data().name ? doc.data().name : "un",
             };
           });
-    
-          setUniversity((prev)=>{
 
-            return [...prev,...s]
+          setUniversity((prev) => {
+            return [...prev, ...s];
           });
-          setInitialUniversityValue((prev)=>{
-            return [...prev,...s]
+          setInitialUniversityValue((prev) => {
+            return [...prev, ...s];
           });
-          
+
           fetchRef.current = false;
-          if(data[1])
-          setnextdoc(data[1]);
+          if (data[4]) setnextdoc(data[4]);
         }
-       
-    
       } catch (e) {
         console.log(e);
-        setLoading(false)
+        setLoading(false);
       }
-     
-     
     };
     f();
-    setLoading(false)
-  
+    setLoading(false);
   }, [data]);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
@@ -91,7 +83,7 @@ const UniversityAccounts = () => {
   const searchChangeHandler = (e) => {
     setSearchValue(e.target.value);
   };
-  if (myload) {
+  if (false) {
     return <Loader />;
   } else {
     return (
@@ -141,6 +133,7 @@ const UniversityAccounts = () => {
                 </div>
               </li>
             ))}
+            {myload && <Loader />}
           </ul>
         </div>
       </main>

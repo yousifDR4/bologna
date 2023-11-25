@@ -17,7 +17,7 @@ export const usePaginationFetch = (nextdoc, firstfetch) => {
             collection(db, "users"),
             where("accountType", "==", "University"),
             orderBy("name"),
-            limit(2)
+            limit(5)
           );
           const docs1 = await getDocs(q);
           console.log(docs1.docs[0].data());
@@ -29,13 +29,15 @@ export const usePaginationFetch = (nextdoc, firstfetch) => {
             collection(db, "users"),
             where("accountType", "==", "University"),
             orderBy("name"),
-            limit(2),
+            limit(5),
             startAfter(nextdoc)
           );
           const docs1 = await getDocs(q);
+          if(!docs1.empty){
           console.log(docs1.docs[0].data());
           const d1 = docs1.docs;
           setData(d1);
+          }
         }
       } catch (e) {
         setError(true);
