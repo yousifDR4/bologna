@@ -22,7 +22,8 @@ const UniversityAccounts = () => {
   const accountType = useSelector((state) => state.auth.accountType);
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
-  const { data, load: myload } = usePaginationFetch(nextdoc, fetchRef.current);
+  const limitNumber=1;
+  const { data, load: myload } = usePaginationFetch(nextdoc, fetchRef.current,limitNumber);
 
   useEffect(() => {
     const f = async () => {
@@ -37,24 +38,38 @@ const UniversityAccounts = () => {
               name: doc.data().name ? doc.data().name : "un",
             };
           });
-
+          console.log(s.name);
           setUniversity((prev) => {
             return [...prev, ...s];
           });
           setInitialUniversityValue((prev) => {
             return [...prev, ...s];
           });
+          if(searchValue!=="")
+          performSearch(searchValue);
+        
 
           fetchRef.current = false;
-          if (data[4]) setnextdoc(data[4]);
+          console.log("length",data.length);
+          
+          if (data.length===limitNumber) setnextdoc(data[limitNumber-1]);
+       
         }
+         
+        else{
+          console.log(444);
+          setUniversity(initalUniversityValue)
+          if (searchValue!=="")
+          performSearch(searchValue);
+        }
+        
       } catch (e) {
         console.log(e);
-        setLoading(false);
+       
       }
     };
     f();
-    setLoading(false);
+ 
   }, [data]);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
