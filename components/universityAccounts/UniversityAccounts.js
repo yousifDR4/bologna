@@ -10,13 +10,12 @@ import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import Myloader from "../UI/Loader/Myloader";
 const universities = [];
-
 const UniversityAccounts = () => {
   const [university, setUniversity] = useState(universities);
   const [loading, setLoading] = useState(true);
   const [showAddUniversity, setShowAddUniversity] = useState(false);
   const [initalUniversityValue, setInitialUniversityValue] =
-    useState(universities);
+  useState(universities);
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
@@ -24,7 +23,6 @@ const UniversityAccounts = () => {
   const fetchRef = useRef(true);
   const limitNumber=1;
   const { data, load: myload } = usePaginationFetch(nextdoc, fetchRef.current,limitNumber);
-
   useEffect(() => {
     const f = async () => {
       try {
@@ -45,6 +43,7 @@ const UniversityAccounts = () => {
           setInitialUniversityValue((prev) => {
             return [...prev, ...s];
           });
+          console.log(searchValue);
           if(searchValue!=="")
           performSearch(searchValue);
         

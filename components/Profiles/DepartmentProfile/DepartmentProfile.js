@@ -40,6 +40,7 @@ const DepartmentProfile = () => {
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
   const [modules, setDepartments] = useState([]);
+  console.log(profile);
 if(!loaded){
   return(
     <>

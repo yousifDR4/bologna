@@ -95,8 +95,9 @@ const AddModule = (probs) => {
     };
     console.log();
     const id = await addDoc(collection(db, "subjects"), info);
+    console.log(id.id);
     await updateDoc(doc(db, "users", auth.currentUser.uid), {
-      subjects_id: arrayUnion(id),
+      subjects_id: arrayUnion(id.id),
     });
   }
   catch(e){
