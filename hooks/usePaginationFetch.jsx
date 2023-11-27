@@ -20,7 +20,6 @@ export const usePaginationFetch = (nextdoc, firstfetch,limitNumber) => {
             limit(limitNumber)
           );
           const docs1 = await getDocs(q);
-          console.log(docs1.docs[0].data());
           const d1 = docs1.docs;
           console.log(d1);
           setData(d1);
@@ -35,12 +34,12 @@ export const usePaginationFetch = (nextdoc, firstfetch,limitNumber) => {
           const docs1 = await getDocs(q);
           console.log("d");
           if(!docs1.empty){
-          console.log(docs1.docs[0].data());
+         
           const d1 = docs1.docs;
           setData(d1);
           }
           else{
-            console.log("f");
+          
             setData([])
           }
         }

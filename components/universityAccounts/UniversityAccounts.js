@@ -15,28 +15,31 @@ const UniversityAccounts = () => {
   const [loading, setLoading] = useState(true);
   const [showAddUniversity, setShowAddUniversity] = useState(false);
   const [initalUniversityValue, setInitialUniversityValue] =
-  useState(universities);
+    useState(universities);
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
-  const limitNumber=1;
-  const { data, load: myload } = usePaginationFetch(nextdoc, fetchRef.current,limitNumber);
+  const limitNumber = 1;
+  const { data, load: myload } = usePaginationFetch(
+    nextdoc,
+    fetchRef.current,
+    limitNumber
+  );
   useEffect(() => {
     const f = async () => {
       try {
         if (data.length > 0) {
-          console.log(myload);
-
           const s = data.map((doc) => {
+            
             return {
               ...doc.data(),
               img: doc.data().profilePicture ? doc.data().profilePicture : uob,
-              name: doc.data().name ? doc.data().name : "un",
+              name: doc.data().name ? doc.data().name : "un",id:doc.id
             };
           });
-          console.log(s.name);
+          console.log(s[0].id,"id");
           setUniversity((prev) => {
             return [...prev, ...s];
           });
@@ -44,31 +47,22 @@ const UniversityAccounts = () => {
             return [...prev, ...s];
           });
           console.log(searchValue);
-          if(searchValue!=="")
-          performSearch(searchValue);
-        
+          if (searchValue !== "") performSearch(searchValue);
 
           fetchRef.current = false;
-          console.log("length",data.length);
-          
-          if (data.length===limitNumber) setnextdoc(data[limitNumber-1]);
-       
-        }
-         
-        else{
+          console.log("length", data.length);
+
+          if (data.length === limitNumber) setnextdoc(data[limitNumber - 1]);
+        } else {
           console.log(444);
-          setUniversity(initalUniversityValue)
-          if (searchValue!=="")
-          performSearch(searchValue);
+          setUniversity(initalUniversityValue);
+          if (searchValue !== "") performSearch(searchValue);
         }
-        
       } catch (e) {
         console.log(e);
-       
       }
     };
     f();
- 
   }, [data]);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
