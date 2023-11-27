@@ -8,28 +8,27 @@ import { getDocs, where, collection, query, doc } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
+import Myloader from "../UI/Loader/Myloader";
 const universities = [];
-
 const UniversityAccounts = () => {
   const [university, setUniversity] = useState(universities);
   const [loading, setLoading] = useState(true);
   const [showAddUniversity, setShowAddUniversity] = useState(false);
   const [initalUniversityValue, setInitialUniversityValue] =
-    useState(universities);
-  const [searchValue, setSearchValue] = useState();
+  useState(universities);
+  const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
-  const { data,load:myload } = usePaginationFetch(nextdoc, fetchRef.current);
-  useEffect(()=>{
-    console.log(myload);
-  },[myload])
+  const limitNumber=1;
+  const { data, load: myload } = usePaginationFetch(nextdoc, fetchRef.current,limitNumber);
   useEffect(() => {
     const f = async () => {
       try {
         if (data.length > 0) {
-            console.log(myload);
+          console.log(myload);
+
           const s = data.map((doc) => {
             return {
               ...doc.data(),
@@ -37,31 +36,39 @@ const UniversityAccounts = () => {
               name: doc.data().name ? doc.data().name : "un",
             };
           });
-    
-          setUniversity((prev)=>{
+          console.log(s.name);
+          setUniversity((prev) => {
+            return [...prev, ...s];
+          });
+          setInitialUniversityValue((prev) => {
+            return [...prev, ...s];
+          });
+          console.log(searchValue);
+          if(searchValue!=="")
+          performSearch(searchValue);
+        
 
-            return [...prev,...s]
-          });
-          setInitialUniversityValue((prev)=>{
-            return [...prev,...s]
-          });
-          
           fetchRef.current = false;
-          if(data[1])
-          setnextdoc(data[1]);
-        }
+          console.log("length",data.length);
+          
+          if (data.length===limitNumber) setnextdoc(data[limitNumber-1]);
        
-    
+        }
+         
+        else{
+          console.log(444);
+          setUniversity(initalUniversityValue)
+          if (searchValue!=="")
+          performSearch(searchValue);
+        }
+        
       } catch (e) {
         console.log(e);
-        setLoading(false)
+       
       }
-     
-     
     };
     f();
-    setLoading(false)
-  
+ 
   }, [data]);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
@@ -91,7 +98,7 @@ const UniversityAccounts = () => {
   const searchChangeHandler = (e) => {
     setSearchValue(e.target.value);
   };
-  if (myload) {
+  if (false) {
     return <Loader />;
   } else {
     return (
@@ -141,6 +148,7 @@ const UniversityAccounts = () => {
                 </div>
               </li>
             ))}
+            {myload && <Myloader />}
           </ul>
         </div>
       </main>

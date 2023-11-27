@@ -53,31 +53,31 @@ export async function signin() {
 export async function valiedemail(email) {
   console.log(email);
   const q = query(collection(db, "users"), where("email", "==", email));
-  console.log(auth.currentUser.uid);
-  console.log(email);
+ 
   try {
     const students = await getDocs(q);
     const uidexist=students.docs[0].data().uid?students.docs[0].data().uid:"";
-    if(uidexist!==""){
-      await deleteUser(auth.currentUser);
-      return null;
 
-    }
     console.log(students.docs[0].data());
     if (students.docs.length === 0) {
-      console.log("hhh");
+
       await deleteUser(auth.currentUser);
       return null;
     } else {
       console.log(students.docs[0].id !== auth.currentUser.uid);
       console.log("nnnn");
       if (students.docs[0].id !== auth.currentUser.uid) {
+        if(uidexist!==""){
+      
+          await deleteUser(auth.currentUser);
+          return null;
+    
+        }
         const temp1 = { email: email, uid: auth.currentUser.uid };
         const temp2 = students.docs[0].data();
         console.log(temp2);
         await setId(temp2);
-        console.log(temp2);
-        console.log("work");
+       
         adduserinfo({ ...temp2, uid: temp1.uid });
         await deleteDoc(doc(db, "users", students.docs[0].id));
       }
