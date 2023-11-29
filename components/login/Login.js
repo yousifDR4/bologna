@@ -9,6 +9,8 @@ import {  useNavigate } from "react-router-dom";
 import { profileActions } from "../../store/profile-slice";
 import Uob from "../../Images/UniversityofBaghdad.png";
 import UobBanner from "../../Images/UoB_Tower.jpg";
+import Loader from "../UI/Loader/Loader";
+import { errorActions } from "../../store/error-slice";
 const details="University of Baghdad is a public university in Baghdad. It's the largest university in Iraq and the tenth largest university in Arab world."
 let x={name:"University of Baghdad",uid:"UoB",details:details,location:"Iraq, Baghdad",facebook:"UOB",instagram:"UOB",twitter:"UOB",website:"www.UOB.com",profilePicture:Uob,bannerPicture:UobBanner};
 const intilistate = {
@@ -42,7 +44,7 @@ const Login=()=>{
         emailaddress: state.emailaddress.length > 0,
         password: state.password.length > 0,
     };
-
+    const [loading,setLoading]=useState(false);
     
     function onChangeInput(e) {
         const action = {
@@ -63,7 +65,7 @@ const Login=()=>{
 
     const onSubmit=async (e)=>{ //emailAdress => state.emailaddress , password => state.password
       e.preventDefault(); 
-      
+      setLoading(true);
         await setPersistence(auth, browserLocalPersistence);
        
         if (state.emailaddress.includes("@")){
@@ -78,6 +80,8 @@ const Login=()=>{
       
       catch(e){
         setloginstate(false)
+        setLoading(false);
+        dispatchRedux(errorActions.setError({title:"Login Failed",message:"Sorry, unable to login. Please know only registered accounts can login."}))
       }
     }
     else{
@@ -105,6 +109,7 @@ const Login=()=>{
       try{
       await setPersistence(auth, browserLocalPersistence);
       await signin();
+      setLoading(true);
       if(auth.currentUser===null){
         console.log("not register");
         return;
@@ -115,6 +120,8 @@ const Login=()=>{
       setloginstate(true);
       }
       catch(e){
+        setLoading(false);
+        dispatchRedux(errorActions.setError({title:"Login Failed",message:"Sorry, unable to login. Please know only registered accounts can login."}))
         console.log(e);
       }
     }
@@ -126,7 +133,10 @@ const Login=()=>{
     }
    },[loginstate])
 
-
+if(loading){
+  return <Loader/>
+}
+else{
     return (
         <div className={classes.container}>
         <form action="" className=" form">
@@ -180,5 +190,5 @@ const Login=()=>{
         </div>
       </div>
     );
-}
+}}
 export default Login;

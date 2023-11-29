@@ -37,6 +37,7 @@ const Navbar=()=>{
         await auth.signOut();
         dispatch(authActions.logOut());
         dispatch(profileActions.logOut());
+        setShowAsideList(false);
        navigate('/');
     }
     const uid = useSelector(selectuid);
