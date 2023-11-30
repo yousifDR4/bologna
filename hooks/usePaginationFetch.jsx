@@ -11,7 +11,6 @@ export const usePaginationFetch = (nextdoc, firstfetch,limitNumber) => {
     const fetchData = async () => {
       try {
         setLoad(true);
-
         if (nextdoc === null && firstfetch === true) {
           const q = query(
             collection(db, "users"),
@@ -32,9 +31,7 @@ export const usePaginationFetch = (nextdoc, firstfetch,limitNumber) => {
             startAfter(nextdoc)
           );
           const docs1 = await getDocs(q);
-          console.log("d");
           if(!docs1.empty){
-         
           const d1 = docs1.docs;
           setData(d1);
           }
@@ -52,7 +49,7 @@ export const usePaginationFetch = (nextdoc, firstfetch,limitNumber) => {
     };
 
     fetchData();
-  }, [nextdoc, firstfetch]);
+  }, [nextdoc]);
 
   return { data, error, load };
 };
