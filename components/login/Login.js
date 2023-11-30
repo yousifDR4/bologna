@@ -87,6 +87,7 @@ const Login=()=>{
     else{
           
             console.log(11);
+            console.log(state.emailaddress);
         const {email} = await signinWithUsername(state.emailaddress);
           if (email !== null) {
               console.log('User email:', email);
@@ -102,8 +103,6 @@ const Login=()=>{
           
       }
       
-
-    
     const signInwithGoogle= async(e)=>{
       e.preventDefault();
       try{
