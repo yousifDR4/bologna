@@ -11,7 +11,6 @@ import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import Myloader from "../UI/Loader/Myloader";
 import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
 const universities = [];
-
 const UniversityAccounts = () => {
   const setRef = useRef(true);
   const [university, setUniversity] = useState(universities);
@@ -42,24 +41,21 @@ const UniversityAccounts = () => {
               id: doc.id,
             };
           });
-          if (setRef.current) {
+        
             setUniversity((prev) => {
               return [...prev, ...s];
             });
             setInitialUniversityValue((prev) => {
               return [...prev, ...s];
             });
-          }
+          
 
           console.log(searchValue);
           if (searchValue !== "") performSearch(searchValue);
-
           fetchRef.current = false;
           console.log("length", data.length);
           if (data.length === limitNumber) setnextdoc(data[limitNumber - 1]);
-          else {
-            setRef.current = false;
-          }
+          
         } else {
           console.log(444);
           setUniversity(initalUniversityValue);
