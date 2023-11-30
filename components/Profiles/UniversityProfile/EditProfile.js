@@ -14,8 +14,10 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import Button from "../../UI/Loader/Button/Button";
 const EditProfile = (probs) => {
   const profile = useSelector((state) => state.profile.profile);
+  const [uploading,setUploading]=useState(false);
   const imgref = useRef("");
   const wimgRef = useRef("");
   const typeRef = useRef(["", ""]);
@@ -128,6 +130,7 @@ const EditProfile = (probs) => {
                 value: res,
               })
             );
+            setUploading(false);
             setDoc(
               doc(db, "users", auth.currentUser.uid),
               { [typeRef.current[0]]: res },
@@ -184,6 +187,7 @@ const EditProfile = (probs) => {
               value: res,
             })
           );
+          setUploading(false);
           setDoc(
             doc(db, "users", auth.currentUser.uid),
             { [typeRef.current[2]]: res },
@@ -197,15 +201,17 @@ const EditProfile = (probs) => {
 }
   const sumbitHandler = async(e) => {
     e.preventDefault();
+    setUploading(true);
+    setImagesValid((prev) => {
+      return { ...prev, bannerPictureTouched: false, profilePictureTouched: false };
+    });
     try{
-   const[p1,p2] =await Promise.all([uploadbannerPicture(),uploadprofilepicture()])
-   console.log(p1,p2);
-  
+   await Promise.all([uploadbannerPicture(),uploadprofilepicture()])
     }
     catch(e){
+      setUploading(false);
         console.log(e);
     }
-    probs.showEdit(false);
   };
   const cancelHandler = () => {
     probs.showEdit(false);
@@ -263,8 +269,9 @@ const EditProfile = (probs) => {
           <button type="button" onClick={cancelHandler}>
             Cancel
           </button>
-          <button disabled={!isFormValid} type="submit">
-            Save
+          
+          <button disabled={!isFormValid || uploading} type="submit">
+            {uploading ? "...uploading":"Save"}
           </button>
         </span>
       </form>

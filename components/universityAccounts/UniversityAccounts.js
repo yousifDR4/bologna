@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import Myloader from "../UI/Loader/Myloader";
+import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
 const universities = [];
 const UniversityAccounts = () => {
   const setRef = useRef(true);
@@ -94,9 +95,6 @@ const UniversityAccounts = () => {
   const searchChangeHandler = (e) => {
     setSearchValue(e.target.value);
   };
-  if (false) {
-    return <Loader />;
-  } else {
     return (
       <main className={classes.main}>
         {accountType === "Admin" && (
@@ -144,11 +142,10 @@ const UniversityAccounts = () => {
                 </div>
               </li>
             ))}
-            {myload && <Myloader />}
+            {myload && <PlaceHolderLoader />}
           </ul>
         </div>
       </main>
     );
-  }
 };
 export default UniversityAccounts;
