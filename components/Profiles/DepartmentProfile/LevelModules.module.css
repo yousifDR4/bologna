@@ -99,6 +99,18 @@ flex-direction: column;
     color: var(--styling1);
     cursor: pointer;
 }
+.level  button:last-child{
+width: 7rem;
+height: 1.5rem;
+background-color: #fff;
+border: 1px solid var(--styling1);
+align-self: flex-end;
+cursor: pointer;
+}
+.level button:last-child:hover{
+color: red;
+border-color: red;
+}
 @media (max-width:1250px) {
     .coursesContainer div ul{
         grid-template-columns: 1fr;

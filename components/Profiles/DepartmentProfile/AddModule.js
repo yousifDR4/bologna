@@ -48,7 +48,7 @@ const AddModule = (probs) => {
   const { course, level } = probs;
   const [state, dispatch] = useReducer(reducer, intilistate);
   const inputsValid = {
-    describtion: state.describtion.trim() !== "",
+    describtion: state.describtion.trim() !== "" ,
     name: state.name.trim() !== "",
     ECTS: state.ECTS.trim() !== "",
   };
@@ -145,9 +145,9 @@ const AddModule = (probs) => {
         <label className="text">
           Decscribtion<span className={classes.star}>*</span>
         </label>
-        <input
+        <textarea
           name="describtion"
-          type="text"
+          type=""
           onChange={onchange}
           onBlur={blurHandler}
           value={state.describtion}

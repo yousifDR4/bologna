@@ -37,6 +37,7 @@ function reducer(state, action) {
 
 const AddDepartment = (probs) => {
   const [state, dispatch] = useReducer(reducer, intilistate);
+  const [uploading,setUploading]=useState(false);
   const inputsValid = {
     email: state.email.trim() !== "",
     password: state.password.length > 7,
@@ -79,6 +80,7 @@ const AddDepartment = (probs) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setUploading(true);
     let creationType="";
     if(state.email.includes("@") && state.email.includes(".com")){
       creationType="emailandpassword";
@@ -101,8 +103,10 @@ const AddDepartment = (probs) => {
       console.log(info);
       const k = await creatuser(info);
       console.log(k);
+      setUploading(false);
     } catch (e) {
       console.log(e);
+      setUploading(false);
     }
     const action={
       type:"reset"
@@ -160,7 +164,7 @@ const AddDepartment = (probs) => {
         <div className={classes.button}>
           {" "}
           <button onClick={submitHandler} disabled={!formIsValid}>
-            Add
+          {uploading ? "Uploading...":"Add"}
           </button>
         </div>
       </form>

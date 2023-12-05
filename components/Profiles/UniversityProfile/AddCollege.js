@@ -38,6 +38,7 @@ function reducer(state, action) {
 
 const AddCollege = (probs) => {
   const [state, dispatch] = useReducer(reducer, intilistate);
+  const [uploading,setUploading]=useState(false);
   const dispathcRedux=useDispatch();
   const inputsValid = {
     email: state.email.trim() !== "",
@@ -81,6 +82,7 @@ const AddCollege = (probs) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setUploading(true);
     let creationType="";
     if(state.email.includes("@") && state.email.includes(".com")){
       creationType="emailandpassword";
@@ -105,9 +107,10 @@ const AddCollege = (probs) => {
       const k = await creatuser(info);
       dispathcRedux(profileActions.addOnProfileValue({type:"Colleges_id",value:k.uid}));
       console.log(k);
-    
+      setUploading(false);
     } catch (e) {
       console.log(e);
+      setUploading(false);
     }
     probs.setReload((prev)=>!prev);
     probs.showAdd(false);
@@ -165,8 +168,8 @@ const AddCollege = (probs) => {
         )}
         <div className={classes.button}>
           {" "}
-          <button onClick={submitHandler} disabled={!formIsValid}>
-            Add
+          <button onClick={submitHandler} disabled={!formIsValid || uploading}>
+            {uploading ? "Uploading...":"Add"}
           </button>
         </div>
       </form>

@@ -90,6 +90,7 @@
 }
 .upperBanner img{
     object-fit: cover;
+    aspect-ratio: 2/3;
 }
 .mainInfo{
     display: flex;

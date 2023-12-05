@@ -80,9 +80,7 @@ const LevelModule = (probs) => {
         );
         const [docs1, docs2] = await Promise.all([getDocs(q1), getDocs(q2)]);
         let d1 = docs1.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-        console.log(d1);
         let d2 = docs2.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-        console.log(d2);
         setfirstCourseModules(d1);
         setsecondCourseModules(d2);
       } catch (e) {
@@ -120,6 +118,7 @@ const LevelModule = (probs) => {
           />
         </span>
         {showModules && (
+          <>
           <div className={classes.coursesContainer}>
             <div>
               <h4>First Course</h4>
@@ -148,6 +147,8 @@ const LevelModule = (probs) => {
               </ul>
             </div>
           </div>
+          <button>Delete Level</button>
+          </>
         )}
       </li>
     </>
