@@ -12,6 +12,7 @@ import idea from "../../Images/idea.png";
 import { profileActions } from "../../store/profile-slice";
 import { auth, getprofile } from "../../store/fire";
 import { onAuthStateChanged } from "firebase/auth";
+import profilePicture from "../../Images/userprofile.png";
 import { onSnapshot } from "firebase/firestore";
 let reF=true;
 let x=true;
@@ -87,9 +88,9 @@ return(
                 <li><Link to="/" onClick={showAsideListHandler}><img src={question} alt=""/> what's APS</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/" onClick={showAsideListHandler}><img src={idea} alt=""/> How it works</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/> Colleges using it</Link><div className={classes.innerLine}/></li>
-                {isCollegeAccount && <li><Link to="/CollegeProfile">College Profile</Link></li>}
-                {isDepartmentAccount && <li><Link to="/DepartmentProfile">Department Profile</Link></li>}
-               {isUniversityAccount && <li><Link to="/UniversityProfile">University Profile</Link></li>}
+                {isCollegeAccount && <li><Link to="/CollegeProfile"><img src={profilePicture} alt=""/> College Profile</Link></li>}
+                {isDepartmentAccount && <li><Link to="/DepartmentProfile"><img src={profilePicture} alt=""/> Department Profile</Link></li>}
+               {isUniversityAccount && <li><Link to="/UniversityProfile"><img src={profilePicture} alt=""/> University Profile</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>
     </nav>

@@ -33,10 +33,10 @@ function reducer(state, action) {
       newstate = {
         name: "",
         nametouched: false,
-        email: "",
-        emailtouched: false,
-        password: "",
-        passwordtouched: false,
+        describtion: "",
+        describtiontouched: false,
+        ECTS: "",
+        ECTStouched: false,
       };
     default:
   }
@@ -103,6 +103,12 @@ const AddModule = (probs) => {
   catch(e){
     console.log(e);
   }
+  probs.showAddModule(false);
+  probs.setReload((prev)=>!prev);
+  const action={
+    type:"reset"
+  };
+  dispatch(action);
   };
   return (
     <div className={`${classes.container} ${probs.className}`}>

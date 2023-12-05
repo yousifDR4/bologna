@@ -133,6 +133,7 @@ background-color: #fff;
     vertical-align: middle;
     margin-right: 0.5rem;
 }
+
 .mainInfo div h2, .mainInfo div p{
     display: inline-block;
 }
@@ -342,6 +343,9 @@ min-height: 4rem;
         margin: 0;
         margin-bottom: 1rem;
     }
+    .mainInfo{
+        text-align: center;
+    }
     .mainInfo .profilePicture{
         margin-right: 0;
     }
@@ -350,8 +354,22 @@ min-height: 4rem;
     padding: 0;
   
     }
+    .depts{
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
     .depts li{
         width: 95%;
+        min-height: 6rem;
+        align-items: center;
+    }
+    .depts li:first-child{
+        min-height: 4rem;
+    }
+    .depts img{
+        width: 5rem;
+        height: 5rem;
+        margin-left: 1rem;
     }
     .depts span{
         margin-top: 2px;

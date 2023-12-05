@@ -49,6 +49,7 @@ function stringifyNumber(n) {
   return deca[Math.floor(n / 10) - 2] + "y-" + special[n % 10];
 }
 const LevelModule = (probs) => {
+  const [reload,setReload]=useState(false);
   const [showModules, setShowModules] = useState(false);
   const [showAddModule, setShowAddModule] = useState(false);
   const [course, setCourse] = useState("");
@@ -89,7 +90,7 @@ const LevelModule = (probs) => {
       }
     };
     f();
-  }, []);
+  }, [reload]);
   return (
     <>
       <div
@@ -101,6 +102,7 @@ const LevelModule = (probs) => {
           course={course}
           level={level}
           showAddModule={setShowAddModule}
+          setReload={setReload}
         />{" "}
       </div>
       {showAddModule && (

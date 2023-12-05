@@ -2,6 +2,8 @@ import React, { useState, useEffect, useReducer } from "react";
 import { auth, creatuser } from "../../../store/fire";
 import classes from "./AddCollege.module.css";
 import { getIdToken } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { profileActions } from "../../../store/profile-slice";
 
 const intilistate = {
   email: "",
@@ -36,6 +38,7 @@ function reducer(state, action) {
 
 const AddCollege = (probs) => {
   const [state, dispatch] = useReducer(reducer, intilistate);
+  const dispathcRedux=useDispatch();
   const inputsValid = {
     email: state.email.trim() !== "",
     password: state.password.length > 7,
@@ -100,11 +103,18 @@ const AddCollege = (probs) => {
       };
       console.log(info);
       const k = await creatuser(info);
+      dispathcRedux(profileActions.addOnProfileValue({type:"Colleges_id",value:k.uid}));
       console.log(k);
     
     } catch (e) {
       console.log(e);
     }
+    probs.setReload((prev)=>!prev);
+    probs.showAdd(false);
+    const action={
+      type:"reset"
+    }
+    dispatch(action);
   };
 
   return (
