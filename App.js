@@ -12,6 +12,8 @@ import { auth, getprofile } from './store/fire.jsx';
 import { onLogin, selectUid, useUid } from './store/auth-slice.js';
 import CollegeProfile from './components/Profiles/CollegeProfile/CollegeProfile.js';
 import DepartmentProfile from './components/Profiles/DepartmentProfile/DepartmentProfile.js';
+import AddNewModule from './components/Profiles/DepartmentProfile/Modules_s/AddNewModule.js';
+import ModulesTable from './components/Profiles/DepartmentProfile/Modules_s/ModulesTable.js';
 let firstInitilize=true;
 function App() {
   const profile=useSelector(state=>state.profile.profile);
@@ -64,7 +66,18 @@ function App() {
         {
           path: "/DepartmentProfile",
           element:<DepartmentProfile/>
-        }
+        },
+        {
+          path: "/AddModule",
+          element:<AddNewModule/>
+        },
+        {
+          path: "/ModuleTable",
+          element:<ModulesTable/>
+        },
+        
+        
+
     ]
    }
   ]);
