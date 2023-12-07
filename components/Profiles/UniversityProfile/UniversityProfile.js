@@ -27,8 +27,11 @@ import {
 } from "firebase/firestore";
 import { useFetch } from "../../../hooks/useFetch.jsx";
 import { useStudensts } from "../../../hooks/useStudents.jsx";
+import Loader from "../../UI/Loader/Loader.js";
 const UniversityProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
+  const loaded=useSelector((state)=>state.profile.loaded);
+  const [reload,setReload]=useState(false);
   const [activatedList, setActivatedList] = useState("colleges");
   const [activatedSection, setActivatedSection] = useState("overview");
   const [showEdit, setShowEdit] = useState(false);
@@ -38,12 +41,17 @@ const UniversityProfile = () => {
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
-  const {data:colleges,load,error,setData}=useFetch(profile.Colleges_id);
-  
+  const {data:colleges,load,error,setData}=useFetch(profile.Colleges_id,reload);
+  if(!loaded){
+    return(
+      <Loader/>
+    )
+  }
+  else{
   return (
     <>
     {showAddCollege && <div className={`${showAddCollege?classes.active:""} ${classes.addCollege}`}>
-    <AddCollege/>
+    <AddCollege setReload={setReload} showAdd={setShowAddCollege}/>
     </div>}
     {showAddCollege && (
         <div
@@ -246,5 +254,5 @@ const UniversityProfile = () => {
       </div>
     </>
   );
-};
+};}
 export default UniversityProfile;

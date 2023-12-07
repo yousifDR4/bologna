@@ -3,10 +3,12 @@ import LevelModule from "./LevelModule";
 import classes from "./Modules.module.css";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth ,db} from "../../../store/fire";
+import AddLevel from "./AddLevel";
 
 const Modules=(probs)=>{
-
-    const [levels,setLevels]=useState(0);
+    const [levels,setLevels]=useState([]);
+    const [showAddLevel,setShowAddLevel]=useState(false);
+    const [reload,setReload]=useState(false);
     useEffect(()=>{
         if (!auth.currentUser) return; 
      const f=async()=>{
@@ -23,25 +25,22 @@ const Modules=(probs)=>{
         }
      }
      f();
-    },[auth.currentUser])
+    },[auth.currentUser,reload])
    
     const levelsContainer=[];
-    for (let i = 1; i <= levels; i++) {
-        levelsContainer.push(<LevelModule key={i} level={i}/>);
+    for (let i in levels) {
+        levelsContainer.push(<LevelModule key={levels[i]} level={levels[i]}/>);
     }
-    const addLevel=async()=>{
-        setLevels((prev)=>{
-            setDoc(doc(db,"users",auth.currentUser.uid),{levels:prev+1},{merge:true})
-            return prev=prev+1;
-        });
-        
-    }
+    
     return(
+        <>
+        {showAddLevel && <div className={`${classes.addLevel} ${showAddLevel?classes.active:""}`}><AddLevel levels={levels} reload={setReload} showAddLevel={setShowAddLevel}/></div>}
+        {showAddLevel && <div className={classes.backDrop} onClick={()=>setShowAddLevel(false)}/>}
         <ul className={classes.modulesList}>
-            <li onClick={()=>addLevel()}>+</li>
+            <li onClick={()=>setShowAddLevel(true)}>+</li>
             {levelsContainer}
         </ul>
-
+        </>
     )
 }
 export default Modules;

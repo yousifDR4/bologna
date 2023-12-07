@@ -90,6 +90,7 @@
 }
 .upperBanner img{
     object-fit: cover;
+    aspect-ratio: 2/3;
 }
 .mainInfo{
     display: flex;
@@ -119,10 +120,10 @@ background-color: #fff;
     border: none;
     border-radius: 8%;
     margin-top: 1rem;
-    width: 8rem;
+    min-width: 12rem;
     margin-right: 4rem;
     font-family: GraphikLight;
-    font-size: 1.07rem;
+    font-size: 1.3rem;
 }
 .mainInfo button:hover{
     border: 1px solid var(--styling1);
@@ -350,8 +351,22 @@ min-height: 4rem;
     padding: 0;
   
     }
+    .colleges{
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
     .colleges li{
         width: 95%;
+        min-height: 6rem;
+        align-items: center;
+    }
+    .colleges li:first-child{
+        min-height: 5rem;
+    }
+    .colleges li img{
+        width: 5rem;
+        height: 5rem;
+        margin-left: 1rem;
     }
     .colleges span{
         margin-top: 2px;

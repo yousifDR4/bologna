@@ -2,6 +2,8 @@ import React, { useState, useEffect, useReducer } from "react";
 import { auth, creatuser } from "../../../store/fire";
 import classes from "./AddCollege.module.css";
 import { getIdToken } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { profileActions } from "../../../store/profile-slice";
 
 const intilistate = {
   email: "",
@@ -36,6 +38,8 @@ function reducer(state, action) {
 
 const AddCollege = (probs) => {
   const [state, dispatch] = useReducer(reducer, intilistate);
+  const [uploading,setUploading]=useState(false);
+  const dispathcRedux=useDispatch();
   const inputsValid = {
     email: state.email.trim() !== "",
     password: state.password.length > 7,
@@ -78,6 +82,7 @@ const AddCollege = (probs) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setUploading(true);
     let creationType="";
     if(state.email.includes("@") && state.email.includes(".com")){
       creationType="emailandpassword";
@@ -100,11 +105,19 @@ const AddCollege = (probs) => {
       };
       console.log(info);
       const k = await creatuser(info);
+      dispathcRedux(profileActions.addOnProfileValue({type:"Colleges_id",value:k.uid}));
       console.log(k);
-    
+      setUploading(false);
     } catch (e) {
       console.log(e);
+      setUploading(false);
     }
+    probs.setReload((prev)=>!prev);
+    probs.showAdd(false);
+    const action={
+      type:"reset"
+    }
+    dispatch(action);
   };
 
   return (
@@ -155,8 +168,8 @@ const AddCollege = (probs) => {
         )}
         <div className={classes.button}>
           {" "}
-          <button onClick={submitHandler} disabled={!formIsValid}>
-            Add
+          <button onClick={submitHandler} disabled={!formIsValid || uploading}>
+            {uploading ? "Uploading...":"Add"}
           </button>
         </div>
       </form>

@@ -32,15 +32,15 @@
 .container form input,.container form select{
 border: 1px solid #6B6C6D;
 border-radius: 15px;
-height: 1.86rem;
-padding: 0 0.5rem ;
+padding-left: 1rem;
+height: 2rem;
 width: 100%;
+overflow: hidden;
 font-family: GraphikThin;
 color:#6B6C6D;
 }
 .container form select{
-    text-align: center;
-    font-size: 95%;
+    font-size: 100%;
 }
 .container form textarea{
     word-wrap: break-word;
@@ -63,8 +63,7 @@ width: 100% !important;
     color: red;
 }
 .container form select option{
-    color: #6B6C6D;
-
+   
 }
 .container form  .errorText{
 color:red;

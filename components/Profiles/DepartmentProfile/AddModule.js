@@ -33,10 +33,10 @@ function reducer(state, action) {
       newstate = {
         name: "",
         nametouched: false,
-        email: "",
-        emailtouched: false,
-        password: "",
-        passwordtouched: false,
+        describtion: "",
+        describtiontouched: false,
+        ECTS: "",
+        ECTStouched: false,
       };
     default:
   }
@@ -48,7 +48,7 @@ const AddModule = (probs) => {
   const { course, level } = probs;
   const [state, dispatch] = useReducer(reducer, intilistate);
   const inputsValid = {
-    describtion: state.describtion.trim() !== "",
+    describtion: state.describtion.trim() !== "" ,
     name: state.name.trim() !== "",
     ECTS: state.ECTS.trim() !== "",
   };
@@ -103,6 +103,12 @@ const AddModule = (probs) => {
   catch(e){
     console.log(e);
   }
+  probs.showAddModule(false);
+  probs.setReload((prev)=>!prev);
+  const action={
+    type:"reset"
+  };
+  dispatch(action);
   };
   return (
     <div className={`${classes.container} ${probs.className}`}>
@@ -139,9 +145,9 @@ const AddModule = (probs) => {
         <label className="text">
           Decscribtion<span className={classes.star}>*</span>
         </label>
-        <input
+        <textarea
           name="describtion"
-          type="text"
+          type=""
           onChange={onchange}
           onBlur={blurHandler}
           value={state.describtion}

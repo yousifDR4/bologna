@@ -1,7 +1,7 @@
 import { doc ,query,where,getDocs,collection} from "firebase/firestore"
 import { auth ,db} from "../store/fire"
 import { useEffect, useState } from "react"
-export const useFetch=(arr)=>{
+export const useFetch=(arr,reload)=>{
 const [data,setData]=useState([]);
 const [load,setload]=useState(false);
 const [error,setError]=useState(false);
@@ -24,6 +24,6 @@ useEffect(() => {
     };
     setload(false);
     f();
-  }, [auth.currentUser,arr]);
-  return{data,load,error,setData}
+  }, [arr,reload]);
+  return{data,load,error}
 }
