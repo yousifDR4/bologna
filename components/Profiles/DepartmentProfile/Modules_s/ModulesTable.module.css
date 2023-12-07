@@ -1,0 +1,20 @@
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;
+}
+.container .table{
+    height: fit-content;
+    background-color: #fff;
+    width: 98%;
+    border-radius: 9px;
+    box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
+    padding-bottom: 0.5rem;
+}
+.container h3{
+    color: #696767;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 0.9rem;
+}
