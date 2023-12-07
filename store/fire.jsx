@@ -110,7 +110,7 @@ export const creatuser = async (info) => {
     });
     console.log(res.status);
     const k = await res.json();
-    console.log(k);
+    console.log(k.state[2]);
     return k;
   } catch (e) {
     return 500;

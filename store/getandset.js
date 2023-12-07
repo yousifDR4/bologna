@@ -62,3 +62,18 @@ export const set_student_subject = async (info, id) => {
     { merge: true }
   );
 };
+const filterSearch=(value,initalUniversityValue)=>{
+const v="uni";
+let arr2=[];
+const arr=v.split('')
+arr.forEach((val)=>{
+const k=initalUniversityValue.filter((university) =>
+university.name.toLowerCase().match(val.toLowerCase()))
+arr2.push(k);
+const arr3=arr2.filter((v,i,self)=>self.indexOf(v)===i);
+return arr3
+
+
+})
+
+}

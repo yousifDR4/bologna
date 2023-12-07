@@ -77,7 +77,7 @@ export const onLogin = (profile) => {
       profilePicture,
       bannerPicture,
       location,
-      Departments_id,
+      Department_id,
       username,
       University_id,
     } = profile;
@@ -96,7 +96,7 @@ export const onLogin = (profile) => {
           profilePicture: profilePicture ? profilePicture : "",
           bannerPicture: bannerPicture ? bannerPicture : "",
           location: location ? location : "",
-          Departments_id: Departments_id ? Departments_id : [],
+          Department_id: Department_id ? Department_id : [],
           University_id:University_id?University_id:[]
         })
       );
