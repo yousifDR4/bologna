@@ -68,6 +68,12 @@ const q=query(collection(db,"subjects"),where("Deprartment_id","==",auth.current
 const docs=await getDocs(q);
 const data=docs.docs.map((doc)=>({label:doc.data().name,value:doc.data().name})) 
 return data;
-
-
 }
+export const get_modules=async()=>{
+  const q=query(collection(db,"subjects"),where("Deprartment_id","==",auth.currentUser.uid))
+  const docs=await getDocs(q);
+  const data=docs.docs.map((doc)=>({...doc.data(),id:doc.id})) 
+  console.log(data);
+  return data;
+  }
+
