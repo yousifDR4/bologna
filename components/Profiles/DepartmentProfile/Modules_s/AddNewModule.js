@@ -12,11 +12,13 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-let modules=[
+import {get_Sujects} from"../../../../store/getandset";
+let modul=[
   { value: 'physics', label: 'Physics' },
   { value: 'mathII', label: 'MathII' },
   { value: 'humanrights', label: 'Human Rights' }
 ]
+
 const intilistate = {
   name: "",
   nametouched: false,
@@ -63,8 +65,8 @@ function reducer(state, action) {
         midtermHourstouched:false,
         type:"",
         typetouched:false,
+        corequisites:[],
         prerequisite:[],
-  corequisites:[]
       };
     default:
   }
@@ -72,6 +74,9 @@ function reducer(state, action) {
 }
 
 const AddNewModule = () => {
+
+  const [modules,setModules]=useState(modul)
+
   const [state, dispatch] = useReducer(reducer, intilistate);
   const [uploading,setUploading]=useState(false);
   const inputsValid = {
@@ -143,6 +148,8 @@ const AddNewModule = () => {
       Deprartment_id: auth.currentUser.uid,
       University_id:profile.University_id,
       College_id:profile.College_id,
+      prerequisite:state.prerequisite,
+      corequisites:state.corequisites,
     };
     console.log();
     const id = await addDoc(collection(db, "subjects"), info);
@@ -160,6 +167,19 @@ const AddNewModule = () => {
   };
   dispatch(action);
   };
+useEffect(()=>{
+  if (!auth.currentUser)
+  return; 
+  console.log("NNNN");
+const f=async()=>{
+  const a=await get_Sujects();
+  setModules(a);
+  console.log(a,"a");
+}
+f();
+},[auth.currentUser])
+
+
   return (
     <div className={`${classes.container}`}>
       <form action="" className=" form">

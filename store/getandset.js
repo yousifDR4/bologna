@@ -62,3 +62,12 @@ export const set_student_subject = async (info, id) => {
     { merge: true }
   );
 };
+
+export const get_Sujects=async()=>{
+const q=query(collection(db,"subjects"),where("Deprartment_id","==",auth.currentUser.uid))
+const docs=await getDocs(q);
+const data=docs.docs.map((doc)=>({label:doc.data().name,value:doc.data().name})) 
+return data;
+
+
+}

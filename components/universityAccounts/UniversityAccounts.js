@@ -23,7 +23,7 @@ const UniversityAccounts = () => {
   const accountType = useSelector((state) => state.auth.accountType);
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
-  const limitNumber = 20;
+  const limitNumber = 2;
   const { data, load: myload } = usePaginationFetch(
     nextdoc,
     fetchRef.current,
