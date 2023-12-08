@@ -135,6 +135,7 @@ const AddNewModule = () => {
   }
   const submitHandler = async (e) => {
     e.preventDefault();
+    setUploading(true);
     // course is variable indicating course number with values 1 or 2
     try{
     const info = {
@@ -158,8 +159,10 @@ const AddNewModule = () => {
     await updateDoc(doc(db, "users", auth.currentUser.uid), {
       subjects_id: arrayUnion(id.id),
     });
+    setUploading(false);
   }
   catch(e){
+    setUploading(false);
     console.log(e);
   }
  
@@ -340,7 +343,7 @@ f();
         </span></> }
         <div className={classes.button}>
           {" "}
-          <button onClick={submitHandler} disabled={!formIsValid && !uploading}>
+          <button onClick={submitHandler} disabled={!formIsValid || uploading}>
            {uploading ? "Uploading" :"Add"}
           </button>
         </div>
