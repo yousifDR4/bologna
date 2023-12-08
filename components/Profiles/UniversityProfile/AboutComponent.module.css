@@ -3,7 +3,9 @@
     width: fit-content;
     top: 20px;
     right: 10px;
-    position:absolute;
+    position:relative;
+    top:-20px;
+    right: 50px;
     background-color: #fff;
     z-index: 1;
     border-radius: 4px;
