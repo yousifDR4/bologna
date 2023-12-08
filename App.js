@@ -16,6 +16,9 @@ import AddNewModule from './components/Profiles/DepartmentProfile/Modules_s/AddN
 import ModulesTable from './components/Profiles/DepartmentProfile/Modules_s/ModulesTable.js';
 import EditModule from './components/Profiles/DepartmentProfile/Modules_s/EditModule.js';
 import AddProffessor from './components/Profiles/DepartmentProfile/Proffessor/AddProffessor.js';
+
+import ProgramManage from './components/Profiles/DepartmentProfile/Programs/ProgramManage.js';
+
 let firstInitilize=true;
 function App() {
   const profile=useSelector(state=>state.profile.profile);
@@ -85,7 +88,11 @@ function App() {
           path: "/EditModule",
           element:<EditModule/>
         },
-        
+
+        {
+          path: "/ProgramManage",
+          element:<ProgramManage/>
+
 
     ]
    }

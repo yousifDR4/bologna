@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
 import { auth, creatuser, db } from "../../../../store/fire";
 import Select from 'react-select'
-import classes from "./AddNewModule.module.css";
+import classes from "./AddProgram.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
 import {
@@ -22,21 +22,22 @@ let modul=[
 const intilistate = {
   name: "",
   nametouched: false,
-  describtion: "",
-  describtiontouched: false,
-  ECTS: "",
-  ECTStouched: false,
+  outcome: "",
+  outcometouched: false,
+  eveningStudy:false,
   code:"",
   codetouched:false,
-  language:"english",
-  lastExamHours:"",
-  lastExamHourstouched:false,
-  midtermHours:"",
-  midtermHourstouched:false,
-  type:"",
-  typetouched:false,
-  prerequisite:[],
-  corequisites:[]
+  specialty:false,
+  specialtyYear:0,
+  specialtyYeartouched:false,
+  programsNeeded:0,
+  programsNeededtouched:false,
+  summerInternship:false,
+  summerInternshipYear:0,
+  programManager:"",
+  programMangertouched:false,
+  programCordinator:"",
+  programCordinatortouched:false,
 };
 function reducer(state, action) {
   let newstate = {};
@@ -51,52 +52,54 @@ function reducer(state, action) {
       newstate = {
         name: "",
         nametouched: false,
-        describtion: "",
-        describtiontouched: false,
-        ECTS: "",
-        ECTStouched: false,
+        outcome: "",
+        outcometouched: false,
+        eveningStudy:false,
         code:"",
         codetouched:false,
-        language:"",
-        languagetouched:false,
-        lastExamHours:"",
-        lastExamHourstouched:false,
-        midtermHours:"",
-        midtermHourstouched:false,
-        type:"",
-        typetouched:false,
-        corequisites:[],
-        prerequisite:[],
-
+        specialty:false,
+        specialtyYear:0,
+        specialtyYeartouched:false,
+        programsNeeded:0,
+        programsNeededtouched:false,
+        summerInternship:false,
+        summerInternshipYear:0,
+        summerInternshipYeartouched:false,
+        programManager:"",
+        programManagertouched:false,
+        programCordinator:"",
+        programCordinatortouched:false,
       };
     default:
   }
   return newstate;
 }
 
-const AddNewModule = () => {
+const AddProgram = (probs) => {
 
   const [modules,setModules]=useState(modul)
 
   const [state, dispatch] = useReducer(reducer, intilistate);
   const [uploading,setUploading]=useState(false);
   const inputsValid = {
-    describtion: state.describtion.trim() !== "" ,
+    outcome: state.outcome.trim() !== "" ,
     name: state.name.trim() !== "",
-    ECTS: state.ECTS > 0,
+    specialtyYear: state.specialtyYear > 0,
     code: state.code.trim() !== "",
-    midtermHours: state.midtermHours > 0,
-    lastExamHours:state.lastExamHours > 0,
-    type:state.type.trim() !== ""
+    programsNeeded: state.programsNeeded > 0,
+    summerInternshipYear: state.summerInternshipYear > 0,
+    programManager:state.programManager.trim() !== "" ,
+    programCordinator:state.programCordinator.trim() !== ""
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
   useEffect(() => {
-    if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name && inputsValid.code && inputsValid.lastExamHours && inputsValid.midtermHours && inputsValid.type) {
+    if (inputsValid.outcome && inputsValid.name && (state.specialty? inputsValid.specialtyYear : true) && (state.specialty? inputsValid.programsNeeded : true) && (state.summerInternship? inputsValid.summerInternshipYear : true) && inputsValid.programCordinator && inputsValid.programManager) {
       setFormIsValid(true);
     } else {
       setFormIsValid(false);
     }
+    console.log(formIsValid);
   }, [inputsValid]);
 
   const blurHandler = (e) => {
@@ -113,22 +116,6 @@ const AddNewModule = () => {
       type: "input",
       input: e.target.name,
       value: e.target.value,
-    };
-    console.log(action);
-    dispatch(action);
-  }
-  function onselect(input,obj){
-    let value= state.prerequisite;
-    console.log(value);
-    console.log(obj);
-    obj.map((obj)=>{
-      if(!value.includes(obj.value)){
-      value.push(obj.value)}
-    });
-    const action = {
-      type: "input",
-      input: input,
-      value: value,
     };
     console.log(action);
     dispatch(action);
@@ -186,12 +173,13 @@ f();
 
   return (
     <div className={`${classes.container}`}>
+      <button onClick={()=>probs.showAddProgram(false)}>X</button>
       <form action="" className=" form">
-        <h3>Add Module</h3>
+        <h3>Program Setup</h3>
         <div className={classes.fields}>
           <span>
         <label htmlFor="email">
-          Module Name<span className={classes.star}>*</span>
+          Program Name<span className={classes.star}>*</span>
         </label>
         <input
           type="text"
@@ -203,21 +191,21 @@ f();
           value={state.name}
         />
         {!inputsValid.name && state.nametouched && (
-          <p className={classes.errorText}>Module Name must be valid!</p>
+          <p className={classes.errorText}>Program Name must be valid!</p>
         )}
         </span>
         <span>
         <label className="text">
-          Decscribtion<span className={classes.star}>*</span>
+          Outcome<span className={classes.star}>*</span>
         </label>
         <input
-          name="describtion"
+          name="outcome"
           type=""
           onChange={onchange}
           onBlur={blurHandler}
           value={state.describtion}
         />
-        {!inputsValid.describtion && state.describtiontouched && (
+        {!inputsValid.outcome && state.outcometouched && (
           <p className={classes.errorText}>describtion must not be empty!</p>
         )}
         </span>
@@ -238,109 +226,110 @@ f();
         </span>
         <span>
         <label className="text">
-          Language<span className={classes.star}>*</span>
+          Is there a specialty<span className={classes.star}>*</span>
         </label>
         <select
-          name="language"
+          name="specialty"
           type=""
           onChange={onchange}
           onBlur={blurHandler}
-          value={state.language}
-        >
-          <option value="Arabic">Arabic</option>
-          <option value="English">Enlgish </option>
+          value={state.specialty}
+        > 
+          <option value={false}>doesn't exist</option>
+          <option value={true}>exist</option>
         </select>
         </span>
+        
         <span>
         <label className="text">
-          ECTS<span className={classes.star}>*</span>
+          Specialty Year<span className={classes.star}>*</span>
         </label>
         <input
-          name="ECTS"
+          name="specialtyYear"
           type="number"
           onChange={onchange}
           onBlur={blurHandler}
-          value={state.ECTS}
+          value={state.specialtyYear}
         />
-        {!inputsValid.ECTS && state.ECTStouched && (
-          <p className={classes.errorText}>ECTS must be bigger than zero!</p>
+        {!inputsValid.specialtyYear && state.specialtyYeartouched && (
+          <p className={classes.errorText}>Specialty Year must be bigger than zero!</p>
         )}
         </span>
         <span>
         <label className="text">
-          Midterm Exam Hours<span className={classes.star}>*</span>
+          number of modules needed for speciality<span className={classes.star}>*</span>
         </label>
         <input
-          name="midtermHours"
+          name="programsNeeded"
           type="number"
           onChange={onchange}
           onBlur={blurHandler}
-          value={state.midtermHours}
-          className={classes.quart}
+          value={state.programsNeeded}
         />
-        {!inputsValid.midtermHours && state.midtermHourstouched && (
-          <p className={classes.errorText}>Midterm exam hours must be bigger than zero!</p>
+        {!inputsValid.programsNeeded && state.programsNeededtouched && (
+          <p className={classes.errorText}>number must be bigger than zero!</p>
         )}
         </span>
         <span>
         <label className="text">
-          Endterm Exam Hours<span className={classes.star}>*</span>
-        </label>
-        <input
-          name="lastExamHours"
-          type="number"
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.lastExamHours}
-          className={classes.quart}
-        />
-        {!inputsValid.lastExamHours && state.lastExamHourstouched && (
-          <p className={classes.errorText}>Endterm exam hours must be bigger than zero!</p>
-        )}
-        </span>
-        <span>
-        <label className="text">
-          Module Type<span className={classes.star}>*</span>
+          Is Summer Internship needed<span className={classes.star}>*</span>
         </label>
         <select
-          name="type"
+          name="summerInternship"
+          type=""
           onChange={onchange}
           onBlur={blurHandler}
-          value={state.type}
-          className={classes.quart}
-        >
-          <option value="" hidden>Select...</option>
-          <option value="elective">Elective</option>
-          <option value="supportive">Supportive </option>
-          <option value="core">Core </option>
+          value={state.summerInternship}
+        > 
+          <option value={false}>not needed</option>
+          <option value={true}>needed</option>
         </select>
         </span>
-        {state.type.length>0 &&
-        <>
         <span>
         <label className="text">
-          Corequisites<span className={classes.star}>*</span>
+          Summer Internship Year<span className={classes.star}>*</span>
         </label>
-        <Select
-        options={modules}
-        isMulti
-        closeMenuOnSelect={false}
-        onChange={(choice)=>onselect("corequisites",choice)}
-        name="corequisites"
+        <input
+          name="summerInternshipYear"
+          type="number"
+          onChange={onchange}
+          onBlur={blurHandler}
+          value={state.summerInternshipYear}
         />
+        {!inputsValid.summerInternshipYear && state.summerInternshipYeartouched && (
+          <p className={classes.errorText}>number must be bigger than zero!</p>
+        )}
         </span>
         <span>
         <label className="text">
-          Prerequisite<span className={classes.star}>*</span>
+          Program Manager<span className={classes.star}>*</span>
         </label>
-        <Select
-        options={modules}
-        isMulti
-        closeMenuOnSelect={false}
-        onChange={(choice)=>onselect("prerequisite",choice)}
-        name="prerequisite"
+        <input
+          name="programManager"
+          type="text"
+          onChange={onchange}
+          onBlur={blurHandler}
+          value={state.programManager}
         />
-        </span></> }
+        {!inputsValid.programManager && state.programManagertouched && (
+          <p className={classes.errorText}>name must not be empty!</p>
+        )}
+        </span>
+        <span>
+        <label className="text">
+          Program Cordinator<span className={classes.star}>*</span>
+        </label>
+        <input
+          name="programCordinator"
+          type="text"
+          onChange={onchange}
+          onBlur={blurHandler}
+          value={state.programCordinator}
+        />
+        {!inputsValid.programCordinator && state.programCordinatortouched && (
+          <p className={classes.errorText}>name must not be empty!</p>
+        )}
+        </span>
         <div className={classes.button}>
           {" "}
           <button onClick={submitHandler} disabled={!formIsValid || uploading}>
@@ -352,4 +341,4 @@ f();
     </div>
   );
 };
-export default AddNewModule;
+export default AddProgram;

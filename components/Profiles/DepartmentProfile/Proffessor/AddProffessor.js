@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
 import { auth, creatuser, db } from "../../../../store/fire";
+
 import Select from "react-select";
+
 import classes from "./AddProffessor.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
@@ -8,21 +10,20 @@ import {
   addDoc,
   arrayUnion,
   collection,
+
   count,
+
   doc,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-let modules = [
-  { value: "physics", label: "Physics" },
-  { value: "mathII", label: "MathII" },
-  { value: "humanrights", label: "Human Rights" },
-];
+
 const intilistate = {
   name: "",
   nametouched: false,
   describtion: "",
   describtiontouched: false,
+
   ECTStouched: false,
   Country: "",
   Countrytouched: false,
@@ -34,6 +35,7 @@ const intilistate = {
   passwordtouched: false,
   email: "",
   emailtouched: false,
+
 };
 function reducer(state, action) {
   let newstate = {};
@@ -50,6 +52,7 @@ function reducer(state, action) {
         nametouched: false,
         describtion: "",
         describtiontouched: false,
+
         password: "",
         passwordtouched: false,
         email: "",
@@ -62,6 +65,7 @@ function reducer(state, action) {
 
         sex: "",
         Degree: "",
+
       };
     default:
   }
@@ -70,6 +74,7 @@ function reducer(state, action) {
 
 const AddProffessor = () => {
   const [state, dispatch] = useReducer(reducer, intilistate);
+
   const [uploading, setUploading] = useState(false);
   const inputsValid = {
     describtion: state.describtion.trim() !== "",
@@ -78,12 +83,15 @@ const AddProffessor = () => {
     city: state.city.trim() !== "",
     Country: state.Country.trim() !== "",
     email: state.email.trim() !== "",
+
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
   useEffect(() => {
+
     console.log(inputsValid.Country);
     if (inputsValid.describtion && inputsValid.Country && inputsValid.name) {
+
       setFormIsValid(true);
     } else {
       setFormIsValid(false);
@@ -108,6 +116,7 @@ const AddProffessor = () => {
     console.log(action);
     dispatch(action);
   }
+
   function onselect(input, obj) {
     let value = state.prerequisite;
     console.log(value);
@@ -116,6 +125,8 @@ const AddProffessor = () => {
       if (!value.includes(obj.value)) {
         value.push(obj.value);
       }
+
+
     });
     const action = {
       type: "input",
@@ -128,6 +139,7 @@ const AddProffessor = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     // course is variable indicating course number with values 1 or 2
+
     try {
       const info = {
         "name": state.name,
@@ -155,6 +167,7 @@ const AddProffessor = () => {
     }
 
  
+
   };
   return (
     <div className={`${classes.container}`}>
@@ -162,6 +175,7 @@ const AddProffessor = () => {
         <h3>Add Module</h3>
         <div className={classes.fields}>
           <span>
+
             <label htmlFor="email">
               Name<span className={classes.star}>*</span>
             </label>
@@ -296,6 +310,7 @@ const AddProffessor = () => {
               {uploading ? "Uploading" : "Add"}
             </button>
           </div>
+
         </div>
       </form>
     </div>
