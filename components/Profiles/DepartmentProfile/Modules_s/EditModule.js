@@ -76,6 +76,7 @@ function reducer(state, action) {
       newstate = { ...state, [action.value]: false };
     default:
   }
+
   console.log(newstate);
   return newstate;
 }
@@ -98,6 +99,8 @@ const EditModule = () => {
     lastExamHours:state.lastExamHours > 0,
     type:state.type.trim() !== ""
   };
+
+  const formTouched=(state.ECTStouched || state.nametouched || state.describtiontouched || state.codetouched || state.languagetouched || state.lastExamHourstouched || state.midtermHourstouched || state.typetouched || state.prerequisitetouched || state.corequisitestouched);
   
 //   const [formTouched,setFormTouched]=useState((state.ECTStouched || state.nametouched || state.describtiontouched || state.codetouched || state.languagetouched || state.lastExamHourstouched || state.midtermHourstouched || state.typetouched || state.prerequisitetouched || state.corequisitestouched));
 
@@ -166,7 +169,7 @@ const EditModule = () => {
             setDefaultCorequisites((prev)=>([...prev,p_obj]))
         })
     }
- 
+
 
   },[module]);
   const blurHandler = (e) => {
@@ -186,11 +189,13 @@ const EditModule = () => {
     };
     console.log(action);
     dispatch(action);
+
     const action2 = {
         type: "touch",
         value: e.target.name + "touched",
       };
       dispatch(action2);
+
   }
   function onselect(input,obj){
     let value= state.prerequisite;
@@ -246,7 +251,9 @@ const EditModule = () => {
 //   };
 //   dispatch(action);
   };
+
   console.log(!formIsValid  && !(state.ECTStouched || state.nametouched || state.describtiontouched || state.codetouched || state.languagetouched || state.lastExamHourstouched || state.midtermHourstouched || state.typetouched || state.prerequisitetouched || state.corequisitestouched));
+
   return (
     <div className={`${classes.container}`}>
       <form action="" className=" form">
@@ -408,8 +415,10 @@ const EditModule = () => {
         </span></> }
         <div className={classes.button}>
           {" "}
+
           <button onClick={submitHandler} disabled={!formIsValid  || !(state.ECTStouched || state.nametouched || state.describtiontouched || state.codetouched || state.languagetouched || state.lastExamHourstouched || state.midtermHourstouched || state.typetouched || state.prerequisitetouched || state.corequisitestouched)}>
            {uploading ? "Uploading" :"Save"}
+
           </button>
         </div>
         </div>

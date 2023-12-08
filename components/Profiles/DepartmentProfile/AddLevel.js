@@ -24,7 +24,6 @@ function sortedIndex(array, value) {
   }
   return low;
 }
-
 const AddLevel = (probs) => {
   let AllLevels=[1,2,3,4,5,6];
   const {levels:l}=probs
@@ -43,7 +42,6 @@ const AddLevel = (probs) => {
   function onchange(e) {
    setSelectedLevel(e.target.value);
   }
-
   const submitHandler = async (e) => {
     e.preventDefault();
     try{
@@ -58,7 +56,6 @@ const AddLevel = (probs) => {
         temp[0]=+selectedLevel;
         console.log(selectedLevel);
         setlevels (temp);
-       
         console.log(levels);
         setSelectedLevel(filteredLevels[0])
         await setDoc(doc(db,"users",auth.currentUser.uid),{levels:[+selectedLevel]},{merge:true});
