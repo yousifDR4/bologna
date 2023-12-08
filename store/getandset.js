@@ -62,18 +62,12 @@ export const set_student_subject = async (info, id) => {
     { merge: true }
   );
 };
-const filterSearch=(value,initalUniversityValue)=>{
-const v="uni";
-let arr2=[];
-const arr=v.split('')
-arr.forEach((val)=>{
-const k=initalUniversityValue.filter((university) =>
-university.name.toLowerCase().match(val.toLowerCase()))
-arr2.push(k);
-const arr3=arr2.filter((v,i,self)=>self.indexOf(v)===i);
-return arr3
 
+export const get_Sujects=async()=>{
+const q=query(collection(db,"subjects"),where("Deprartment_id","==",auth.currentUser.uid))
+const docs=await getDocs(q);
+const data=docs.docs.map((doc)=>({label:doc.data().name,value:doc.data().name})) 
+return data;
 
-})
 
 }

@@ -1,15 +1,17 @@
-import React, { useState,  cloneElement } from "react";
+import React, { useState,  cloneElement, useEffect } from "react";
 import { auth, creatuser, db } from "../../../store/fire";
 import classes from "./AddLevel.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
 import {
   addDoc,
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
   setDoc,
   updateDoc,
+  
 } from "firebase/firestore";
 function sortedIndex(array, value) {
   var low = 0,
@@ -24,9 +26,17 @@ function sortedIndex(array, value) {
 }
 
 const AddLevel = (probs) => {
-  let { levels } = probs;
   let AllLevels=[1,2,3,4,5,6];
-  const filteredLevels=AllLevels.filter(x => !levels.includes(x));
+  const {levels:l}=probs
+  const [levels,setlevels]=useState(l);
+  const filteredLevels=AllLevels.filter((x)=>{
+    if (!levels) {
+      console.log(levels,"unnnnnffwo");
+      return x;
+    }
+    console.log(levels,"o");
+    console.log(!levels.includes(x));
+    return !levels.includes(x)});
   const [selectedLevel,setSelectedLevel]=useState(filteredLevels[0]);  
   const profile = useSelector((state) => state.profile.profile);
 
@@ -36,34 +46,42 @@ const AddLevel = (probs) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    let modLevels=[];
-    if(levels.length == 0){
-      console.log(selectedLevel);
-     levels.push(selectedLevel);
-    }
-    else{
-    let index=sortedIndex(levels,selectedLevel);
-    console.log(index,levels.length);
-     if(index == levels.length){
-     levels.push(+selectedLevel);
-     console.log("inside");
-     console.log(selectedLevel);
-     console.log(levels);
-    }
-    else{
-    modLevels=levels.splice(index,0,+selectedLevel);
-    console.log(modLevels,index,levels);}
-    }
-    // course is variable indicating course number with values 1 or 2
     try{
-           await setDoc(doc(db,"users",auth.currentUser.uid),{levels:levels},{merge:true}); 
+      let temp = [];
+    console.log(levels,"l");
+    if (levels.length!==0) {
+   levels.forEach((val,i)=>{
+    temp.push(val);
+   })
+  }
+      if (temp.length===0) {
+        temp[0]=+selectedLevel;
+        console.log(selectedLevel);
+        setlevels (temp);
+       
+        console.log(levels);
+        setSelectedLevel(filteredLevels[0])
+        await setDoc(doc(db,"users",auth.currentUser.uid),{levels:[+selectedLevel]},{merge:true});
+        
+      }
+      else if(!temp.includes(+selectedLevel)){
+      temp.push(+selectedLevel);
+      let sortedArrayAsc = temp.slice().sort((a, b) => a - b);
+      setlevels(sortedArrayAsc);
+      // course is variable indicating course number with values 1 or 
+      setSelectedLevel(filteredLevels[0])
+      await setDoc(doc(db,"users",auth.currentUser.uid),{levels:sortedArrayAsc},{merge:true}); 
+      
+      }
     }
   catch(e){
     console.log(e);
   }
+
   probs.showAddLevel(false);
   probs.reload((prev)=>!prev);
   };
+console.log(filteredLevels);
   return (
     <div className={`${classes.container}`}>
       <form action="" className=" form">
