@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "../store/fire";
 import { collection, getDocs, limit, orderBy, query, startAfter, where } from "firebase/firestore";
-
 export const usePaginationFetch = (nextdoc, firstfetch,limitNumber) => {
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(true);
   const [error, setError] = useState(false);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,7 +34,6 @@ export const usePaginationFetch = (nextdoc, firstfetch,limitNumber) => {
           setData(d1);
           }
           else{
-          
             setData([])
           }
         }
@@ -47,7 +44,6 @@ export const usePaginationFetch = (nextdoc, firstfetch,limitNumber) => {
         setLoad(false);
       }
     };
-
     fetchData();
   }, [nextdoc]);
 
