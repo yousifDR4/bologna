@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
 import { auth, creatuser, db } from "../../../../store/fire";
-import Select from 'react-select'
+import Select from "react-select";
 import classes from "./AddProffessor.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
@@ -8,33 +8,32 @@ import {
   addDoc,
   arrayUnion,
   collection,
+  count,
   doc,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-let modules=[
-  { value: 'physics', label: 'Physics' },
-  { value: 'mathII', label: 'MathII' },
-  { value: 'humanrights', label: 'Human Rights' }
-]
+let modules = [
+  { value: "physics", label: "Physics" },
+  { value: "mathII", label: "MathII" },
+  { value: "humanrights", label: "Human Rights" },
+];
 const intilistate = {
   name: "",
   nametouched: false,
   describtion: "",
   describtiontouched: false,
-  ECTS: "",
   ECTStouched: false,
-  code:"",
-  codetouched:false,
-  language:"english",
-  lastExamHours:"",
-  lastExamHourstouched:false,
-  midtermHours:"",
-  midtermHourstouched:false,
-  type:"",
-  typetouched:false,
-  prerequisite:[],
-  corequisites:[]
+  Country: "",
+  Countrytouched: false,
+  city: "",
+  citytouched: false,
+  Degree: "",
+  sex: "",
+  password: "",
+  passwordtouched: false,
+  email: "",
+  emailtouched: false,
 };
 function reducer(state, action) {
   let newstate = {};
@@ -51,20 +50,18 @@ function reducer(state, action) {
         nametouched: false,
         describtion: "",
         describtiontouched: false,
-        ECTS: "",
-        ECTStouched: false,
-        code:"",
-        codetouched:false,
-        language:"",
-        languagetouched:false,
-        lastExamHours:"",
-        lastExamHourstouched:false,
-        midtermHours:"",
-        midtermHourstouched:false,
-        type:"",
-        typetouched:false,
-        prerequisite:[],
-  corequisites:[]
+        password: "",
+        passwordtouched: false,
+        email: "",
+        emailtouched: false,
+        Country: "",
+        Countrytouched: false,
+        city: "",
+        citytouched: false,
+        codetouched: false,
+
+        sex: "",
+        Degree: "",
       };
     default:
   }
@@ -73,20 +70,20 @@ function reducer(state, action) {
 
 const AddProffessor = () => {
   const [state, dispatch] = useReducer(reducer, intilistate);
-  const [uploading,setUploading]=useState(false);
+  const [uploading, setUploading] = useState(false);
   const inputsValid = {
-    describtion: state.describtion.trim() !== "" ,
+    describtion: state.describtion.trim() !== "",
     name: state.name.trim() !== "",
-    ECTS: state.ECTS > 0,
-    code: state.code.trim() !== "",
-    midtermHours: state.midtermHours > 0,
-    lastExamHours:state.lastExamHours > 0,
-    type:state.type.trim() !== ""
+    password: state.password.trim() !== "",
+    city: state.city.trim() !== "",
+    Country: state.Country.trim() !== "",
+    email: state.email.trim() !== "",
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
   useEffect(() => {
-    if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name && inputsValid.code && inputsValid.lastExamHours && inputsValid.midtermHours && inputsValid.type) {
+    console.log(inputsValid.Country);
+    if (inputsValid.describtion && inputsValid.Country && inputsValid.name) {
       setFormIsValid(true);
     } else {
       setFormIsValid(false);
@@ -111,13 +108,14 @@ const AddProffessor = () => {
     console.log(action);
     dispatch(action);
   }
-  function onselect(input,obj){
-    let value= state.prerequisite;
+  function onselect(input, obj) {
+    let value = state.prerequisite;
     console.log(value);
     console.log(obj);
-    obj.map((obj)=>{
-      if(!value.includes(obj.value)){
-      value.push(obj.value)}
+    obj.map((obj) => {
+      if (!value.includes(obj.value)) {
+        value.push(obj.value);
+      }
     });
     const action = {
       type: "input",
@@ -130,35 +128,33 @@ const AddProffessor = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     // course is variable indicating course number with values 1 or 2
-    try{
-    const info = {
-      name: state.name,
-      describtion: state.describtion,
-      ECTS: state.ECTS,
-      code: state.code,
-      language:state.language,
-      midTermHours:state.midtermHours,
-      endTermHours:state.lastExamHours,
-      type:state.type,
-      Deprartment_id: auth.currentUser.uid,
-      University_id:profile.University_id,
-      College_id:profile.College_id,
-    };
-    console.log();
-    const id = await addDoc(collection(db, "subjects"), info);
-    console.log(id.id);
-    await updateDoc(doc(db, "users", auth.currentUser.uid), {
-      subjects_id: arrayUnion(id.id),
-    });
-  }
-  catch(e){
-    console.log(e);
-  }
+    try {
+      const info = {
+        "name": state.name,
+        "email": state.email,
+        "password": state.password,
+        "accountType": "Department",
+        "createType": "username",
+        "role": "Proffessor", 
+        "path": {
+          "University_id": profile.University_id,
+          "College_id": profile.College_id,
+          "Department_id": auth.currentUser.uid},
+        "pinfo": {
+          "describtion": state.describtion,
+          "Country": state.Country,
+          "city": state.city,
+          "sex": state.sex,
+          "Degree": state.Degree}
+      };
+      
+      console.log(info);
+      await creatuser(info);
+    } catch (e) {
+      console.log(e);
+    }
+
  
-  const action={
-    type:"reset"
-  };
-  dispatch(action);
   };
   return (
     <div className={`${classes.container}`}>
@@ -166,163 +162,140 @@ const AddProffessor = () => {
         <h3>Add Module</h3>
         <div className={classes.fields}>
           <span>
-        <label htmlFor="email">
-          Module Name<span className={classes.star}>*</span>
-        </label>
-        <input
-          type="text"
-          placeholder=""
-          name="name"
-          id="name"
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.name}
-        />
-        {!inputsValid.name && state.nametouched && (
-          <p className={classes.errorText}>Module Name must be valid!</p>
-        )}
-        </span>
-        <span>
-        <label className="text">
-          Decscribtion<span className={classes.star}>*</span>
-        </label>
-        <input
-          name="describtion"
-          type=""
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.describtion}
-        />
-        {!inputsValid.describtion && state.describtiontouched && (
-          <p className={classes.errorText}>describtion must not be empty!</p>
-        )}
-        </span>
-        <span>
-        <label className="text">
-          Module Code<span className={classes.star}>*</span>
-        </label>
-        <input
-          name="code"
-          type=""
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.code}
-        />
-        {!inputsValid.code && state.codetouched && (
-          <p className={classes.errorText}>Code must not be empty!</p>
-        )}
-        </span>
-        <span>
-        <label className="text">
-          Language<span className={classes.star}>*</span>
-        </label>
-        <select
-          name="language"
-          type=""
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.language}
-        >
-          <option value="Arabic">Arabic</option>
-          <option value="English">Enlgish </option>
-        </select>
-        </span>
-        <span>
-        <label className="text">
-          ECTS<span className={classes.star}>*</span>
-        </label>
-        <input
-          name="ECTS"
-          type="number"
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.ECTS}
-        />
-        {!inputsValid.ECTS && state.ECTStouched && (
-          <p className={classes.errorText}>ECTS must be bigger than zero!</p>
-        )}
-        </span>
-        <span>
-        <label className="text">
-          Midterm Exam Hours<span className={classes.star}>*</span>
-        </label>
-        <input
-          name="midtermHours"
-          type="number"
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.midtermHours}
-          className={classes.quart}
-        />
-        {!inputsValid.midtermHours && state.midtermHourstouched && (
-          <p className={classes.errorText}>Midterm exam hours must be bigger than zero!</p>
-        )}
-        </span>
-        <span>
-        <label className="text">
-          Endterm Exam Hours<span className={classes.star}>*</span>
-        </label>
-        <input
-          name="lastExamHours"
-          type="number"
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.lastExamHours}
-          className={classes.quart}
-        />
-        {!inputsValid.lastExamHours && state.lastExamHourstouched && (
-          <p className={classes.errorText}>Endterm exam hours must be bigger than zero!</p>
-        )}
-        </span>
-        <span>
-        <label className="text">
-          Module Type<span className={classes.star}>*</span>
-        </label>
-        <select
-          name="type"
-          onChange={onchange}
-          onBlur={blurHandler}
-          value={state.type}
-          className={classes.quart}
-        >
-          <option value="" hidden>Select...</option>
-          <option value="elective">Elective</option>
-          <option value="supportive">Supportive </option>
-          <option value="core">Core </option>
-        </select>
-        </span>
-        {state.type.length>0 &&
-        <>
-        <span>
-        <label className="text">
-          Corequisites<span className={classes.star}>*</span>
-        </label>
-        <Select
-        options={modules}
-        isMulti
-        closeMenuOnSelect={false}
-        onChange={(choice)=>onselect("corequisites",choice)}
-        name="corequisites"
-        />
-        </span>
-        <span>
-        <label className="text">
-          Prerequisite<span className={classes.star}>*</span>
-        </label>
-        <Select
-        options={modules}
-        isMulti
-        closeMenuOnSelect={false}
-        onChange={(choice)=>onselect("prerequisite",choice)}
-        name="prerequisite"
-        />
-        </span></> }
-        <div className={classes.button}>
-          {" "}
-          <button onClick={submitHandler} disabled={!formIsValid && !uploading}>
-           {uploading ? "Uploading" :"Add"}
-          </button>
-        </div>
+            <label htmlFor="email">
+              Name<span className={classes.star}>*</span>
+            </label>
+            <input
+              type="text"
+              placeholder=""
+              name="name"
+              id="name"
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.name}
+            />
+            {!inputsValid.name && state.nametouched && (
+              <p className={classes.errorText}>Name must be valid!</p>
+            )}
+          </span>
+          <span>
+            <label className="text">
+              Decscribtion<span className={classes.star}>*</span>
+            </label>
+            <input
+              name="describtion"
+              type=""
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.describtion}
+            />
+            {!inputsValid.describtion && state.describtiontouched && (
+              <p className={classes.errorText}>
+                describtion must not be empty!
+              </p>
+            )}
+          </span>
+          <span>
+            <label className="text">
+              Country<span className={classes.star}>*</span>
+            </label>
+            <input
+              name="Country"
+              type=""
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.Country}
+            />
+            {!inputsValid.Country && state.Countrytouched && (
+              <p className={classes.errorText}>Country must not be empty!</p>
+            )}
+
+            <label className="text">
+              City<span className={classes.star}>*</span>
+            </label>
+            <input
+              name="city"
+              type=""
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.city}
+            />
+            {!inputsValid.city && state.citytouched && (
+              <p className={classes.errorText}>city must not be empty!</p>
+            )}
+            <label className="text">
+              Degree <span className={classes.star}>*</span>
+            </label>
+            <select
+              name="Degree"
+              type=""
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.Degree}
+            >
+              <option value="Master">Master </option>
+              <option value="Doctoral">Doctoral</option>
+            </select>
+          </span>
+          <span>
+            <label className="text">
+              sex <span className={classes.star}>*</span>
+            </label>
+            <select
+              name="sex"
+              type=""
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.Degree}
+            >
+              <option value="male">male </option>
+              <option value="female">female</option>
+            </select>
+
+            <label htmlFor="password">
+              Password<span className={classes.star}>*</span>
+            </label>
+            <input
+              type="password"
+              placeholder=""
+              name="password"
+              id="password"
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.password}
+            />
+            {!inputsValid.password && state.passwordtouched && (
+              <p className={classes.errorText}>Password must be valid!</p>
+            )}
+            <label htmlFor="email">
+              Email<span className={classes.star}>*</span>
+            </label>
+            <input
+              type="email"
+              placeholder=""
+              name="email"
+              id="email"
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.email}
+            />
+            {!inputsValid.email && state.emailtouched && (
+              <p className={classes.errorText}>Password must be valid!</p>
+            )}
+          </span>
+
+          <span></span>
+          <span></span>
+
+          <div className={classes.button}>
+            {" "}
+            <button
+              onClick={submitHandler}
+              disabled={!formIsValid && !uploading}
+            >
+              {uploading ? "Uploading" : "Add"}
+            </button>
+          </div>
         </div>
       </form>
     </div>
