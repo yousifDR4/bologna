@@ -94,6 +94,7 @@ return(
                {isDepartmentAccount && <li><Link to="/AddModule"><img src={profilePicture} alt=""/>Add Module</Link></li>}
                {isDepartmentAccount && <li><Link to="/AddProfessor"><img src={profilePicture} alt=""/>Add Proffessor</Link></li>}
                {isDepartmentAccount && <li><Link to="/ModuleTable"><img src={profilePicture} alt=""/>Modules Table</Link></li>}
+               {isDepartmentAccount && <li><Link to="/ProgramManage"><img src={profilePicture} alt=""/>Manage Program</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>
     </nav>
