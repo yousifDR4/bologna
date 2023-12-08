@@ -1,4 +1,5 @@
-import * as React from 'react';
+import {useState} from 'react';
+import Options from './Options';
 import classes from "./ModulesTable.module.css"
 import {
     Table,
@@ -11,7 +12,7 @@ import {
   } from '@table-library/react-table-library/table';
   import { useTheme } from '@table-library/react-table-library/theme';
 import { getTheme } from '@table-library/react-table-library/baseline';
-import { useSort } from '@table-library/react-table-library/sort';
+import { HeaderCellSort, useSort } from '@table-library/react-table-library/sort';
 const key = 'Compact Table';
 
 const ModulesTable = () => {
@@ -20,45 +21,89 @@ const ModulesTable = () => {
         code:"hh3h3",
         name:"physics",
         midtermExamHours:"2",
-        endtermExamHours:"3"
-    },],
+        endtermExamHours:"3",
+        id:"00"
+    },{
+      code:"hh3h4",
+        name:"MathII",
+        midtermExamHours:"4",
+        endtermExamHours:"1" ,
+        id:"01"
+    }],
 }
+const sort = useSort(data,{
+  onChange: onSortChange,
+}, {
+  sortFns: {
+    NAME: (array) =>
+      array.sort((a, b) => a.name.localeCompare(b.name)),
+    MIDTERM: (array) =>
+      array.sort((a, b) => a.midtermExamHours - b.midtermExamHours),
+    ENDTERM: (array) =>
+      array.sort((a, b) => a.endtermExamHours - b.endtermExamHours),
+  },});
   const theme = useTheme([getTheme(
    
   ),
+  {Table: `
+  position:unset;
+  `
+
+  },
   {
     HeaderRow: `
-    font-size: 14px;
+    font-size: 16px;
     font-family:GraphikLight;
     background-color: #F5F5F5;
+    padding:0;
+    
   `,
+},
+{HeaderCell:
+  `
+&:nth-of-type(5){
+text-align:center;
+}
+  `
 },
 {Row: `
 font-family:GraphikLight;
-padding:0.5rem;
 `},
 {Cell: `
-&:nth-of-type(3),&:nth-of-type(4)  {
+&:nth-of-type(3) p,&:nth-of-type(4) p  {
     background-color: #d2e9fb;
+    padding:0.2rem 0.5rem;
     width:fit-content;
     color:var(--styling1);
   }
+  &:nth-of-type(5){
+    text-align:center;
+  }
+  
+img{
+  width:2rem;
+  height:2rem;
+}
+  padding:10px 12px;
 `},
 ]);
-
+function onSortChange(action, state) {
+  console.log(action, state);
+}
   return (
     <div className={classes.container}>
         <div className={classes.table}>
         <h3>View modules</h3>
-    <Table data={data} theme={theme} >
+    <Table data={data} theme={theme} sort={sort}>
       {(tableList) => (
         <>
            <Header>
           <HeaderRow>
-            <HeaderCell>code</HeaderCell>
-            <HeaderCell>name</HeaderCell>
-            <HeaderCell>midtermExamHours</HeaderCell>
-            <HeaderCell>endtermExamHours</HeaderCell>
+            <HeaderCell >code</HeaderCell>
+            <HeaderCellSort sortKey="NAME">name</HeaderCellSort>
+            <HeaderCellSort sortKey="MIDTERM">midtermExamHours</HeaderCellSort>
+            <HeaderCellSort sortKey="ENDTERM">endtermExamHours</HeaderCellSort>
+            <HeaderCell>options</HeaderCell>
           </HeaderRow>
         </Header>
 
@@ -69,8 +114,9 @@ padding:0.5rem;
                 <Cell>
                   {module.name}
                 </Cell>
-                <Cell>{module.midtermExamHours + " hours"}</Cell>
-                <Cell>{module.endtermExamHours + " hours"}</Cell>
+                <Cell><p>{module.midtermExamHours + " hours"}</p></Cell>
+                <Cell><p>{module.endtermExamHours + " hours"}</p></Cell>
+                <Cell><div className='relative'><Options id={module.id} code={module.code}/></div></Cell>
               </Row>
             ))}
           </Body>

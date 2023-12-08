@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
 import { auth, creatuser, db } from "../../../../store/fire";
 import Select from 'react-select'
+import { Link, useLocation,useSearchParams } from "react-router-dom";
 import classes from "./AddNewModule.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
@@ -26,7 +27,8 @@ const intilistate = {
   ECTStouched: false,
   code:"",
   codetouched:false,
-  language:"english",
+  language:"",
+  languagetouched:false,
   lastExamHours:"",
   lastExamHourstouched:false,
   midtermHours:"",
@@ -34,7 +36,9 @@ const intilistate = {
   type:"",
   typetouched:false,
   prerequisite:[],
-  corequisites:[]
+  prerequisitetouched:false,
+  corequisites:[],
+  corequisitestouched:false
 };
 function reducer(state, action) {
   let newstate = {};
@@ -64,14 +68,24 @@ function reducer(state, action) {
         type:"",
         typetouched:false,
         prerequisite:[],
-  corequisites:[]
+        prerequisitetouched:false,
+        corequisites:[],
+        corequisitestouched:false
       };
+      case "untouch":
+      newstate = { ...state, [action.value]: false };
     default:
   }
   return newstate;
 }
 
-const AddNewModule = () => {
+const EditModule = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = (queryParams.get('id') || ''); //getting module id from url
+  const [module,setModule]=useState({});
+  const [defaultPrerequisite,setDefaultPrerequisite]=useState([]);
+  const [defaultCorequisites,setDefaultCorequisites]=useState([]);
   const [state, dispatch] = useReducer(reducer, intilistate);
   const [uploading,setUploading]=useState(false);
   const inputsValid = {
@@ -83,8 +97,24 @@ const AddNewModule = () => {
     lastExamHours:state.lastExamHours > 0,
     type:state.type.trim() !== ""
   };
+  const formTouched=(state.ECTStouched || state.nametouched || state.describtiontouched || state.codetouched || state.languagetouched || state.lastExamHourstouched || state.midtermHourstouched || state.typetouched || state.prerequisitetouched || state.corequisitestouched);
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
+  useEffect(()=>{ //load module using module id
+    let module={
+        name: "physics",
+        describtion: "something",
+        ECTS: 35,
+        code:"h3h22",
+        language:"english",
+        lastExamHours:4,
+        midtermHours:2,
+        type:"elective",
+        prerequisite:["mathII","humanrights"],
+  corequisites:["mathII"]
+    };
+    setModule(module);
+  },[]);
   useEffect(() => {
     if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name && inputsValid.code && inputsValid.lastExamHours && inputsValid.midtermHours && inputsValid.type) {
       setFormIsValid(true);
@@ -92,7 +122,49 @@ const AddNewModule = () => {
       setFormIsValid(false);
     }
   }, [inputsValid]);
+  useEffect(()=>{
+    function mapData(object,input){
+      const action={
+             type:"input",
+             input:input,
+             value :object
+           }
+          dispatch(action);
+          const action2={
+            type:"untouch",
+            input:input,
+          }
+         dispatch(action2);
+    }
+   
+    const objectMap = (obj, fn) =>
+    Object.fromEntries(
+      Object.entries(obj).map(
+        ([k, v], i) => [k, fn(v, k, i)]
+      )
+    )
+    objectMap(module,mapData);
+    if(module.prerequisite){
+        module.prerequisite.map((p)=>{
+            let p_obj={
+                label:p,
+                value:p,
+            }
+            console.log(defaultPrerequisite);
+            setDefaultPrerequisite((prev)=>([...prev,p_obj]))
+        })
+    }
+    if(module.corequisites){
+        module.corequisites.map((p)=>{
+            let p_obj={
+                label:p,
+                value:p,
+            }
+            setDefaultCorequisites((prev)=>([...prev,p_obj]))
+        })
+    }
 
+  },[module]);
   const blurHandler = (e) => {
     const action = {
       type: "touch",
@@ -114,7 +186,7 @@ const AddNewModule = () => {
   function onselect(input,obj){
     let value= state.prerequisite;
     console.log(value);
-    console.log(obj);
+   
     obj.map((obj)=>{
       if(!value.includes(obj.value)){
       value.push(obj.value)}
@@ -126,39 +198,44 @@ const AddNewModule = () => {
     };
     console.log(action);
     dispatch(action);
+    const action2 = {
+        type: "touch",
+        value: input + "touched",
+      };
+      dispatch(action2);
   }
   const submitHandler = async (e) => {
-    e.preventDefault();
-    // course is variable indicating course number with values 1 or 2
-    try{
-    const info = {
-      name: state.name,
-      describtion: state.describtion,
-      ECTS: state.ECTS,
-      code: state.code,
-      language:state.language,
-      midTermHours:state.midtermHours,
-      endTermHours:state.lastExamHours,
-      type:state.type,
-      Deprartment_id: auth.currentUser.uid,
-      University_id:profile.University_id,
-      College_id:profile.College_id,
-    };
-    console.log();
-    const id = await addDoc(collection(db, "subjects"), info);
-    console.log(id.id);
-    await updateDoc(doc(db, "users", auth.currentUser.uid), {
-      subjects_id: arrayUnion(id.id),
-    });
-  }
-  catch(e){
-    console.log(e);
-  }
+//     e.preventDefault();
+//     // course is variable indicating course number with values 1 or 2
+//     try{
+//     const info = {
+//       name: state.name,
+//       describtion: state.describtion,
+//       ECTS: state.ECTS,
+//       code: state.code,
+//       language:state.language,
+//       midTermHours:state.midtermHours,
+//       endTermHours:state.lastExamHours,
+//       type:state.type,
+//       Deprartment_id: auth.currentUser.uid,
+//       University_id:profile.University_id,
+//       College_id:profile.College_id,
+//     };
+//     console.log();
+//     const id = await addDoc(collection(db, "subjects"), info);
+//     console.log(id.id);
+//     await updateDoc(doc(db, "users", auth.currentUser.uid), {
+//       subjects_id: arrayUnion(id.id),
+//     });
+//   }
+//   catch(e){
+//     console.log(e);
+//   }
  
-  const action={
-    type:"reset"
-  };
-  dispatch(action);
+//   const action={
+//     type:"reset"
+//   };
+//   dispatch(action);
   };
   return (
     <div className={`${classes.container}`}>
@@ -303,6 +380,7 @@ const AddNewModule = () => {
         closeMenuOnSelect={false}
         onChange={(choice)=>onselect("corequisites",choice)}
         name="corequisites"
+        defaultValue={defaultCorequisites || 'Select'}
         />
         </span>
         <span>
@@ -315,11 +393,12 @@ const AddNewModule = () => {
         closeMenuOnSelect={false}
         onChange={(choice)=>onselect("prerequisite",choice)}
         name="prerequisite"
+        defaultValue={defaultPrerequisite|| 'Select'}
         />
         </span></> }
         <div className={classes.button}>
           {" "}
-          <button onClick={submitHandler} disabled={!formIsValid && !uploading}>
+          <button onClick={submitHandler} disabled={!formIsValid && !uploading && !formTouched}>
            {uploading ? "Uploading" :"Add"}
           </button>
         </div>
@@ -328,4 +407,4 @@ const AddNewModule = () => {
     </div>
   );
 };
-export default AddNewModule;
+export default EditModule;

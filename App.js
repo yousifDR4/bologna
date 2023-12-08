@@ -14,6 +14,8 @@ import CollegeProfile from './components/Profiles/CollegeProfile/CollegeProfile.
 import DepartmentProfile from './components/Profiles/DepartmentProfile/DepartmentProfile.js';
 import AddNewModule from './components/Profiles/DepartmentProfile/Modules_s/AddNewModule.js';
 import ModulesTable from './components/Profiles/DepartmentProfile/Modules_s/ModulesTable.js';
+import EditModule from './components/Profiles/DepartmentProfile/Modules_s/EditModule.js';
+import AddProffessor from './components/Profiles/DepartmentProfile/Proffessor/AddProffessor.js';
 let firstInitilize=true;
 function App() {
   const profile=useSelector(state=>state.profile.profile);
@@ -72,10 +74,17 @@ function App() {
           element:<AddNewModule/>
         },
         {
+          path: "/AddProfessor",
+          element:<AddProffessor/>
+        },
+        {
           path: "/ModuleTable",
           element:<ModulesTable/>
         },
-        
+        {
+          path: "/EditModule",
+          element:<EditModule/>
+        },
         
 
     ]

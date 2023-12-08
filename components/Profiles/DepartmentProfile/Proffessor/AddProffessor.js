@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
 import { auth, creatuser, db } from "../../../../store/fire";
 import Select from 'react-select'
-import classes from "./AddNewModule.module.css";
+import classes from "./AddProffessor.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
 import {
@@ -71,7 +71,7 @@ function reducer(state, action) {
   return newstate;
 }
 
-const AddNewModule = () => {
+const AddProffessor = () => {
   const [state, dispatch] = useReducer(reducer, intilistate);
   const [uploading,setUploading]=useState(false);
   const inputsValid = {
@@ -328,4 +328,4 @@ const AddNewModule = () => {
     </div>
   );
 };
-export default AddNewModule;
+export default AddProffessor;
