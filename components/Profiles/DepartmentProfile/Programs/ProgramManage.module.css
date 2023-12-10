@@ -1,7 +1,11 @@
 
 .mainContainer{
-    flex: 1 0 auto;
-
+   display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    align-items: center;
+    width: 100%;
+    padding: 2.4rem 2.4rem 0rem;
 }
 .secondaryContainer *{
     box-sizing: border-box;
@@ -12,7 +16,6 @@
 .secondaryContainer{
     display: flex;
     max-width: 1400px;
-    padding: 2.4rem 2.4rem 4.8rem;
     width: 100%;
     margin-right: auto;
     margin-left: auto;
@@ -73,11 +76,25 @@ text-align: left;
 .activeLink{
     background-color: var(--secondary);
 }
+.speciality{
+    width: 100%;
+    max-width: 1400px;
+    padding: 1rem 1rem;
+    background-color: #fff;
+}
+@media (max-width:850px) {
+    .secondaryContainer{
+        padding: 2.5rem 1rem;
+    }
 
+}
 @media (max-width:650px) {
+    .mainContainer{
+        padding: 0;
+    }
     .secondaryContainer{
         display: block;
-        padding: 0px 10px;
+        padding: 0px 0px;
         margin-bottom: 10px;
     }
     .sideContainer{
@@ -85,6 +102,9 @@ text-align: left;
         width: 100%;
         max-width: 100%;
         text-align: center;
+    }
+    .sideContainer > div > h3{
+        font-size: 1.3rem;
     }
     .sideContainer ul{
       text-align: start;

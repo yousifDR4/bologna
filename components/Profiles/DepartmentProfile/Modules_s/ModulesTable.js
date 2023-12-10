@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Options from './Options';
 import classes from "./ModulesTable.module.css"
 import {
@@ -16,20 +16,25 @@ import { HeaderCellSort, useSort } from '@table-library/react-table-library/sort
 const key = 'Compact Table';
 
 const ModulesTable = () => {
+  const [modules,setModules]=useState([]);
+  useEffect(()=>{
+    //fetch
+    setModules([{
+      code:"hh3h3",
+      name:"physics",
+      midtermExamHours:"2",
+      endtermExamHours:"3",
+      id:"00", //
+  },{
+    code:"hh3h4",
+      name:"MathII",
+      midtermExamHours:"4",
+      endtermExamHours:"1" ,
+      id:"01"
+  }]);
+  },[])
   const data = {
-    nodes: [{
-        code:"hh3h3",
-        name:"physics",
-        midtermExamHours:"2",
-        endtermExamHours:"3",
-        id:"00"
-    },{
-      code:"hh3h4",
-        name:"MathII",
-        midtermExamHours:"4",
-        endtermExamHours:"1" ,
-        id:"01"
-    }],
+    nodes:modules ,
 }
 const sort = useSort(data,{
   onChange: onSortChange,

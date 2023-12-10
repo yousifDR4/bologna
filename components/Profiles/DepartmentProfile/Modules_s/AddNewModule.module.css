@@ -12,6 +12,7 @@
   width: 100%;
   max-width: 80rem;
   border-radius: 20px;
+  margin: 0 1.5rem;
 }
 .container form > div{
     padding: 2rem;
@@ -28,6 +29,12 @@
     border-top-left-radius: 20px;
     background-color: var(--styling1);
 }
+.container form h3 img{
+    width: 2rem;
+    height: 2rem;
+    vertical-align:sub;
+    margin-right: 0.2rem;
+ }
 .container form label:first-of-type{
     margin-top: 8px;
 }

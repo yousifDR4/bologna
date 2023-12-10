@@ -2,6 +2,7 @@ import React from "react";
 import classes from './ProgramManage.module.css';
 import { useState,useContext } from "react";
 import BachelorFour from "./BachelorFour";
+import Speciality from "./Speciality";
 const ProgramManage=()=>{
    
 const [rightContainer,setRightContainer]=useState(<BachelorFour ECTS="240" levels="4"/>)
@@ -20,7 +21,7 @@ const clickHandler=(probs)=>{
 }
 
     return(
-        <>
+        <main className={classes.mainContainer}>
             <div className={classes.secondaryContainer}>
                 <aside className={classes.sideContainer}>
                     <div>
@@ -41,7 +42,11 @@ const clickHandler=(probs)=>{
                     </div>
                 </div>
             </div>
-        </>
+            <div className={classes.speciality}>
+                <h3>Specialities</h3>
+                <Speciality/>
+            </div>
+        </main>
     );
 }
 export default ProgramManage;
