@@ -10,7 +10,7 @@ const stSp=[
     }
 ];
  const Speciality=()=>{
-    const [specialities,setSpecialities]=useState(stSp);
+    const [specialities,setSpecialities]=useState([]);
     const [loading,setLoading]=useState(false);
     useEffect(()=>{
         setLoading(true);
@@ -21,7 +21,7 @@ const stSp=[
     if(loading){
         return <Loader/>
     }
-    else{
+    else if(specialities.length > 0){
     return(
         <table className={ classes.styledtable}>
     <thead>
