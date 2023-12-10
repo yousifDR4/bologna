@@ -76,4 +76,11 @@ export const get_modules=async()=>{
   console.log(data);
   return data;
   }
+  export const get_prog=async()=>{
+    const q=query(collection(db,"programs"),where("Deprartment_id","==",auth.currentUser.uid))
+    const docs=await getDocs(q);
+    const data=docs.docs.map((doc)=>({...doc.data(),id:doc.id})) 
+    console.log(data);
+    return data;
+    }
 
