@@ -119,7 +119,8 @@ export const onLogin = (profile) => {
       username,
       University_id,
       College_id,
-      levels
+      levels,
+      professors,
     } = profile;
     return async (dispatch) => {
       dispatch(authSlice.actions.logIn({ accountType, uid }));
@@ -138,7 +139,8 @@ export const onLogin = (profile) => {
           location: location ? location : "",
           University_id:University_id? University_id:"",
           College_id:College_id?College_id:"",
-          levels:  levels?  levels:[]
+          levels:  levels?  levels:[],
+          professors:professors?professors:[],
         })
       );
     };
