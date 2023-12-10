@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import Options from './Options';
 import classes from "./ModulesTable.module.css"
+ 
 import {
     Table,
     Header,
@@ -13,28 +14,28 @@ import {
   import { useTheme } from '@table-library/react-table-library/theme';
 import { getTheme } from '@table-library/react-table-library/baseline';
 import { HeaderCellSort, useSort } from '@table-library/react-table-library/sort';
+import Modules from '../Modules';
+import { get_Sujects,get_modules } from '../../../../store/getandset';
+import { auth } from '../../../../store/fire';
 const key = 'Compact Table';
 
 const ModulesTable = () => {
   const [modules,setModules]=useState([]);
   useEffect(()=>{
-    //fetch
-    setModules([{
-      code:"hh3h3",
-      name:"physics",
-      midtermExamHours:"2",
-      endtermExamHours:"3",
-      id:"00", //
-  },{
-    code:"hh3h4",
-      name:"MathII",
-      midtermExamHours:"4",
-      endtermExamHours:"1" ,
-      id:"01"
-  }]);
-  },[])
+
+    if(!auth.currentUser)
+    return;
+    const f=async()=>{
+const data=await get_modules()
+console.log(data);
+setModules(data);
+    }
+    f();
+
+  },[auth.currentUser])
   const data = {
-    nodes:modules ,
+    nodes:modules
+
 }
 const sort = useSort(data,{
   onChange: onSortChange,
@@ -119,8 +120,8 @@ function onSortChange(action, state) {
                 <Cell>
                   {module.name}
                 </Cell>
-                <Cell><p>{module.midtermExamHours + " hours"}</p></Cell>
-                <Cell><p>{module.endtermExamHours + " hours"}</p></Cell>
+                <Cell><p>{module.midTermHours + " hours"}</p></Cell>
+                <Cell><p>{module.endTermHours + " hours"}</p></Cell>
                 <Cell><div className='relative'><Options id={module.id} code={module.code}/></div></Cell>
               </Row>
             ))}
