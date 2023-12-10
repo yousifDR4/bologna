@@ -97,6 +97,8 @@ function App() {
         {
           path: "ProfessorList",
           element: <ProfessorTable/>
+
+
         }
 
     ]

@@ -10,6 +10,7 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -77,7 +78,7 @@ function reducer(state, action) {
     default:
   }
 
-  console.log(newstate);
+
   return newstate;
 }
 
@@ -117,9 +118,17 @@ const EditModule = () => {
         midtermHours:2,
         type:"elective",
         prerequisite:["mathII","humanrights"],
-  corequisites:["mathII"]
+  corequisites:["mathII"] 
     };
-    setModule(module);
+
+    const f=async()=>{
+      console.log("work");
+    const data=await getDoc(doc(collection(db,"subjects"),id));
+      setModule(data.data());
+      console.log(data);
+    }
+    f();
+   
   },[]);
   useEffect(() => {
     if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name && inputsValid.code && inputsValid.lastExamHours && inputsValid.midtermHours && inputsValid.type) {
