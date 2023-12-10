@@ -1,0 +1,106 @@
+.container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    padding-top: 2rem;
+}
+.container div{
+    width: fit-content;
+}
+.container .info{
+width: 80%;
+box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+border-radius: 7px;
+}
+.container h2{
+    font-size: 115%;
+}
+.info h2{
+    background-color: var(--styling1);
+    color: #fff;
+    padding: 1rem 0.5rem;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+ 
+}
+.info div{
+    padding: 2rem 0.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.info div span{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+.info div span p:first-child{
+    background-color: var(--styling1);
+    padding: 0.5rem;
+    color: #fff;
+}
+.container .levels{
+    width: 80%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+border-radius: 7px;
+}
+.container .levels h2{
+    background-color: var(--styling1);
+    color: #fff;
+    padding: 1rem 0.5rem;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+.container .levels > span{
+    padding: 1rem 0.5rem;
+    display: block;
+}
+
+.container .levels span > div{
+display: flex;
+flex-direction: row;
+gap: 1rem;
+width: 100%;
+justify-content: space-around;
+align-items: center;
+margin: 0.6rem 0rem;
+}
+.levels span  > div p{
+    width: 9rem;
+    text-align: center;
+}
+.container .details{
+    width: 80%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 7px;
+}
+.container .details h2{
+    background-color: var(--styling1);
+    color: #fff;
+    padding: 1rem 0.5rem;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+.container .details > div{
+    display: grid;
+    padding: 0.8rem;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    row-gap: 1rem;
+}
+.details > div span{
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    row-gap: 0.25rem;
+}
+.details > div span p:first-of-type{
+    font-size: 85%;
+    color:var(--styling1);
+}
+.details div span p{
+    width: fit-content;
+}

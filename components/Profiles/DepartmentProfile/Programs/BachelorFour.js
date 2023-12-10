@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import classes from "./BachelorFour.module.css"
 import AddProgram from "./AddProgram";
+import PreviewBachelor from "./PreviewBachelor";
 let Program={
     activated:true,
     ECTS:240,
@@ -23,6 +24,8 @@ const BachelorFour=(probs)=>{
     },[])
     return(
         <>
+        {!program.activated &&
+        <>
         {showAddProgram && <div className={classes.add}><AddProgram showAddProgram={setShowAddProgram}/></div>}
         {showAddProgram && <div className={classes.backDrop} onClick={()=>setShowAddProgram(false)}></div>}
 
@@ -42,7 +45,11 @@ const BachelorFour=(probs)=>{
             </div>
             <div className={classes.message}> <h2>This Program is not activated yet! Press on activate program button below!</h2></div>
             <button onClick={()=>{setShowAddProgram(true);}}>Activate Program</button>
-        </div></>
+        </div></>}
+            {program.activated &&
+                <PreviewBachelor program={program}/>
+            }
+        </>
     )
 }
 export default BachelorFour;

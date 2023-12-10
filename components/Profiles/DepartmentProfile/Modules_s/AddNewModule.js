@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
 import { auth, creatuser, db } from "../../../../store/fire";
+import book from "../../../../Images/book.png";
 import Select from 'react-select'
 import classes from "./AddNewModule.module.css";
 import { getIdToken } from "firebase/auth";
@@ -187,7 +188,7 @@ f();
   return (
     <div className={`${classes.container}`}>
       <form action="" className=" form">
-        <h3>Add Module</h3>
+        <h3> <img src={book} alt=""/> Add a new  module</h3>
         <div className={classes.fields}>
           <span>
         <label htmlFor="email">

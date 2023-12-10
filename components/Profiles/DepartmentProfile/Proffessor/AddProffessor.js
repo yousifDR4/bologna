@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
 import { auth, creatuser, db } from "../../../../store/fire";
-
+import person from "../../../../Images/user.png";
 import Select from "react-select";
 
 import classes from "./AddProffessor.module.css";
@@ -139,7 +139,7 @@ const AddProffessor = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     // course is variable indicating course number with values 1 or 2
-
+    setUploading(true);
     try {
       const info = {
         "name": state.name,
@@ -162,8 +162,10 @@ const AddProffessor = () => {
       
       console.log(info);
       await creatuser(info);
+      setUploading(false);
     } catch (e) {
       console.log(e);
+      setUploading(false);
     }
 
  
@@ -172,7 +174,7 @@ const AddProffessor = () => {
   return (
     <div className={`${classes.container}`}>
       <form action="" className=" form">
-        <h3>Add Module</h3>
+       <span>  <h3> <img src={person} alt=""/> Add a new professor</h3></span>
         <div className={classes.fields}>
           <span>
 
@@ -223,7 +225,8 @@ const AddProffessor = () => {
             {!inputsValid.Country && state.Countrytouched && (
               <p className={classes.errorText}>Country must not be empty!</p>
             )}
-
+            </span>
+            <span>
             <label className="text">
               City<span className={classes.star}>*</span>
             </label>
@@ -236,7 +239,8 @@ const AddProffessor = () => {
             />
             {!inputsValid.city && state.citytouched && (
               <p className={classes.errorText}>city must not be empty!</p>
-            )}
+            )}</span>
+            <span>
             <label className="text">
               Degree <span className={classes.star}>*</span>
             </label>
@@ -247,8 +251,9 @@ const AddProffessor = () => {
               onBlur={blurHandler}
               value={state.Degree}
             >
+              <option value="Bachelor">Bachelor</option>
               <option value="Master">Master </option>
-              <option value="Doctoral">Doctoral</option>
+              <option value="Doctorate">Doctorate</option>
             </select>
           </span>
           <span>
@@ -265,7 +270,8 @@ const AddProffessor = () => {
               <option value="male">male </option>
               <option value="female">female</option>
             </select>
-
+            </span>
+              <span>
             <label htmlFor="password">
               Password<span className={classes.star}>*</span>
             </label>
@@ -281,6 +287,8 @@ const AddProffessor = () => {
             {!inputsValid.password && state.passwordtouched && (
               <p className={classes.errorText}>Password must be valid!</p>
             )}
+            </span>
+            <span>
             <label htmlFor="email">
               Email<span className={classes.star}>*</span>
             </label>
@@ -298,14 +306,13 @@ const AddProffessor = () => {
             )}
           </span>
 
-          <span></span>
-          <span></span>
+         
 
           <div className={classes.button}>
             {" "}
             <button
               onClick={submitHandler}
-              disabled={!formIsValid && !uploading}
+              disabled={!formIsValid || !uploading}
             >
               {uploading ? "Uploading" : "Add"}
             </button>

@@ -1,0 +1,28 @@
+.styledtable {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styledtable thead tr {
+    background-color: var(--styling1);
+    color: #ffffff;
+    text-align: left;
+}
+.styledtable th,
+.styledtable td {
+    padding: 12px 15px;
+}
+.styledtable tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styledtable tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styledtable tbody tr:last-of-type {
+    border-bottom: 2px solid var(--styling1);
+}
