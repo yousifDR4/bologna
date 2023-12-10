@@ -97,7 +97,7 @@ function onSortChange(action, state) {
   return (
     <div className={classes.container}>
         <div className={classes.table}>
-        <h3>View modules</h3>
+        <h3>View Professors</h3>
     <Table data={data} theme={theme} sort={sort}>
       {(tableList) => (
         <>

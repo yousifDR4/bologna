@@ -6,6 +6,7 @@
     align-items: center;
     width: 100%;
     padding: 2.4rem 2.4rem 0rem;
+    margin-bottom: 1rem;
 }
 .secondaryContainer *{
     box-sizing: border-box;

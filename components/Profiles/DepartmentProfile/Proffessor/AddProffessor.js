@@ -91,9 +91,10 @@ const AddProffessor = () => {
 
     console.log(inputsValid.Country);
     if (inputsValid.describtion && inputsValid.Country && inputsValid.name) {
-
+      console.log("Hh");
       setFormIsValid(true);
     } else {
+      console.log("@2");
       setFormIsValid(false);
     }
   }, [inputsValid]);
@@ -163,6 +164,10 @@ const AddProffessor = () => {
       console.log(info);
       await creatuser(info);
       setUploading(false);
+      const action={
+        type:"reset"
+      };
+      dispatch(action);
     } catch (e) {
       console.log(e);
       setUploading(false);
@@ -312,7 +317,7 @@ const AddProffessor = () => {
             {" "}
             <button
               onClick={submitHandler}
-              disabled={!formIsValid || !uploading}
+              disabled={!formIsValid || uploading}
             >
               {uploading ? "Uploading" : "Add"}
             </button>

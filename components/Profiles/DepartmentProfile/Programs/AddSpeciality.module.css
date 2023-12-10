@@ -1,0 +1,115 @@
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    height: fit-content;
+}
+.container form{
+    background-color: white;
+    box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
+  width: 100%;
+
+}
+.container form > div{
+    padding: 2rem;
+}
+.container .closeBtn{
+    display: none;
+}
+.container form h3{
+    font-family: Graphik;
+    color:#fff;
+    text-align: left;
+    padding: 0.7rem 0.4rem;
+    background-color: var(--styling1);
+}
+.container form label:first-of-type{
+    margin-top: 8px;
+}
+.container form label{
+     font-family: GraphikLight;
+    display: inline-block;
+    margin: 20px 0 3px 0;
+    color: #6B6C6D;
+  
+}
+
+.container form > .fields{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    column-gap: 0.8rem;
+}
+.container form .fields span{
+    height: fit-content;
+}
+.container form input,.container form select{
+border: 1px solid #6B6C6D;
+border-radius: 7px;
+padding-left: 0.5rem;
+height: 2.5rem;
+width: 100%;
+overflow: hidden;
+font-size: 110%;
+font-family: GraphikThin;
+color:#6B6C6D;
+}
+.container form select{
+    padding-left: 0;
+}
+.container form  .errorText{
+    color:red;
+    font-size: small;
+    font-family: GraphikLight;
+    margin-bottom: 0;
+    }
+    .container .button{
+        text-align: end;
+        grid-column: 2/3;
+        display: flex;
+        column-gap: 0.3rem;
+        justify-content: end;
+    }
+    .container .button button:first-child{
+        background-color: #fff;
+        border: 1px solid #b9bbbd;
+        color:#959696;
+        cursor: pointer;
+    }
+    .container form button{
+        background-color:var(--styling1) ;
+        color: white;
+        margin: 40px 0 20px 0;
+        border: 1px solid #6B6C6D;
+        border-radius: 7px;
+    width: 9rem;
+    height: 2.2rem;
+    font-family: Graphik;
+    cursor: pointer;
+    }
+    .container form button:hover{
+        color:var(--styling1);
+        background-color: white;
+    }
+    .container form .button p{
+        color: #6B6C6D;
+        font-family: GraphikThin;
+        font-size: 80%;
+    }
+    .container form .button a{
+        color:var(--styling1);
+        font-size: 100%;
+    }
+    .container form button:disabled{
+        background-color: #B8BFC6;
+        color: white;
+        border: none;
+        
+        }
+    .container form button:disabled:hover{
+          background-color: #B8BFC6;
+          border: none;
+          box-shadow: none;
+          cursor: not-allowed;
+        }
