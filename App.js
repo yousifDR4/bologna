@@ -18,6 +18,7 @@ import EditModule from './components/Profiles/DepartmentProfile/Modules_s/EditMo
 import AddProffessor from './components/Profiles/DepartmentProfile/Proffessor/AddProffessor.js';
 
 import ProgramManage from './components/Profiles/DepartmentProfile/Programs/ProgramManage.js';
+import ProfessorTable from './components/Profiles/DepartmentProfile/Proffessor/PrefessorTable.js';
 
 let firstInitilize=true;
 function App() {
@@ -92,6 +93,10 @@ function App() {
         {
           path: "/ProgramManage",
           element:<ProgramManage/>
+        },
+        {
+          path: "ProfessorList",
+          element: <ProfessorTable/>
         }
 
     ]
