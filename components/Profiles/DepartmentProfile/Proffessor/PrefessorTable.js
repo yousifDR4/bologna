@@ -148,7 +148,7 @@ img{
   return (
     <div className={classes.container}>
       <div className={classes.table}>
-        <h3>View modules</h3>
+        <h3>View Professor</h3>
         <Table data={data} theme={theme} sort={sort}>
           {(tableList) => (
             <>
