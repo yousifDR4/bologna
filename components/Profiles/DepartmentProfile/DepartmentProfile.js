@@ -40,14 +40,7 @@ const DepartmentProfile = () => {
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
   const [modules, setDepartments] = useState([]);
-  console.log(profile);
-  useEffect(()=>{
-    const f=async()=>{
-      const k=await getDoc(doc(db,"passwords","vjjfj"));
-      console.log(k.data());
-    }
-    f();
-  },[])
+  console.log(profile); 
 if(!loaded){
   return(
     <>
