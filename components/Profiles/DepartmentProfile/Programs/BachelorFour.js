@@ -5,17 +5,17 @@ import PreviewBachelor from "./PreviewBachelor";
 import { get_prog } from "../../../../store/getandset";
 import { auth } from "../../../../store/fire";
 import { useSelector } from "react-redux";
-let Program1={
-    activated:true,
-    ECTS:240,
-    levels:4,
-    name:"ICE Bachelor's degree",
-    code:"BSc-ICE",
-    eveningStudy:true,
-    summerInternhsip:true,
-    summerInternhsipYear:3,
-    speciality:true,
-}
+// let Program1={
+//     activated:true,
+//     ECTS:240,
+//     levels:4,
+//     name:"ICE Bachelor's degree",
+//     code:"BSc-ICE",
+//     eveningStudy:true,
+//     summerInternhsip:true,
+//     summerInternhsipYear:3,
+//     speciality:true,
+// }
 const BachelorFour=(probs)=>{
     let {ECTS,levels}=probs;
     console.log(ECTS,levels);
@@ -23,24 +23,29 @@ const BachelorFour=(probs)=>{
     let p=profile;
     const [program,setProgram]=useState({});
     const [showAddProgram,setShowAddProgram]=useState(false);
+    const [error,setError]=useState(false);
+    const [loading,setLoading]=useState(false);
+
     useEffect(()=>{
-       
         if(!auth.currentUser) return;
         //load Program (if exist (Activated))]
         const f=async()=>{
+            try{
+                setLoading(true);
         const d=await get_prog();
-      
-            
         const obj=d[0]
         console.log(obj);
            
-            setProgram(Program1);
-         
+            setProgram(obj);}
+          catch(e){
+            setError(true);
+          }
+          finally{
+            setLoading(false);
+          }
+            
         }
         f();
-        
-        
-
         // ;
     },[p])
     return(

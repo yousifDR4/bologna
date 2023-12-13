@@ -86,18 +86,19 @@ const AddUniversity = (probs) => {
       creationType="username";
     }
     try {
-      // const IdToken = await getIdToken(auth.currentUser);
+      const IdToken = await getIdToken(auth.currentUser);
 
-      // const info = {
-      //   email: state.email,
-      //   password: state.password,
-      //   createType: creationType,
-      //   name: state.name,
-      //   accountType: "University",
-      //   IdToken: IdToken,
-      // };
-      // console.log(info);
-      // const k = await creatuser(info);
+      const info = {
+        email: state.email,
+        password: state.password,
+        createType: creationType,
+        name: state.name,
+        accountType: "University",
+        IdToken: IdToken,
+      };
+      console.log(info);
+      const k = await creatuser(info);
+      if(k.uid)
       probs.updateUniversity();
       // console.log(k);
     } catch (e) {
