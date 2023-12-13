@@ -90,10 +90,13 @@ const AddProffessor = () => {
   useEffect(() => {
 console.log(formIsValid);
     console.log(inputsValid.Country);
-    if (inputsValid.describtion && inputsValid.Country && inputsValid.name) {
-      console.log("lol");
+    if (inputsValid.describtion && inputsValid.Country && inputsValid.name && inputsValid.email && inputsValid.password) {
+      console.log("Hh");
+
+
       setFormIsValid(true);
     } else {
+      console.log("@2");
       setFormIsValid(false);
     }
   }, [inputsValid]);
@@ -165,6 +168,10 @@ console.log(formIsValid);
       console.log(info);
       await creatuser(info);
       setUploading(false);
+      const action={
+        type:"reset"
+      };
+      dispatch(action);
     } catch (e) {
       console.log(e);
       setUploading(false);
@@ -292,7 +299,7 @@ console.log(formIsValid);
             </span>
             <span>
             <label htmlFor="email">
-              Email<span className={classes.star}>*</span>
+              Email or Username<span className={classes.star}>*</span>
             </label>
             <input
               type="email"
@@ -314,7 +321,8 @@ console.log(formIsValid);
             {" "}
             <button
               onClick={submitHandler}
-              disabled={!formIsValid}
+              disabled={!formIsValid || uploading}
+
             >
               {uploading ? "Uploading" : "Add"}
             </button>

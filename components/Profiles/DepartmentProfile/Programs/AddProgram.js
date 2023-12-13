@@ -77,7 +77,7 @@ function reducer(state, action) {
 
 const AddProgram = (probs) => {
   const [modules, setModules] = useState(modul);
-
+  
   const [state, dispatch] = useReducer(reducer, intilistate);
   const [uploading, setUploading] = useState(false);
   const inputsValid = {
@@ -146,7 +146,8 @@ const AddProgram = (probs) => {
         University_id: profile.University_id,
         College_id: profile.College_id,
         specialty: state.specialty,
-        activeted:true
+        activeted:true,
+        type:(probs.ECTS == 240 ? 4:probs.ECTS == 300 ? 5: 6)
       };
       const id=await addDoc(collection(db,"programs"),info);
        updateDoc(doc(db,"users",auth.currentUser.uid),

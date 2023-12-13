@@ -26,3 +26,21 @@
 .styledtable tbody tr:last-of-type {
     border-bottom: 2px solid var(--styling1);
 }
+.add{
+    cursor: pointer;
+    margin-top: 0.8rem;
+}
+.add p{
+    color:#4A8BDF;
+    font-family: GraphikLight; 
+    display: inline-block;
+ }
+  .add img{
+     vertical-align:middle;
+     margin-right: 0.5rem!important;
+     width: 2rem;
+     height: 2rem;
+ }
+ .add:hover p{
+     text-decoration: underline;
+ }

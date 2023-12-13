@@ -5,16 +5,19 @@ import BachelorFour from "./BachelorFour";
 import Speciality from "./Speciality";
 const ProgramManage=()=>{
    
-const [rightContainer,setRightContainer]=useState(<BachelorFour ECTS="240" levels="4"/>)
-const [header,setHeader]=useState({title:"Bachelor's 4 Years",desc:"Manage Bachelor's 4 Years."})
+const [rightContainer,setRightContainer]=useState(<BachelorFour  ECTS="240" levels="4"/>);
+const [program,setProgram]=useState(4);
+const [header,setHeader]=useState({title:"Bachelor's 4 Years",desc:"Manage Bachelor's 4 Years."});
 const clickHandler=(probs)=>{
     switch(probs){
         case 'bach4':
             setRightContainer(<BachelorFour ECTS="240" levels="4" />)
+            setProgram(4);
             setHeader({title:"Bachelor's 4 Years",desc:"Manage Bachelor's 4 Years Program."})
             break;
         case 'bach5':
             setRightContainer("h")
+            setProgram(5)
             setHeader({title:"Bachelor's 5 Years",desc:"Manage Bachelor's 4 Years Program."})
             break;
     }
@@ -44,7 +47,7 @@ const clickHandler=(probs)=>{
             </div>
             <div className={classes.speciality}>
                 <h3>Specialities</h3>
-                <Speciality/>
+                <Speciality program={program}/>
             </div>
         </main>
     );

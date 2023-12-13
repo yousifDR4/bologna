@@ -47,7 +47,7 @@ const BachelorFour=(probs)=>{
         <>
         {!program.activated &&
         <>
-        {showAddProgram && <div className={classes.add}><AddProgram showAddProgram={setShowAddProgram}/></div>}
+        {showAddProgram && <div className={classes.add}><AddProgram showAddProgram={setShowAddProgram} ECTS={ECTS}/></div>}
         {showAddProgram && <div className={classes.backDrop} onClick={()=>setShowAddProgram(false)}></div>}
 
         <div className={classes.container}>

@@ -26,24 +26,14 @@ const ProfessorTable = () => {
   useEffect(() => {
     //fetch
     setModules([
-      {
-        password: "hh3h3",
-        name: "physics",
-        midtermExamHours: "2",
-        endtermExamHours: "3",
-        id: "00", //
-      },
-      {
-        name: "hh3h4",
-        password: "MathII",
-        midtermExamHours: "4",
-        endtermExamHours: "1",
-        id: "01",
-      },
+     
     ]);
     const f=async()=>{
       if(!profile.professors)
       return;
+    else if(profile.professors.length === 0){
+      return;
+    }
       console.log(profile.professors);
      const m= profile.professors
    const p1=getDocs(query(collection(db,"users"),where("uid","in",profile.professors)));
@@ -147,8 +137,11 @@ img{
   }
   return (
     <div className={classes.container}>
+
       <div className={classes.table}>
-        <h3>View Professor</h3>
+        <h3>View Professors</h3>
+
+
         <Table data={data} theme={theme} sort={sort}>
           {(tableList) => (
             <>
