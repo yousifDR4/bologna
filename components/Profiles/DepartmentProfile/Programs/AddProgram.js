@@ -146,7 +146,7 @@ const AddProgram = (probs) => {
         University_id: profile.University_id,
         College_id: profile.College_id,
         specialty: state.specialty,
-        activeted:true,
+        activated:true,
         type:(probs.ECTS == 240 ? 4:probs.ECTS == 300 ? 5: 6)
       };
       const id=await addDoc(collection(db,"programs"),info);
