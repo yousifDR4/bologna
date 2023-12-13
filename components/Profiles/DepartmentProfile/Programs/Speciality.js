@@ -42,7 +42,9 @@ const stSp=[
             return(
         <tr key={speciality.id}>
             <td>{speciality.name}</td>
-            <td>{speciality.requestedModules}</td>
+            <td>{speciality.requestedModules.map((mod)=>{
+                return mod + "  ";
+            })}</td>
             <td>{speciality.stuedentNum}</td>
         </tr>);
     })}

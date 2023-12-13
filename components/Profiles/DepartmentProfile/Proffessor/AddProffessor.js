@@ -90,7 +90,7 @@ const AddProffessor = () => {
   useEffect(() => {
 
     console.log(inputsValid.Country);
-    if (inputsValid.describtion && inputsValid.Country && inputsValid.name) {
+    if (inputsValid.describtion && inputsValid.Country && inputsValid.name && inputsValid.email && inputsValid.password) {
       console.log("Hh");
       setFormIsValid(true);
     } else {
@@ -295,7 +295,7 @@ const AddProffessor = () => {
             </span>
             <span>
             <label htmlFor="email">
-              Email<span className={classes.star}>*</span>
+              Email or Username<span className={classes.star}>*</span>
             </label>
             <input
               type="email"
