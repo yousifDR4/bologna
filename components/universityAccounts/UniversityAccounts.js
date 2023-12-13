@@ -95,6 +95,12 @@ const UniversityAccounts = () => {
   const searchChangeHandler = (e) => {
     setSearchValue(e.target.value);
   };
+  const updateUniversity=()=>{
+    setnextdoc(null);
+    fetchRef.current=true;
+    setUniversity([]);
+    setInitialUniversityValue([]);
+  }
     return (
       <main className={classes.main}>
         {accountType === "Admin" && (
@@ -103,7 +109,7 @@ const UniversityAccounts = () => {
               showAddUniversity === true ? classes.active : ""
             }`}
           >
-            <AddUniversity />
+            <AddUniversity updateUniversity={updateUniversity} />
           </div>
         )}
         {showAddUniversity && (
