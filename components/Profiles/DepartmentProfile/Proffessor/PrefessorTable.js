@@ -140,6 +140,8 @@ img{
 
       <div className={classes.table}>
         <h3>View Professors</h3>
+
+
         <Table data={data} theme={theme} sort={sort}>
           {(tableList) => (
             <>

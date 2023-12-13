@@ -88,10 +88,12 @@ const AddProffessor = () => {
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
   useEffect(() => {
-
+console.log(formIsValid);
     console.log(inputsValid.Country);
     if (inputsValid.describtion && inputsValid.Country && inputsValid.name && inputsValid.email && inputsValid.password) {
       console.log("Hh");
+
+
       setFormIsValid(true);
     } else {
       console.log("@2");
@@ -141,8 +143,10 @@ const AddProffessor = () => {
     e.preventDefault();
     // course is variable indicating course number with values 1 or 2
     setUploading(true);
+    const IdToken=await getIdToken(auth.currentUser);
     try {
       const info = {
+        IdToken:IdToken,
         "name": state.name,
         "email": state.email,
         "password": state.password,
@@ -318,6 +322,7 @@ const AddProffessor = () => {
             <button
               onClick={submitHandler}
               disabled={!formIsValid || uploading}
+
             >
               {uploading ? "Uploading" : "Add"}
             </button>
