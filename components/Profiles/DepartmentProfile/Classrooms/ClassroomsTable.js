@@ -15,25 +15,25 @@ import {
 import { getTheme } from '@table-library/react-table-library/baseline';
 import { HeaderCellSort, useSort } from '@table-library/react-table-library/sort';
 import Modules from '../Modules';
-import { get_Sujects,get_modules } from '../../../../store/getandset';
+import { get_Sujects,get_classRooms,get_modules } from '../../../../store/getandset';
 import { auth } from '../../../../store/fire';
 import AddClass from './AddClass';
 const key = 'Compact Table';
-let c=[
-    {
-        name:"Programming Lab",
-        place:"Building 1",
-        notes:"",
-        id:"01"
-    }
-    ,
-    {
-        name:"Networking Lab",
-        place:"Building 1",
-        notes:"",
-        id:"02"
-    }
-];
+// let c=[
+//     {
+//         name:"Programming Lab",
+//         place:"Building 1",
+//         notes:"",
+//         id:"01"
+//     }
+//     ,
+//     {
+//         name:"Networking Lab",
+//         place:"Building 1",
+//         notes:"",
+//         id:"02"
+//     }
+// ];
 const ClassroomsTable = () => {
   const [classroom,setClassRoom]=useState([]);
   const [showAdd,setShowAdd]=useState(false);
@@ -45,9 +45,17 @@ const ClassroomsTable = () => {
     if(!auth.currentUser)
     return;
     const f=async()=>{
-    // const data=await get_modules()
+      try{
+     const data = await get_classRooms()
     console.log(data);
-    setClassRoom(c);
+    if (data) {
+      setClassRoom(data);
+    }
+  }
+  catch(e){
+    
+  }
+   
     }
     f();
   },[auth.currentUser,reload])
