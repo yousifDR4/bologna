@@ -19,6 +19,7 @@ import AddProffessor from './components/Profiles/DepartmentProfile/Proffessor/Ad
 
 import ProgramManage from './components/Profiles/DepartmentProfile/Programs/ProgramManage.js';
 import ProfessorTable from './components/Profiles/DepartmentProfile/Proffessor/PrefessorTable.js';
+import ClassroomsTable from './components/Profiles/DepartmentProfile/Classrooms/ClassroomsTable.js';
 
 let firstInitilize=true;
 function App() {
@@ -97,6 +98,12 @@ function App() {
         {
           path: "ProfessorList",
           element: <ProfessorTable/>
+
+
+        },
+        {
+          path: "Classrooms",
+          element: <ClassroomsTable/>
 
 
         }

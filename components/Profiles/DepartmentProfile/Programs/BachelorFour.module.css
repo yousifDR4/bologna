@@ -5,20 +5,21 @@
     width: 95%;
     border-radius: 10rem;
     left: 50%;
-    top: 45%;
+    top: 50%;
     transform: translate(-50%,-50%);
     max-width: 65rem; 
     box-sizing:content-box;
 }
 .backDrop{
-    height: 100vh;
+    height: 100%;
+
     width: 100vw;
     top:0;
     left:0;
     background-color: #929394;
     opacity: 0.6;
     z-index: 12;
-    position: absolute;
+    position: fixed;
 }
 .container{
     display: flex;
@@ -89,6 +90,23 @@ border-radius: 7px;
     color: var(--styling1);
 }
 @media (max-width:650px) {
+    .add{
+        height: auto;
+        overflow: visible;
+        max-width: 100%;
+        width: 100vw;
+        box-sizing: border-box;
+        transform: none;
+        top:0;
+        left: 0;
+        position: absolute;
+        padding-top: 0;
+    }
+    .backDrop{
+        display: none;
+    }
+}
+@media (max-height: 650px) {
     .add{
         height: auto;
         overflow: visible;

@@ -1,17 +1,9 @@
 
-.container > button:first-child{
-    background-color: var(--styling1);
-    border: none;
-    color: #fff;
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 105%;
-}
 .container{
     width: 100%;
     display: flex;
     justify-content: center;
+    padding-top: 1rem;
     height: fit-content;
 }
 .container form{
@@ -20,6 +12,7 @@
   width: 100%;
   max-width: 80rem;
   border-radius: 20px;
+  margin: 0 1.5rem;
 }
 .container form > div{
     padding: 2rem;
@@ -36,6 +29,12 @@
     border-top-left-radius: 20px;
     background-color: var(--styling1);
 }
+.container form h3 img{
+    width: 2rem;
+    height: 2rem;
+    vertical-align:sub;
+    margin-right: 0.2rem;
+ }
 .container form label:first-of-type{
     margin-top: 8px;
 }
@@ -48,17 +47,9 @@
 }
 
 .container form > .fields{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto;
-    grid-template-areas: 
-    "first first first  second second second"
-    "third third third fourth fourth fourth"
-    "fifth fifth fifth sixth sixth sixth"
-    " seventh seventh seventh eighth eighth eighth"
-    "tenth tenth tenth elevth elevth elevth"
-    ". . . . . ninth"
-    ;
+    display: flex;
+    flex-direction: column;
+
     gap: 1rem;
     column-gap: 2rem;
 }
@@ -76,39 +67,7 @@ color:#6B6C6D;
 .container form select{
     padding-left: 0;
 }
-.container form span:first-of-type{
-    grid-area: first;
-}
-.container form span:nth-of-type(2){
-    grid-area: second;
-}
-.container form span:nth-of-type(3){
-    grid-area: third;
-}
-.container form span:nth-of-type(4){
-    grid-area: fourth;
-}
-.container form span:nth-of-type(5){
-    grid-area: fifth;
-}
-.container form span:nth-of-type(6){
-    grid-area: sixth;
-}
-.container form span:nth-of-type(7){
-    grid-area: seventh;
-}
-.container form span:nth-of-type(8){
-    grid-area: eighth;
-}
-.container form span:nth-of-type(9){
-    grid-area: tenth;
-}
-.container form span:nth-of-type(10){
-    grid-area: elevth;
-}
-.container form .fields div{
-    grid-area: ninth;
-}
+
 .container form select{
     font-size: 100%;
 }
@@ -182,23 +141,8 @@ cursor: pointer;
       box-shadow: none;
       cursor: not-allowed;
     }
-@media (max-width:900px) {
-        .container form > .fields{
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: auto;
-            grid-template-areas: 
-            "first first first  second second second"
-            "third third third fourth fourth fourth"
-            "fifth fifth fifth sixth sixth sixth"
-            "seventh seventh seventh eighth eighth eighth  "
-            "tenth tenth tenth elevth elevth elevth"
-            ". . . . . ninth"
-            ;
-            gap: 1rem;
-            column-gap: 2rem;
-        } }
-@media (max-width:650px) or (max-height:650px){
+
+@media (max-width:650px) {
     .container{
         padding-top: 0;
     }
@@ -209,26 +153,7 @@ cursor: pointer;
         margin: 0 auto;
         box-shadow: none;
     }
-    .container form > .fields{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-        grid-template-rows: auto;
-        grid-template-areas: 
-        "first first first first first first"
-        "second second second second second second "
-        "third third third third third third"
-        "fourth fourth fourth fourth fourth fourth"
-        "fifth fifth fifth fifth fifth fifth"
-        "sixth sixth sixth  sixth sixth sixth "
-        "seventh seventh seventh seventh seventh seventh"
-        "eighth eighth eighth eighth eighth eighth"
-        "tenth tenth tenth tenth tenth tenth "
-        "elevth elevth elevth elevth elevth elevth"
-        ". . . . . ninth"
-        ;
-        gap: 1rem;
-        column-gap: 2rem;
-    }
+   
     .container .closeBtn{
         border: none;
         display: block;
@@ -247,10 +172,7 @@ cursor: pointer;
         height: 1rem;
         
     }
-    .container form h3{
-        font-size: 120%;
-        border-radius: 0;
-    }
+    
     .container form label{
         font-size: 120%;
     }
@@ -265,7 +187,7 @@ cursor: pointer;
         font-size: 110%;
     }
     .container form button{
-        width: 8rem;
+        width: 12rem;
         height: 2.7rem;
      
         font-size: 120%;

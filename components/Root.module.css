@@ -11,7 +11,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: 12;
+    z-index: 20;
     background: rgba(119, 117, 117,0.5);
 }
 .error{
