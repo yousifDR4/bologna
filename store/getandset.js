@@ -7,6 +7,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  orderBy,
   query,
   setDoc,
   updateDoc,
@@ -89,7 +90,9 @@ export const get_modules=async()=>{
     export const get_classRooms=async()=>{
       const userRef=doc(db,"users",auth.currentUser.uid);
       console.log("works");
-      const docs=await getDocs(collection(userRef,"classRooms"));
+      const docs=await getDocs(query(collection(userRef,"classRooms")
+      ,orderBy("namelower","asc")
+      ));
       const data=docs.docs.map((doc)=>({...doc.data(),id:doc.id})) 
       console.log(data);
       return data;

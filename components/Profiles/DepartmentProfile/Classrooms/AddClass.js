@@ -103,15 +103,19 @@ const AddClass = (probs) => {
     e.preventDefault();
     setUploading(true);
     // if it's edit then edit ==true else false
-    const info = {
-      name: state.name,
-      notes:state.notes,
-      place:state.place,
-      Deprartment_id:auth.currentUser.uid
-    };
-   const userRef=doc(db,"users",auth.currentUser.uid)
-    const ref=await addDoc(collection(userRef,"classRooms"),info)
+  
+ 
+
     try{
+      const info = {
+        name: state.name,
+        namelower:state.name.toLocaleLowerCase(),
+        notes:state.notes,
+        place:state.place,
+        Deprartment_id:auth.currentUser.uid
+      };
+      const userRef=doc(db,"users",auth.currentUser.uid)
+      const ref=await addDoc(collection(userRef,"classRooms"),info)
         
         setUploading(false);
     }
