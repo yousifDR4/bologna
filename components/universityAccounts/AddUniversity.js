@@ -42,7 +42,8 @@ const AddUniversity = (probs) => {
     name: state.name.trim() !== "",
   };
   const [formIsValid, setFormIsValid] = useState(false);
-
+  const [error ,seterror]=useState(false);
+  const [loading,setLoading]=useState(true);
   useEffect(() => {
     if (inputsValid.email && inputsValid.password && inputsValid.name) {
       setFormIsValid(true);
@@ -86,8 +87,9 @@ const AddUniversity = (probs) => {
       creationType="username";
     }
     try {
+      setLoading(true);
       const IdToken = await getIdToken(auth.currentUser);
-
+      
       const info = {
         email: state.email,
         password: state.password,
@@ -98,9 +100,15 @@ const AddUniversity = (probs) => {
       };
       console.log(info);
       const k = await creatuser(info);
-      console.log(k);
+      if(k.uid)
+      probs.updateUniversity();
+      // console.log(k);
     } catch (e) {
       console.log(e);
+      seterror(false);
+    }
+    finally{
+      setLoading(false);
     }
   };
 
