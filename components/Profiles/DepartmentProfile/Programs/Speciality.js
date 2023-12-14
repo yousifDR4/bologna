@@ -56,7 +56,7 @@ const stSp=[
     )}
     else{
         return(
-<>{showAdd &&<AddSpeciality showAdd={setShowAdd}/>}
+<>{showAdd &&<AddSpeciality showAdd={setShowAdd} program={program}/>}
 {!showAdd && <div  className={classes.add} onClick={()=>setShowAdd(true)}><img src={addIcon} alt=""/><p>Add a new speciality</p></div>}</>
         );
     }

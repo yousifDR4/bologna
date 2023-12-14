@@ -154,7 +154,7 @@ f();
         <div className={classes.fields}>
           <span>
         <label htmlFor="email">
-          Module Name<span className={classes.star}>*</span>
+          Speciality Name<span className={classes.star}>*</span>
         </label>
         <input
           type="text"
