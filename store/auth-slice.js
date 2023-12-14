@@ -107,6 +107,7 @@ export const onLogin = (profile) => {
       name,
       accountType,
       uid,
+      Department_id,
       email,
       details,
       website,
@@ -141,6 +142,7 @@ export const onLogin = (profile) => {
           College_id:College_id?College_id:"",
           levels:  levels?  levels:[],
           professors:professors?professors:[],
+          Department_id:Department_id?Department_id:uid,
         })
       );
     };

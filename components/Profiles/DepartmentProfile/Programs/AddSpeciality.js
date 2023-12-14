@@ -111,16 +111,20 @@ const AddSpeciality = (probs) => {
     setUploading(true);
     //program is program     
     try{
-    // const info = {
-    //   name: state.name,
-    //   prerequisite:state.prerequisite,
-    // };
-    // console.log();
-    // const id = await addDoc(collection(db, "subjects"), info);
-    // console.log(id.id);
-    // await updateDoc(doc(db, "users", auth.currentUser.uid), {
-    //   subjects_id: arrayUnion(id.id),
-    // });
+    const info = {
+      name: state.name,
+      namelower:state.name.toLocaleLowerCase(),
+      prerequisite:state.prerequisite,
+      programId:program,
+      Department_id:auth.currentUser.uid,
+    };
+ 
+    console.log("work");
+    const id = await addDoc(collection(db,"speciality" ), info);
+    console.log(id.id);
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      subjects_id: arrayUnion(id.id),
+    });
     setUploading(false); // dont delete my code
     showAdd(false);
   }
