@@ -1,4 +1,5 @@
 import {
+  and,
   arrayRemove,
   arrayUnion,
   collection,
@@ -76,11 +77,21 @@ export const get_modules=async()=>{
   console.log(data);
   return data;
   }
-  export const get_prog=async()=>{
-    const q=query(collection(db,"programs"),where("Deprartment_id","==",auth.currentUser.uid))
+  export const get_prog=async(levels)=>{
+    const q=query(collection(db,"programs"),
+  and(
+    where("Deprartment_id","==",auth.currentUser.uid),where("levels","==",levels)))
     const docs=await getDocs(q);
     const data=docs.docs.map((doc)=>({...doc.data(),id:doc.id})) 
     console.log(data);
     return data;
     }
+    export const get_classRooms=async()=>{
+      const userRef=doc(db,"users",auth.currentUser.uid);
+      console.log("works");
+      const docs=await getDocs(collection(userRef,"classRooms"));
+      const data=docs.docs.map((doc)=>({...doc.data(),id:doc.id})) 
+      console.log(data);
+      return data;
+      }
 
