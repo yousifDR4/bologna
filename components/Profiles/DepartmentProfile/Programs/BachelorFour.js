@@ -32,7 +32,7 @@ const BachelorFour=(probs)=>{
         const f=async()=>{
             try{
                 setLoading(true);
-        const d=await get_prog();
+        const d=await get_prog(levels);
         const obj=d[0]
         console.log(obj);
            

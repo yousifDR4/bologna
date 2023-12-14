@@ -53,7 +53,7 @@ const ClassroomsTable = () => {
     }
   }
   catch(e){
-    
+
   }
    
     }
@@ -135,6 +135,9 @@ img{
 function onSortChange(action, state) {
   console.log(action, state);
 }
+const updateTable=()=>{
+ setReload((prev)=>!prev);  
+}
   return (
   <>
  {showAdd && <div className={classes.add}><AddClass classroom={classS} edit={edit} showAdd={setShowAdd} setReload={setReload}/></div>}
@@ -161,7 +164,7 @@ function onSortChange(action, state) {
                   {classroom.name}
                 </Cell>
                 <Cell><p>{classroom.place}</p></Cell>
-                <Cell><div className='relative'><Options classroom={classroom} showAdd={addClassHandler}/></div></Cell>
+                <Cell><div className='relative'><Options classroom={classroom} showAdd={addClassHandler} updateTable={updateTable}/></div></Cell>
               </Row>
             ))}
           </Body>

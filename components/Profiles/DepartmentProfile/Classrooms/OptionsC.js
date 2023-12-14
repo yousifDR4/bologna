@@ -2,12 +2,23 @@ import { useState } from "react";
 import options from "../../../../Images/option.png";
 import classes from "../Modules_s/Options.module.css";
 import { useNavigate } from "react-router-dom";
+import { deleteDoc, doc } from "firebase/firestore";
+import { auth, db } from "../../../../store/fire";
 const Options=(probs)=>{
     const [showDropDown,setShowDropDown]=useState(false);
     const navigate=useNavigate();
     let {classroom}=probs;
-    const deleteHandler=()=>{
+    const deleteHandler=async()=>{
         //classroom.id -> id
+        const userRef=doc(db,"users",auth.currentUser.uid);
+        console.log("works");
+       try{
+        await deleteDoc(doc(userRef,"classRooms",classroom.id));
+        probs.updateTable();
+       }
+       catch(e){
+
+       }
 
     }
     const editHandler=()=>{
