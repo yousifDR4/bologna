@@ -3,7 +3,7 @@ import classes from "./Notifications.module.css";
 import uob from "../../Images/UniversityofBaghdad.png";
 import search from "../../Images/search.png";
 import { db, auth } from "../../store/fire";
-import { getDocs, where, collection, query, doc } from "firebase/firestore";
+import { getDocs, where, collection, query, doc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
@@ -19,52 +19,48 @@ const Notifications = () => {
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
+  const profile = useSelector((state) => state.profile.profile);
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
-  const limitNumber = 2;
-  const { data, load: myload } = usePaginationFetch(
-    nextdoc,
-    fetchRef.current,
-    limitNumber
-  );
+  const [myload,setmyload]=useState(false);
+  const Department_id=profile.Department_id;
   useEffect(() => {
-    const f = async () => {
-      try {
-        if (data.length > 0) {
-          const s = data.map((doc) => {
-            return {
-              ...doc.data(),
-              img: doc.data().profilePicture ? doc.data().profilePicture : uob,
-              name: doc.data().name ? doc.data().name : "un",
-              id: doc.id,
-            };
-          });
-        
-            setUniversity((prev) => {
-              return [...prev, ...s];
-            });
-            setInitialUniversityValue((prev) => {
-              return [...prev, ...s];
-            });
-          
-
-          console.log(searchValue);
-          if (searchValue !== "") performSearch(searchValue);
-          fetchRef.current = false;
-          console.log("length", data.length);
-          if (data.length === limitNumber) setnextdoc(data[limitNumber - 1]);
-          
-        } else {
-          console.log(444);
-          setUniversity(initalUniversityValue);
-          if (searchValue !== "") performSearch(searchValue);
+    if(!Department_id)
+    return;
+    if(Department_id.length===0)
+    return;
+    const DepartmentRef=doc(db,"notififcation",Department_id);
+    const q=query(collection(DepartmentRef, "Department"))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let count = 0;
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added"&&
+        change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id
+        ) 
+        {
+          const temp=doc(db,change.doc.ref.path);
+          updateDoc(temp,{
+            seen:arrayUnion(Department_id)
+          })
+          console.log(temp);
+          count++;
+          console.log("notfacation",count);
         }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    f();
-  }, [data]);
+      });
+    });
+    return () => unsubscribe;
+  }, [Department_id]);
+  
+  // useEffect(() => {
+  //   const f = async () => {
+  //     try {
+  //       }
+  //      catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  //   f();
+  // }, []);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
     return () => clearTimeout(timer);
@@ -93,12 +89,6 @@ const Notifications = () => {
   const searchChangeHandler = (e) => {
     setSearchValue(e.target.value);
   };
-  const updateUniversity=()=>{
-    setnextdoc(null);
-    fetchRef.current=true;
-    setUniversity([]);
-    setInitialUniversityValue([]);
-  }
     return (
       <main className={classes.main}>
         <div className={classes.universities}>

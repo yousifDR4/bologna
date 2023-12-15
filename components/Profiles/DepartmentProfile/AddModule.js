@@ -11,6 +11,8 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { useLocation } from "react-router-dom";
+import { setreport } from "../../../store/getandset";
 
 const intilistate = {
   name: "",
@@ -44,7 +46,7 @@ function reducer(state, action) {
 }
 
 const AddModule = (probs) => {
-
+  const location = useLocation();
   const { course, level } = probs;
   const [state, dispatch] = useReducer(reducer, intilistate);
   const inputsValid = {
@@ -54,6 +56,7 @@ const AddModule = (probs) => {
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
+  const Department_id = profile.Department_id;
   useEffect(() => {
     if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name) {
       setFormIsValid(true);
@@ -88,7 +91,7 @@ const AddModule = (probs) => {
       describtion: state.describtion,
       ECTS: state.ECTS,
       level: level,
-      Deprartment_id: auth.currentUser.uid,
+      Deprartment_id: Department_id,
       course: course,
       University_id:profile.University_id,
       College_id:profile.College_id,
@@ -96,9 +99,18 @@ const AddModule = (probs) => {
     console.log();
     const id = await addDoc(collection(db, "subjects"), info);
     console.log(id.id);
-    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+    const update= updateDoc(doc(db, "users", Department_id), {
       subjects_id: arrayUnion(id.id),
     });
+    const reportinfo={
+      page:location.pathname,
+      type:"add",
+      id:id.id,
+      uid:auth.currentUser.uid,
+      name:profile.name,
+      describtion:"add a module"
+    }
+    Promise .all([setreport(reportinfo,Department_id),update])
   }
   catch(e){
     console.log(e);
