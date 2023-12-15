@@ -81,10 +81,11 @@ export const get_modules=async(Deprartment_id)=>{
   export const get_prog=async(levels,Deprartment_id)=>{
     const q=query(collection(db,"programs"),
   and(
-    where("Deprartment_id","==",Deprartment_id),where("levels","==",levels)))
+    where("Deprartment_id","==",Deprartment_id),where("type","==",+levels)))
     const docs=await getDocs(q);
     const data=docs.docs.map((doc)=>({...doc.data(),id:doc.id})) 
     console.log(data);
+    console.log(levels,Deprartment_id);
     return data;
     }
     export const get_classRooms=async(Deprartment_id)=>{

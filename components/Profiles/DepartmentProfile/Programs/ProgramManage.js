@@ -3,6 +3,7 @@ import classes from './ProgramManage.module.css';
 import { useState,useContext } from "react";
 import BachelorFour from "./BachelorFour";
 import Speciality from "./Speciality";
+import AddProgramModule from "./AddProgramModule";
 const ProgramManage=()=>{
    
 const [rightContainer,setRightContainer]=useState(<BachelorFour  ECTS="240" levels="4"/>);
@@ -49,7 +50,10 @@ const clickHandler=(probs)=>{
                 <h3>Specialities</h3>
                 <Speciality program={program}/>
             </div>
+            
+                <AddProgramModule/>
         </main>
+
     );
 }
 export default ProgramManage;
