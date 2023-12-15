@@ -123,6 +123,7 @@ return(
                <li><Link to="/ProfessorList"><img src={profilePicture} alt=""/> Professors Table</Link></li>
                </>}
                </div>}
+               {isLoggedIn && <li><Link to="/Notifications" ><img src={profilePicture} alt=""/>Notifications</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>
     </nav>
