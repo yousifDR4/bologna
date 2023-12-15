@@ -17,16 +17,19 @@ import { HeaderCellSort, useSort } from '@table-library/react-table-library/sort
 import Modules from '../Modules';
 import { get_Sujects,get_modules } from '../../../../store/getandset';
 import { auth } from '../../../../store/fire';
+import { useSelector } from 'react-redux';
 const key = 'Compact Table';
 
 const ModulesTable = () => {
   const [modules,setModules]=useState([]);
+  const profile = useSelector((state) => state.profile.profile);
+  const Department_id= profile.Department_id;
   useEffect(()=>{
 
     if(!auth.currentUser)
     return;
     const f=async()=>{
-const data=await get_modules()
+const data=await get_modules(Department_id)
 console.log(data);
 setModules(data);
     }

@@ -45,6 +45,8 @@ const AddClass = (probs) => {
 
   const { classroom,edit } = probs;
   console.log(classroom,edit);
+  const profile = useSelector((state) => state.profile.profile);
+  const Department_id= profile.Department_id;
   const [state, dispatch] = useReducer(reducer, intilistate);
   const [uploading,setUploading]=useState(false);
   const inputsValid = {
@@ -52,7 +54,7 @@ const AddClass = (probs) => {
     place: state.place.trim() !== "",
   };
   const [formIsValid, setFormIsValid] = useState(false);
-  const profile = useSelector((state) => state.profile.profile);
+  
   useEffect(() => {
     if (inputsValid.place && inputsValid.name) {
       setFormIsValid(true);
@@ -112,9 +114,9 @@ const AddClass = (probs) => {
         namelower:state.name.toLocaleLowerCase(),
         notes:state.notes,
         place:state.place,
-        Deprartment_id:auth.currentUser.uid
+        Deprartment_id:Department_id
       };
-      const userRef=doc(db,"users",auth.currentUser.uid)
+      const userRef=doc(db,"users",Department_id)
       const ref=await addDoc(collection(userRef,"classRooms"),info)
         
         setUploading(false);

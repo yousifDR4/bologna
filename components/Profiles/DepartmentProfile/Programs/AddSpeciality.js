@@ -58,7 +58,8 @@ const AddSpeciality = (probs) => {
     required:state.required.length > 0
   };
   const [formIsValid, setFormIsValid] = useState(false);
-  const profile = useSelector((state) => state.profile.profile);
+  const profile=useSelector(state=> state.profile.profile);
+  const Department_id=profile.Department_id;
   useEffect(() => {
     if (inputsValid.name && inputsValid.required) {
       setFormIsValid(true);
@@ -116,13 +117,13 @@ const AddSpeciality = (probs) => {
       namelower:state.name.toLocaleLowerCase(),
       prerequisite:state.prerequisite,
       programId:program,
-      Department_id:auth.currentUser.uid,
+      Department_id:Department_id,
     };
  
     console.log("work");
     const id = await addDoc(collection(db,"speciality" ), info);
     console.log(id.id);
-    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+    await updateDoc(doc(db, "users", Department_id), {
       subjects_id: arrayUnion(id.id),
     });
     setUploading(false); // dont delete my code

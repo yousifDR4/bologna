@@ -65,30 +65,30 @@ export const set_student_subject = async (info, id) => {
   );
 };
 
-export const get_Sujects=async()=>{
-const q=query(collection(db,"subjects"),where("Deprartment_id","==",auth.currentUser.uid))
+export const get_Sujects=async(Deprartment_id)=>{
+const q=query(collection(db,"subjects"),where("Deprartment_id","==",Deprartment_id))
 const docs=await getDocs(q);
 const data=docs.docs.map((doc)=>({label:doc.data().name,value:doc.data().name})) 
 return data;
 }
-export const get_modules=async()=>{
-  const q=query(collection(db,"subjects"),where("Deprartment_id","==",auth.currentUser.uid))
+export const get_modules=async(Deprartment_id)=>{
+  const q=query(collection(db,"subjects"),where("Deprartment_id","==",Deprartment_id))
   const docs=await getDocs(q);
   const data=docs.docs.map((doc)=>({...doc.data(),id:doc.id})) 
   console.log(data);
   return data;
   }
-  export const get_prog=async(levels)=>{
+  export const get_prog=async(levels,Deprartment_id)=>{
     const q=query(collection(db,"programs"),
   and(
-    where("Deprartment_id","==",auth.currentUser.uid),where("levels","==",levels)))
+    where("Deprartment_id","==",Deprartment_id),where("levels","==",levels)))
     const docs=await getDocs(q);
     const data=docs.docs.map((doc)=>({...doc.data(),id:doc.id})) 
     console.log(data);
     return data;
     }
-    export const get_classRooms=async()=>{
-      const userRef=doc(db,"users",auth.currentUser.uid);
+    export const get_classRooms=async(Deprartment_id)=>{
+      const userRef=doc(db,"users",Deprartment_id);
       console.log("works");
       const docs=await getDocs(query(collection(userRef,"classRooms")
       ,orderBy("namelower","asc")
