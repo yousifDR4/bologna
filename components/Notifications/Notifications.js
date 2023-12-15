@@ -9,11 +9,11 @@ import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import Myloader from "../UI/Loader/Myloader";
 import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
+import { useLocation } from "react-router-dom";
 const universities = [];
 const Notifications = () => {
   const setRef = useRef(true);
   const [university, setUniversity] = useState(universities);
-  const [loading, setLoading] = useState(true);
   const [initalUniversityValue, setInitialUniversityValue] =
     useState(universities);
   const [searchValue, setSearchValue] = useState("");
@@ -24,6 +24,7 @@ const Notifications = () => {
   const fetchRef = useRef(true);
   const [myload,setmyload]=useState(false);
   const Department_id=profile.Department_id;
+  const [seen,setSeen]=useState("");
   useEffect(()=>{
 const f=async ()=>{
   const q=query(collection(db,"reports"),where("Department_id","==",Department_id))
@@ -46,10 +47,11 @@ const f=async ()=>{
         change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id
         ) 
         {
+          console.log();
           const temp=doc(db,change.doc.ref.path);
-          updateDoc(temp,{
-            seen:arrayUnion(Department_id)
-          })
+         setSeen(temp);
+         console.log(temp);
+         
           console.log(change.doc.data());
           count++;
           console.log("notfacation",count);
@@ -59,16 +61,21 @@ const f=async ()=>{
     return () => unsubscribe;
   }, [Department_id]);
   
-  // useEffect(() => {
-  //   const f = async () => {
-  //     try {
-  //       }
-  //      catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-  //   f();
-  // }, []);
+  useEffect(() => {
+    const f = async () => {
+      if(seen==="")return;
+      console.log("seen");
+      try {
+        updateDoc(seen,{
+          seen:arrayUnion(Department_id)
+        })
+        }
+       catch (e) {
+        console.log(e);
+      }
+    };
+    f();
+  }, [seen]);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
     return () => clearTimeout(timer);
