@@ -92,6 +92,7 @@ const AddProgram = (probs) => {
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
+  const Department_id=profile.Department_id;
   useEffect(() => {
     if (
       inputsValid.outcome &&
@@ -142,7 +143,7 @@ const AddProgram = (probs) => {
         summerInternshipYear: state.summerInternshipYear,
         programManager: state.programManager,
         programCordinator: state.programCordinator,
-        Deprartment_id: auth.currentUser.uid,
+        Deprartment_id: Department_id,
         University_id: profile.University_id,
         College_id: profile.College_id,
         specialty: state.specialty,
@@ -171,7 +172,7 @@ const AddProgram = (probs) => {
     if (!auth.currentUser) return;
     console.log("NNNN");
     const f = async () => {
-      const a = await get_Sujects();
+      const a = await get_Sujects(Department_id);
       setModules(a);
       console.log(a, "a");
     };

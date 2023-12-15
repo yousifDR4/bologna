@@ -92,6 +92,7 @@ const AddNewModule = () => {
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
+  const Department_id=profile.Department_id;
   useEffect(() => {
     if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name && inputsValid.code && inputsValid.lastExamHours && inputsValid.midtermHours && inputsValid.type) {
       setFormIsValid(true);
@@ -148,7 +149,7 @@ const AddNewModule = () => {
       midTermHours:state.midtermHours,
       endTermHours:state.lastExamHours,
       type:state.type,
-      Deprartment_id: auth.currentUser.uid,
+      Deprartment_id: Department_id,
       University_id:profile.University_id,
       College_id:profile.College_id,
       prerequisite:state.prerequisite,
@@ -157,7 +158,7 @@ const AddNewModule = () => {
     console.log();
     const id = await addDoc(collection(db, "subjects"), info);
     console.log(id.id);
-    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+    await updateDoc(doc(db, "users", Department_id), {
       subjects_id: arrayUnion(id.id),
     });
     setUploading(false);
@@ -177,7 +178,7 @@ useEffect(()=>{
   return; 
   console.log("NNNN");
 const f=async()=>{
-  const a=await get_Sujects();
+  const a=await get_Sujects(Department_id);
   setModules(a);
   console.log(a,"a");
 }

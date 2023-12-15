@@ -18,6 +18,7 @@ import Modules from '../Modules';
 import { get_Sujects,get_classRooms,get_modules } from '../../../../store/getandset';
 import { auth } from '../../../../store/fire';
 import AddClass from './AddClass';
+import { useSelector } from 'react-redux';
 const key = 'Compact Table';
 // let c=[
 //     {
@@ -40,13 +41,15 @@ const ClassroomsTable = () => {
   const [classS,setClassS]=useState({});
   const [edit,setEdit]=useState(false);
   const [reload,setReload]=useState(false);
+  const profile = useSelector((state) => state.profile.profile);
+ const Department_id= profile.Department_id;
   useEffect(()=>{
 
     if(!auth.currentUser)
     return;
     const f=async()=>{
       try{
-     const data = await get_classRooms()
+     const data = await get_classRooms(Department_id)
     console.log(data);
     if (data) {
       setClassRoom(data);

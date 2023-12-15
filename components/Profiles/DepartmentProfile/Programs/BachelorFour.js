@@ -20,19 +20,22 @@ const BachelorFour=(probs)=>{
     let {ECTS,levels}=probs;
     console.log(ECTS,levels);
     const profile=useSelector(state=> state.profile.profile);
-    let p=profile;
+   const Department_id=profile.Department_id;
+   let p=profile;
     const [program,setProgram]=useState({});
     const [showAddProgram,setShowAddProgram]=useState(false);
     const [error,setError]=useState(false);
     const [loading,setLoading]=useState(false);
 
     useEffect(()=>{
+        console.log(Department_id);
         if(!auth.currentUser) return;
         //load Program (if exist (Activated))]
         const f=async()=>{
             try{
                 setLoading(true);
-        const d=await get_prog(levels);
+               
+        const d=await get_prog(levels,Department_id);
         const obj=d[0]
         console.log(obj);
            

@@ -4,11 +4,17 @@ import uob from "../../Images/UniversityofBaghdad.png";
 import search from "../../Images/search.png";
 import AddUniversity from "./AddUniversity";
 import { db, auth } from "../../store/fire";
-import { getDocs, where, collection, query, doc } from "firebase/firestore";
+import {
+  getDocs,
+  where,
+  collection,
+  query,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
 import { useSelector } from "react-redux";
 import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
-import Myloader from "../UI/Loader/Myloader";
 import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
 const universities = [];
 const UniversityAccounts = () => {
@@ -21,6 +27,8 @@ const UniversityAccounts = () => {
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
+  const profile = useSelector((state) => state.profile.profile);
+  const Department_id=profile.Department_id;
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
   const limitNumber = 2;
@@ -41,21 +49,19 @@ const UniversityAccounts = () => {
               id: doc.id,
             };
           });
-        
-            setUniversity((prev) => {
-              return [...prev, ...s];
-            });
-            setInitialUniversityValue((prev) => {
-              return [...prev, ...s];
-            });
-          
+
+          setUniversity((prev) => {
+            return [...prev, ...s];
+          });
+          setInitialUniversityValue((prev) => {
+            return [...prev, ...s];
+          });
 
           console.log(searchValue);
           if (searchValue !== "") performSearch(searchValue);
           fetchRef.current = false;
           console.log("length", data.length);
           if (data.length === limitNumber) setnextdoc(data[limitNumber - 1]);
-          
         } else {
           console.log(444);
           setUniversity(initalUniversityValue);
@@ -67,6 +73,29 @@ const UniversityAccounts = () => {
     };
     f();
   }, [data]);
+  
+  useEffect(() => {
+    if(!Department_id)
+    return;
+    if(Department_id.length===0)
+    return;
+    const DepartmentRef=doc(db,"notififcation",Department_id);
+    const q=query(collection(DepartmentRef, "Department"))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let count = 0;
+      snapshot.docChanges().forEach((change) => {
+     
+        if (change.type === "added"&&
+        change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id
+        ) {
+          count++;
+          console.log("notfacation",count);
+        }
+      });
+    });
+    return () => unsubscribe;
+  }, [Department_id]);
+
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
     return () => clearTimeout(timer);
@@ -95,63 +124,63 @@ const UniversityAccounts = () => {
   const searchChangeHandler = (e) => {
     setSearchValue(e.target.value);
   };
-  const updateUniversity=()=>{
+  const updateUniversity = () => {
     setnextdoc(null);
-    fetchRef.current=true;
+    fetchRef.current = true;
     setUniversity([]);
     setInitialUniversityValue([]);
-  }
-    return (
-      <main className={classes.main}>
-        {accountType === "Admin" && (
-          <div
-            className={`${classes.addUniversity} ${
-              showAddUniversity === true ? classes.active : ""
-            }`}
-          >
-            <AddUniversity updateUniversity={updateUniversity} />
-          </div>
-        )}
-        {showAddUniversity && (
-          <div
-            className={classes.backDrop}
-            onClick={() => setShowAddUniversity(false)}
-          />
-        )}
-        {accountType === "Admin" && (
-          <button
-            className={classes.addUniversityButton}
-            onClick={() => setShowAddUniversity(true)}
-          >
-            +
-          </button>
-        )}
-        <div className={classes.universities}>
-          <div className={classes.searchBar}>
-            {" "}
-            <div>
-              <img src={search} />
-            </div>
-            <input
-              type="text"
-              value={searchValue}
-              onChange={searchChangeHandler}
-              placeholder="search university..."
-            ></input>{" "}
-          </div>
-          <ul>
-            {university.map((university) => (
-              <li key={university.uid}>
-                <img src={university.img} alt="" />
-                <div>
-                  <p>{university.name}</p> <span></span> <br />
-                </div>
-              </li>
-            ))}
-            {myload && <PlaceHolderLoader />}
-          </ul>
+  };
+  return (
+    <main className={classes.main}>
+      {accountType === "Admin" && (
+        <div
+          className={`${classes.addUniversity} ${
+            showAddUniversity === true ? classes.active : ""
+          }`}
+        >
+          <AddUniversity updateUniversity={updateUniversity} />
         </div>
-      </main>
-    );
+      )}
+      {showAddUniversity && (
+        <div
+          className={classes.backDrop}
+          onClick={() => setShowAddUniversity(false)}
+        />
+      )}
+      {accountType === "Admin" && (
+        <button
+          className={classes.addUniversityButton}
+          onClick={() => setShowAddUniversity(true)}
+        >
+          +
+        </button>
+      )}
+      <div className={classes.universities}>
+        <div className={classes.searchBar}>
+          {" "}
+          <div>
+            <img src={search} />
+          </div>
+          <input
+            type="text"
+            value={searchValue}
+            onChange={searchChangeHandler}
+            placeholder="search university..."
+          ></input>{" "}
+        </div>
+        <ul>
+          {university.map((university) => (
+            <li key={university.uid}>
+              <img src={university.img} alt="" />
+              <div>
+                <p>{university.name}</p> <span></span> <br />
+              </div>
+            </li>
+          ))}
+          {myload && <PlaceHolderLoader />}
+        </ul>
+      </div>
+    </main>
+  );
 };
 export default UniversityAccounts;

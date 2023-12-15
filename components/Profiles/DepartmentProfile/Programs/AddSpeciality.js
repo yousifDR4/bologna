@@ -58,7 +58,8 @@ const AddSpeciality = (probs) => {
     required:state.required.length > 0
   };
   const [formIsValid, setFormIsValid] = useState(false);
-  const profile = useSelector((state) => state.profile.profile);
+  const profile=useSelector(state=> state.profile.profile);
+  const Department_id=profile.Department_id;
   useEffect(() => {
     if (inputsValid.name && inputsValid.required) {
       setFormIsValid(true);
@@ -111,16 +112,18 @@ const AddSpeciality = (probs) => {
     setUploading(true);
     //program is program     
     try{
-    // const info = {
-    //   name: state.name,
-    //   prerequisite:state.prerequisite,
-    // };
-    // console.log();
-    // const id = await addDoc(collection(db, "subjects"), info);
-    // console.log(id.id);
-    // await updateDoc(doc(db, "users", auth.currentUser.uid), {
-    //   subjects_id: arrayUnion(id.id),
-    // });
+    const info = {
+      name: state.name,
+      namelower:state.name.toLocaleLowerCase(),
+      prerequisite:state.prerequisite,
+      levels:program,
+      Department_id:Department_id,
+    };
+ 
+    console.log("work");
+    const id = await addDoc(collection(db,"speciality" ), info);
+    
+    probs.updateSpeciality();
     setUploading(false); // dont delete my code
     showAdd(false);
   }
@@ -139,7 +142,8 @@ useEffect(()=>{
   if (!auth.currentUser)
   return; 
 const f=async()=>{
-  const a=await get_Sujects();
+  console.log(Department_id);
+  const a=await get_Sujects(Department_id);
   setModules(a);
   console.log(a,"a");
 }
