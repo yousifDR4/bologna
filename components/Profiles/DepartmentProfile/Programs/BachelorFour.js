@@ -21,7 +21,6 @@ const BachelorFour=(probs)=>{
     console.log(ECTS,levels);
     const profile=useSelector(state=> state.profile.profile);
    const Department_id=profile.Department_id;
-   let p=profile;
     const [program,setProgram]=useState({});
     const [showAddProgram,setShowAddProgram]=useState(false);
     const [error,setError]=useState(false);
@@ -50,9 +49,10 @@ const BachelorFour=(probs)=>{
         }
         f();
         // ;
-    },[p])
+    },[profile])
     return(
         <>
+        
         {!program.activated &&
         <>
         {showAddProgram && <div className={classes.add}><AddProgram showAddProgram={setShowAddProgram} ECTS={ECTS}/></div>}
@@ -75,7 +75,7 @@ const BachelorFour=(probs)=>{
             <div className={classes.message}> <h2>This Program is not activated yet! Press on activate program button below!</h2></div>
             <button onClick={()=>{setShowAddProgram(true);}}>Activate Program</button>
         </div></>}
-            {program.activated &&
+            {program.activated  &&
                 <PreviewBachelor program={program}/>
             }
         </>

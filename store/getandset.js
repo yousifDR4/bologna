@@ -78,6 +78,7 @@ export const get_modules = async (Deprartment_id) => {
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
   console.log(data);
   return data;
+
 }
 export const get_prog = async (levels, Deprartment_id) => {
   const q = query(collection(db, "programs"),
