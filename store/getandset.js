@@ -168,3 +168,16 @@ export const get_prof=async (professorsoid)=>{
     return []
   }
 }
+export const get_Subjects = async (Deprartment_id) => {
+  const q = query(
+    collection(db, "subjects"),
+    where("Deprartment_id", "==", Deprartment_id)
+  );
+  const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({
+  ... doc.data(),
+   value: doc.data().name,
+    id:doc.id
+  }));
+  return data;
+};

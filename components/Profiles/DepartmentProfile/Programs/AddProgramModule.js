@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import classes from './AddProgramModule.module.css';
 import { useState,useContext } from "react";
 import ModuleInfo from "./ModuleInfo";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../../../store/fire";
 let initialValue={
     program:"",
     module:"",
@@ -34,8 +36,9 @@ let initialValue={
 
 const AddProgramModule=()=>{
 const [form,setForm]=useState(initialValue);
+const [modules,setModules]=useState([]);
 const [completeForm,setCompleteForm]=useState({MInfo:false,MTheor:false})
-const [rightContainer,setRightContainer]=useState(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} setForm={setForm} form={form}/>);
+const [rightContainer,setRightContainer]=useState(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} setForm={setForm} setm={setModules} form={form}/>);
 const [program,setProgram]=useState(4);
 const [header,setHeader]=useState({title:"Module Information"});
 const clickHandler=(probs)=>{
@@ -52,11 +55,22 @@ const clickHandler=(probs)=>{
 }
 useEffect(()=>{
 if(header.title==="Module Information")
-setRightContainer(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} setForm={setForm} form={form}/>);
+setRightContainer(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} setForm={setForm} form={form} setm={setModules}/>);
 else if(header.title==="Theoritical Curriculum")
 setRightContainer(<></>);
 },[form])
-
+const submithandler =async()=>{
+    const filteredObject = Object.entries(form).reduce((acc, [key, value]) => {
+        if (value !== "") {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+      console.log(filteredObject);
+      let x=modules.filter((m)=>m.id===form.module);
+      console.log(x);
+      await addDoc(collection(db,"activemodule"),{...x[0],...filteredObject});
+}
     return(
         <main className={classes.mainContainer}>
             <div className={classes.secondaryContainer}>
@@ -79,7 +93,7 @@ setRightContainer(<></>);
                 </div>
                 <div className={classes.button}>
                 <button>Cancel</button>
-                <button >Save</button>
+                <button  onClick={submithandler}>Save</button>
                 </div>
             </div>
         </main>

@@ -15,7 +15,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { get_Sujects, get_classRooms, get_prof, get_prog, get_progs } from "../../../../store/getandset";
+import { get_Subjects, get_Sujects, get_classRooms, get_prof, get_prog, get_progs } from "../../../../store/getandset";
 let modul = [
   { value: "physics", label: "Physics" },
   { value: "mathII", label: "MathII" },
@@ -118,7 +118,8 @@ const ModuleInfo = (probs) => {
     if (!auth.currentUser) return;
     console.log("NNNN");
     const f = async () => {
-      const p1 = get_Sujects(Department_id);
+      
+      const p1 = get_Subjects(Department_id);
      const p2=get_prof(professorsoid);
       const p3=get_classRooms(Department_id);
       const p4=get_progs(Department_id)
@@ -126,7 +127,8 @@ const ModuleInfo = (probs) => {
   const [Sujects,professors,classRooms,progs]=await Promise.all([p1,p2,p3,p4])
       setModules(Sujects); 
       console.log(Sujects);
-  console.log(professors);
+      probs.setm(Sujects);
+      console.log(professors);
       setProfessors(professors);
       setClassrooms(classRooms);
       console.log(classRooms);
@@ -171,7 +173,7 @@ const ModuleInfo = (probs) => {
                 select...
               </option>
               {modules.map((mod) => {
-                return <option value={mod.id}>{mod.label}</option>;
+                return <option value={mod.id}>{mod.name}</option>;
               })}
             </select>
           </span>
@@ -292,7 +294,7 @@ const ModuleInfo = (probs) => {
               name="theory"
               type=""
               onChange={onchange}
-              value={state.theory}
+              value={form.theory}
             >
               <option value={""} disabled hidden>
                 select...
@@ -310,7 +312,7 @@ const ModuleInfo = (probs) => {
               name="exercises"
               type=""
               onChange={onchange}
-              value={state.exercises}
+              value={form.exercises}
             >
               <option value={""} disabled hidden>
                 select...
