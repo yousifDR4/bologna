@@ -33,7 +33,7 @@ const PreviewBachelor=(probs)=>{
                 <p>ECTS</p>
                 </span>
                 <span>
-                 <p>{program.levels}</p>
+                 <p>{program.type}</p>
                  <p>Levels</p>
                 </span>
                 </div>
