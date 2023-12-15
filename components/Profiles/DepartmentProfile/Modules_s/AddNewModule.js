@@ -171,8 +171,7 @@ const location=useLocation();
       describtion:"add a module",
       Department_id,
 
-    }
-    
+    } 
     await Promise.all ([setreport(reportinfo,Department_id),update])
     setUploading(false);
   }

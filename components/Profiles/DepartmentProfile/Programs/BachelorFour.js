@@ -27,20 +27,29 @@ const BachelorFour=(probs)=>{
     const [loading,setLoading]=useState(false);
 
     useEffect(()=>{
-        console.log(Department_id);
+      
         if(!auth.currentUser) return;
+        if(!Department_id) return;
         //load Program (if exist (Activated))]
         const f=async()=>{
             try{
                 setLoading(true);
                
         const d=await get_prog(levels,Department_id);
-        const obj=d[0]
-        console.log(obj);
+        const obj=d[0];
+        console.log(obj,"kkkkkkkkkkkk");
+        if(obj)
+            setProgram(obj);
+        else
+        setProgram({activated:false});
+        
+       
+      
            
-            setProgram(obj);}
+            }
           catch(e){
             setError(true);
+            setProgram({activated:false});
           }
           finally{
             setLoading(false);

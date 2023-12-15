@@ -87,7 +87,7 @@ const AddProffessor = () => {
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
-  const Department_id=profile.id;
+  const Department_id=profile.Department_id;
   useEffect(() => {
 console.log(formIsValid);
     console.log(inputsValid.Country);
@@ -167,10 +167,10 @@ console.log(formIsValid);
       console.log(info);
       await creatuser(info);
       setUploading(false);
-      const action={
-        type:"reset"
-      };
-      dispatch(action);
+      // const action={
+      //   type:"reset"
+      // };
+      // dispatch(action);
     } catch (e) {
       console.log(e);
       setUploading(false);

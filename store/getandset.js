@@ -50,12 +50,15 @@ export const deletemoduel = async (id) => {
   const p2 = updateDoc(doc(db, "users", auth.currentUser), {
     subjects_id: arrayRemove(id),
   });
-  const q = query(collectionGroup(db, "subject"), where("id", "array-contains", id))
-  const docs_id = getDocs(q)
+  const q = query(
+    collectionGroup(db, "subject"),
+    where("id", "array-contains", id)
+  );
+  const docs_id = getDocs(q);
   const ids = (await docs_id).docs.map((doc) => ({ id: doc.id }));
   const p3 = ids.forEach(async (id) => {
-    await deleteDoc(db, "subjects", id)
-  })
+    await deleteDoc(db, "subjects", id);
+  });
   await Promise.all([p1, p2, p3]);
 };
 export const set_student_subject = async (info, id) => {
@@ -67,54 +70,101 @@ export const set_student_subject = async (info, id) => {
 };
 
 export const get_Sujects = async (Deprartment_id) => {
-  const q = query(collection(db, "subjects"), where("Deprartment_id", "==", Deprartment_id))
+  const q = query(
+    collection(db, "subjects"),
+    where("Deprartment_id", "==", Deprartment_id)
+  );
   const docs = await getDocs(q);
-  const data = docs.docs.map((doc) => ({ label: doc.data().name, value: doc.data().name }))
+  const data = docs.docs.map((doc) => ({
+    label: doc.data().name,
+    value: doc.data().name,
+    id:doc.id
+  }));
   return data;
-}
+};
 export const get_modules = async (Deprartment_id) => {
-  const q = query(collection(db, "subjects"), where("Deprartment_id", "==", Deprartment_id))
+  const q = query(
+    collection(db, "subjects"),
+    where("Deprartment_id", "==", Deprartment_id)
+  );
   const docs = await getDocs(q);
-  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   console.log(data);
   return data;
-
-}
+};
 export const get_prog = async (levels, Deprartment_id) => {
-  const q = query(collection(db, "programs"),
+  const q = query(
+    collection(db, "programs"),
     and(
-      where("Deprartment_id", "==", Deprartment_id), where("levels", "==", levels)))
+      where("Deprartment_id", "==", Deprartment_id),
+      where("type", "==", +levels)
+    )
+  );
   const docs = await getDocs(q);
-  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-  console.log(data);
-  return data;
-}
+  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  console.log(Deprartment_id, levels, "iieio");
+  return data?data:[];
+};
 export const get_classRooms = async (Deprartment_id) => {
   const userRef = doc(db, "users", Deprartment_id);
   console.log("works");
-  const docs = await getDocs(query(collection(userRef, "classRooms")
-    , orderBy("namelower", "asc")
-  ));
-  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+  const docs = await getDocs(
+    query(collection(userRef, "classRooms"), orderBy("namelower", "asc"))
+  );
+  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   console.log(data);
   return data;
-}
+};
 export const setreport = async (reportinfo, Department_id) => {
   console.log(Department_id);
-  try{
-  const report = await addDoc(collection(db, "reports"), reportinfo)
-  const DepartmentRef = doc(db, "notififcation", Department_id);
-  console.log("1");
-  const notification = await addDoc(collection(DepartmentRef, "Department"), {
-    seen: [],
-    reportid:report.id,
-    name:reportinfo.name,
-    Department_id:Department_id,
-  })
-  console.log("2");
-}
-catch(e){
-  console.log(3);
-}
-}
+  try {
+    const report = await addDoc(collection(db, "reports"), reportinfo);
+    const DepartmentRef = doc(db, "notififcation", Department_id);
+    console.log("1");
+    const notification = await addDoc(collection(DepartmentRef, "Department"), {
+      seen: [],
+      reportid: report.id,
+      name: reportinfo.name,
+      Department_id: Department_id,
+    });
+    console.log("2");
+  } catch (e) {
+    console.log(3);
+  }
+};
+export const get_progs = async (Deprartment_id) => {
+  const q = query(
+    collection(db, "programs"),
+      where("Deprartment_id", "==", Deprartment_id),
+  );
+  const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  
+  return data;
+};
+export const get_sp=async(Department_id,levels)=>{
+  const q = query(
+    collection(db, "speciality"),
+    and(
+      where("Department_id", "==", Department_id),
+      where("levels", "==", levels)
+    )
+  );
+  const docs= await getDocs(q);
+  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  
+  return data;
 
+}
+export const get_prof=async (professorsoid)=>{
+  try{
+    const docs=await getDocs(query(collection(db, "users"), where("uid", "in", professorsoid)));
+  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  
+  return data;
+
+  }
+  catch(e){
+    return []
+  }
+}
