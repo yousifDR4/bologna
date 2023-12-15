@@ -24,6 +24,14 @@ const Notifications = () => {
   const fetchRef = useRef(true);
   const [myload,setmyload]=useState(false);
   const Department_id=profile.Department_id;
+  useEffect(()=>{
+const f=async ()=>{
+  const q=query(collection(db,"reports"),where("Department_id","==",Department_id))
+  const docs=await getDocs(q);
+  const data=docs.docs.map((e)=>({...e.data(),id:e.id}));
+  return data;
+}
+  },[])
   useEffect(() => {
     if(!Department_id)
     return;
@@ -42,7 +50,7 @@ const Notifications = () => {
           updateDoc(temp,{
             seen:arrayUnion(Department_id)
           })
-          console.log(temp);
+          console.log(change.doc.data());
           count++;
           console.log("notfacation",count);
         }
