@@ -116,16 +116,14 @@ const AddSpeciality = (probs) => {
       name: state.name,
       namelower:state.name.toLocaleLowerCase(),
       prerequisite:state.prerequisite,
-      programId:program,
+      levels:program,
       Department_id:Department_id,
     };
  
     console.log("work");
     const id = await addDoc(collection(db,"speciality" ), info);
-    console.log(id.id);
-    await updateDoc(doc(db, "users", Department_id), {
-      specialities: arrayUnion(id.id),
-    });
+    
+    probs.updateSpeciality();
     setUploading(false); // dont delete my code
     showAdd(false);
   }
