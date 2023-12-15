@@ -37,11 +37,8 @@ const ProfessorTable = () => {
       console.log(profile.professors);
      const m= profile.professors
    const p1=getDocs(query(collection(db,"users"),where("uid","in",profile.professors)));
-  
    const p2=m.map(async(id)=>{
-   
   const t=await getDoc(doc(db,"passwords",id))
- 
     return  {password: t.data().password,id:t.id}
   });
   const [d1,d2]=await Promise.all([p1,p2]);

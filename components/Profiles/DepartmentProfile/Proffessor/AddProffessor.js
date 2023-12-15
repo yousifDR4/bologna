@@ -87,13 +87,12 @@ const AddProffessor = () => {
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
+
   useEffect(() => {
 console.log(formIsValid);
     console.log(inputsValid.Country);
     if (inputsValid.describtion && inputsValid.Country && inputsValid.name && inputsValid.email && inputsValid.password) {
       console.log("Hh");
-
-
       setFormIsValid(true);
     } else {
       console.log("@2");
@@ -156,7 +155,7 @@ console.log(formIsValid);
         "path": {
           "University_id": profile.University_id,
           "College_id": profile.College_id,
-          "Department_id": auth.currentUser.uid},
+          "Department_id":Department_id},
         "pinfo": {
           "describtion": state.describtion,
           "Country": state.Country,

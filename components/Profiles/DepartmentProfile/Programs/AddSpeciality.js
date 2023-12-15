@@ -144,7 +144,8 @@ useEffect(()=>{
   if (!auth.currentUser)
   return; 
 const f=async()=>{
-  const a=await get_Sujects();
+  console.log(Department_id);
+  const a=await get_Sujects(Department_id);
   setModules(a);
   console.log(a,"a");
 }
