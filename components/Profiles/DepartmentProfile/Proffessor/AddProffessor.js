@@ -87,7 +87,7 @@ const AddProffessor = () => {
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
-
+  const Department_id=profile.id;
   useEffect(() => {
 console.log(formIsValid);
     console.log(inputsValid.Country);

@@ -124,7 +124,7 @@ const AddSpeciality = (probs) => {
     const id = await addDoc(collection(db,"speciality" ), info);
     console.log(id.id);
     await updateDoc(doc(db, "users", Department_id), {
-      subjects_id: arrayUnion(id.id),
+      specialities: arrayUnion(id.id),
     });
     setUploading(false); // dont delete my code
     showAdd(false);

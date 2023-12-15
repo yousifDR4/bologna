@@ -41,7 +41,6 @@ const ClassroomsTable = () => {
   const [classS,setClassS]=useState({});
   const [edit,setEdit]=useState(false);
   const [reload,setReload]=useState(false);
-  
   const profile = useSelector((state) => state.profile.profile);
  const Department_id= profile.Department_id;
   useEffect(()=>{

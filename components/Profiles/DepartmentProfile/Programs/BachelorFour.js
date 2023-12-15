@@ -20,8 +20,8 @@ const BachelorFour=(probs)=>{
     let {ECTS,levels}=probs;
     console.log(ECTS,levels);
     const profile=useSelector(state=> state.profile.profile);
-    let p=profile;
-   const Department_id=profile.Department_id
+   const Department_id=profile.Department_id;
+   let p=profile;
     const [program,setProgram]=useState({});
     const [showAddProgram,setShowAddProgram]=useState(false);
     const [error,setError]=useState(false);
