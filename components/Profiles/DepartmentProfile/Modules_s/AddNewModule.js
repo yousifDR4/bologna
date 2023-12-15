@@ -13,7 +13,8 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import {get_Sujects} from"../../../../store/getandset";
+import {get_Sujects, setreport} from"../../../../store/getandset";
+import { useLocation } from "react-router-dom";
 let modul=[
   { value: 'physics', label: 'Physics' },
   { value: 'mathII', label: 'MathII' },
@@ -76,7 +77,7 @@ function reducer(state, action) {
 }
 
 const AddNewModule = () => {
-
+const location=useLocation();
   const [modules,setModules]=useState(modul)
 
   const [state, dispatch] = useReducer(reducer, intilistate);
@@ -158,9 +159,19 @@ const AddNewModule = () => {
     console.log();
     const id = await addDoc(collection(db, "subjects"), info);
     console.log(id.id);
-    await updateDoc(doc(db, "users", Department_id), {
+    const update= updateDoc(doc(db, "users", Department_id), {
       subjects_id: arrayUnion(id.id),
     });
+    const reportinfo={
+      page:location.pathname,
+      type:"add",
+      id:id.id,
+      uid:auth.currentUser.uid,
+      name:profile.name,
+      describtion:"add a module"
+    }
+    
+    await Promise.all ([setreport(reportinfo,Department_id),update])
     setUploading(false);
   }
   catch(e){
@@ -168,11 +179,12 @@ const AddNewModule = () => {
     console.log(e);
   }
  
-  const action={
-    type:"reset"
-  };
-  dispatch(action);
-  };
+  // const action={
+  //   type:"reset"
+  // };
+  // dispatch(action);
+  // };
+}
 useEffect(()=>{
   if (!auth.currentUser)
   return; 
