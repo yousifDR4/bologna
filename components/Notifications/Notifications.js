@@ -39,7 +39,9 @@ const f=async ()=>{
 
   
   useEffect(() => {
-    if(notifitcations.length === 0) return;
+    if(notifitcations.length === 0) {
+      setLoading(false);
+      return;}
     const f = async () => {
       setLoading(true);
       try{

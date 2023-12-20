@@ -20,6 +20,7 @@ import {
   addDoc,
   deleteDoc,
   arrayUnion,
+  and,
 } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
 import { setId } from "./getandset";
@@ -53,31 +54,30 @@ export async function signin() {
 export async function valiedemail(email) {
   console.log(email);
   const q = query(collection(db, "users"), where("email", "==", email));
- 
+
   try {
     const students = await getDocs(q);
-    const uidexist=students.docs[0].data().uid?students.docs[0].data().uid:"";
+    const uidexist = students.docs[0].data().uid
+      ? students.docs[0].data().uid
+      : "";
 
     console.log(students.docs[0].data());
     if (students.docs.length === 0) {
-
       await deleteUser(auth.currentUser);
       return null;
     } else {
       console.log(students.docs[0].id !== auth.currentUser.uid);
       console.log("nnnn");
       if (students.docs[0].id !== auth.currentUser.uid) {
-        if(uidexist!==""){
-      
+        if (uidexist !== "") {
           await deleteUser(auth.currentUser);
           return null;
-    
         }
         const temp1 = { email: email, uid: auth.currentUser.uid };
         const temp2 = students.docs[0].data();
         console.log(temp2);
         await setId(temp2);
-       
+
         adduserinfo({ ...temp2, uid: temp1.uid });
         await deleteDoc(doc(db, "users", students.docs[0].id));
       }
@@ -91,13 +91,15 @@ export async function signinWithUsername(username) {
   try {
     const q = query(collection(db, "users"), where("username", "==", username));
     const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty ? querySnapshot.docs[0].data() : {email:null};
+    return !querySnapshot.empty
+      ? querySnapshot.docs[0].data()
+      : { email: null };
   } catch (error) {
-    return {email:null}; // Handle errors and return null
+    return { email: null }; // Handle errors and return null
   }
 }
 export const creatuser = async (info) => {
-   console.log(JSON.stringify(info));
+  console.log(JSON.stringify(info));
   try {
     const res = await fetch(process.env.REACT_APP_url, {
       method: "POST",
@@ -117,7 +119,8 @@ export const creatuser = async (info) => {
 export const getprofile = async () => {
   const q = query(
     collection(db, "users"),
-    where("uid", "==", auth.currentUser.uid));
+    where("uid", "==", auth.currentUser.uid)
+  );
   const data = await getDocs(q);
   return data.docs[0].data();
 };
@@ -148,14 +151,23 @@ const adduserinfo = (info) => {
   const docref = doc(db, "users", info.uid);
   setDoc(docref, info, { merge: true });
 };
-export const listnerq=(accountType,Department_id)=>{
-  console.log(Department_id,"kfkkedk");
-  if (accountType==="Department") {
-    return query(collection(db,"reports"),where("Department_id","==",Department_id))
+export const listnerq = (accountType, Department_id) => {
+  console.log(Department_id, "kfkkedk");
+  if (accountType === "Department") {
+    return query(
+      collection(db, "reports"),
+      and(
+        where("Department_id", "==", Department_id),
+        where("uid", "!=", auth.currentUser.uid)
+      )
+    );
+  } else {
+    return query(
+      collection(db, "reports"),
+      and(
+        where("Department_id", "in", Department_id),
+        where("uid", "!=", auth.currentUser.uid)
+      )
+    );
   }
-  else{
-    console.log(Department_id,"kfkkedk");
-    return query(collection(db,"reports"),where("Department_id","in",Department_id))
-
-  }
-}
+};
