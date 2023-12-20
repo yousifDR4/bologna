@@ -166,9 +166,45 @@ background-color: #fff;
 }
 .deptsContainer{
     padding-top: 4rem;
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content:space-around;
+
 }
+.deptsContainer > div{
+    background-color: #fff;
+    width: 40rem;
+    justify-self: center;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+.deptsContainer div h2{
+    border-bottom: 1px solid #bfc1c2;
+    padding: 0.8rem;
+    font-size: 120%;
+}
+.deptsContainer > div div{
+padding: 0.8rem;
+padding-top: 0;
+}
+.deptsContainer > div div span{
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns:50px 10rem;
+    grid-template-rows: 1fr 1fr;
+    width: fit-content;
+    gap: 8px;
+    row-gap: 4px;
+}
+.deptsContainer > div div span img{
+    grid-row: 1/3;
+    background-color: #6B6C6D;
+    width: 2.5rem;
+    height: 2.5rem;
+    justify-self: end;
+    padding: 0.4rem;
+    border-radius: 10px;
+}
+.deptsContainer
 .aboutContainer{
     display: flex;
     flex-direction: row;
@@ -322,7 +358,6 @@ min-height: 4rem;
     margin-top: 6px;
     margin-left: 0;
 }
-.deptsContainer
 @media (max-width:650px) {
     .editProfile{
         width: 80%;
