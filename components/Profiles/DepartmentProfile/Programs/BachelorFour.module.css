@@ -1,3 +1,8 @@
+.loading{
+    position: relative;
+    margin-left: 49%;
+    margin-top: 20%;
+}
 .add{
     display:block;
     position: fixed;

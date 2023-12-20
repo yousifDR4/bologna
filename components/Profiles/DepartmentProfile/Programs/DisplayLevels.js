@@ -27,8 +27,8 @@ const DisplayLevels=(probs)=>{
     return(
         <div >
             <p>{numToString(+index+1) + " level"}</p>
-            <p>modules number: {}</p>
-            <p>Total ECTS: {}</p>
+            <p>modules number: {0}</p>
+            <p>Total ECTS: {0}</p>
         </div>
     );
 }

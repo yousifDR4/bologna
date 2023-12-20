@@ -29,6 +29,8 @@ import {
 import Modules from "./Modules.js";
 const DepartmentProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
+  const [professors,setProfessors]=useState(0);
+  const [students,setStudents]=useState(0);
   const loaded = useSelector((state) => state.profile.loaded);
   const [activatedList, setActivatedList] = useState("modules");
   const [activatedSection, setActivatedSection] = useState("overview");
@@ -126,7 +128,27 @@ else{
             </ul>
             {isModulesActivated && (
               <div className={classes.deptsContainer}>
-              <Modules/>
+              <div>
+                <h2>Professors</h2>
+                <div>
+                  <span>
+                    <img/>
+                    <p>total professors</p>
+                    <p>{professors}</p>
+                  </span>
+                </div>
+              </div>
+              <div>
+              <h2>Students</h2>
+                <div>
+                  <span>
+                    <img/>
+                    <p>total students</p>
+                    <p>{professors}</p>
+                  </span>
+                </div>
+              </div>
+              <div></div>
               </div>
             )}
             {isAboutActivated && (

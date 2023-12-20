@@ -25,6 +25,12 @@ const profileSlice=createSlice({
             const n=[...state.profile.Colleges_id,action.payload.value];
             console.log(n);
             state.profile={...prevProfile,Colleges_id:n}
+        },
+        addOnProfileProfessors(state,action){
+            const prevProfile=state.profile;
+            const n=[...state.profile.professors,action.payload.value];
+            console.log(n);
+            state.profile={...prevProfile,professors:n}
         }
         ,
         logOut(state){

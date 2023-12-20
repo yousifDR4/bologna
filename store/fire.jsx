@@ -148,3 +148,14 @@ const adduserinfo = (info) => {
   const docref = doc(db, "users", info.uid);
   setDoc(docref, info, { merge: true });
 };
+export const listnerq=(accountType,Department_id)=>{
+  console.log(Department_id,"kfkkedk");
+  if (accountType==="Department") {
+    return query(collection(db,"reports"),where("Department_id","==",Department_id))
+  }
+  else{
+    console.log(Department_id,"kfkkedk");
+    return query(collection(db,"reports"),where("Department_id","in",Department_id))
+
+  }
+}

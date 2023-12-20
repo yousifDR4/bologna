@@ -25,7 +25,7 @@ const stSp = [
 const Speciality = (probs) => {
   const { program } = probs;
   const [specialities, setSpecialities] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [update, setUpdate] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
@@ -66,7 +66,7 @@ const Speciality = (probs) => {
     setSpecialities([]);
   };
   if (loading) {
-    return <Loader />;
+    return <div className={classes.loader}><Loader /></div>;
   } else if (specialities.length > 0) {
     return (
       <>
