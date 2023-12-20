@@ -15,13 +15,6 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "./fire";
-export const getunv = async () => {
-  const ref = collection(db, "universities");
-  const q = query(ref, where("name", "!=", null));
-  const docs = await getDocs(q);
-  const data = docs.docs.map((d) => d.data());
-  return data;
-};
 export const setId = async (info) => {
   const { universities_id, Colleges_id, accountType } = info;
   console.log(info, "info");
@@ -78,7 +71,7 @@ export const get_Sujects = async (Deprartment_id) => {
   const data = docs.docs.map((doc) => ({
     label: doc.data().name,
     value: doc.data().name,
-    id:doc.id
+    id: doc.id,
   }));
   return data;
 };
@@ -103,7 +96,7 @@ export const get_prog = async (levels, Deprartment_id) => {
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   console.log(Deprartment_id, levels, "iieio");
-  return data?data:[];
+  return data ? data : [];
 };
 export const get_classRooms = async (Deprartment_id) => {
   const userRef = doc(db, "users", Deprartment_id);
@@ -119,14 +112,6 @@ export const setreport = async (reportinfo, Department_id) => {
   console.log(Department_id);
   try {
     const report = await addDoc(collection(db, "reports"), reportinfo);
-    const DepartmentRef = doc(db, "notififcation", Department_id);
-    console.log("1");
-    const notification = await addDoc(collection(DepartmentRef, "Department"), {
-      seen: [],
-      reportid: report.id,
-      name: reportinfo.name,
-      Department_id: Department_id,
-    });
     console.log("2");
   } catch (e) {
     console.log(3);
@@ -135,14 +120,14 @@ export const setreport = async (reportinfo, Department_id) => {
 export const get_progs = async (Deprartment_id) => {
   const q = query(
     collection(db, "programs"),
-      where("Deprartment_id", "==", Deprartment_id),
+    where("Deprartment_id", "==", Deprartment_id)
   );
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  
+
   return data;
 };
-export const get_sp=async(Department_id,levels)=>{
+export const get_sp = async (Department_id, levels) => {
   const q = query(
     collection(db, "speciality"),
     and(
@@ -150,24 +135,23 @@ export const get_sp=async(Department_id,levels)=>{
       where("levels", "==", levels)
     )
   );
-  const docs= await getDocs(q);
+  const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  
-  return data;
 
-}
-export const get_prof=async (professorsoid)=>{
-  try{
-    const docs=await getDocs(query(collection(db, "users"), where("uid", "in", professorsoid)));
-  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  
   return data;
+};
+export const get_prof = async (professorsoid) => {
+  try {
+    const docs = await getDocs(
+      query(collection(db, "users"), where("uid", "in", professorsoid))
+    );
+    const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 
+    return data;
+  } catch (e) {
+    return [];
   }
-  catch(e){
-    return []
-  }
-}
+};
 export const get_Subjects = async (Deprartment_id) => {
   const q = query(
     collection(db, "subjects"),
@@ -175,9 +159,35 @@ export const get_Subjects = async (Deprartment_id) => {
   );
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({
-  ... doc.data(),
-   value: doc.data().name,
-    id:doc.id
+    ...doc.data(),
+    value: doc.data().name,
+    id: doc.id,
   }));
   return data;
 };
+const rand=()=>(Math.floor(26*Math.random()))
+export const gen=()=>{
+  let capitalLetters = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+  ];
+  let x="";
+
+  for (let index = 0; index < 10; index++) {
+  x=x+capitalLetters[rand()];
+  }
+  return x;
+ 
+}
+export const check=async(x)=>{
+  const q=query(collection(db,"users"),where("username","==",x));
+  const docs=await getDocs(q);
+if(docs.docs.length===0){
+  return x;
+}
+else{
+  return check(gen()); 
+
+}
+}
+

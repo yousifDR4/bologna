@@ -33,33 +33,7 @@ const f=async ()=>{
   return data;
 }
   },[])
-  useEffect(() => {
-    if(!Department_id)
-    return;
-    if(Department_id.length===0)
-    return;
-    const DepartmentRef=doc(db,"notififcation",Department_id);
-    const q=query(collection(DepartmentRef, "Department"))
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      let count = 0;
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added"&&
-        change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id
-        ) 
-        {
-          console.log();
-          const temp=doc(db,change.doc.ref.path);
-         setSeen(temp);
-         console.log(temp);
-         
-          console.log(change.doc.data());
-          count++;
-          console.log("notfacation",count);
-        }
-      });
-    });
-    return () => unsubscribe;
-  }, [Department_id]);
+
   
   useEffect(() => {
     const f = async () => {

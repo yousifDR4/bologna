@@ -127,6 +127,7 @@ const ModuleInfo = (probs) => {
   const [Sujects,professors,classRooms,progs]=await Promise.all([p1,p2,p3,p4])
       setModules(Sujects); 
       console.log(Sujects);
+      console.log(probs);
       probs.setm(Sujects);
       console.log(professors);
       setProfessors(professors);

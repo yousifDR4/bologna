@@ -10,16 +10,18 @@ import  login from "../../Images/enter.png";
 import  university from "../../Images/university.png";
 import idea from "../../Images/idea.png";
 import { profileActions } from "../../store/profile-slice";
-import { auth, getprofile } from "../../store/fire";
+import { auth, db, getprofile } from "../../store/fire";
 import { onAuthStateChanged } from "firebase/auth";
 import profilePicture from "../../Images/userprofile.png";
 import moduleIcon from "../../Images/bookb.png";
 import professor from "../../Images/professor.png"
 import collapse from "../../Images/downArrow.png";
-import { onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { check, gen } from "../../store/getandset";
 let reF=true;
 let x=true;
 const Navbar=()=>{
+  
     const [loading,setLoading]=useState(true);
     const [activatedList,setActivatedList]=useState([]);
     const dispatchRedux=useDispatch();
@@ -28,6 +30,8 @@ const Navbar=()=>{
     const [showAsideList,setShowAsideList]=useState(false);
     const isLoggedIn=useSelector(state=> state.auth.loggedIn);
     const accountType=useSelector(state=> state.auth.accountType);
+    const profile=useSelector(state=>state.profile.profile);
+    const Department_id=profile.Department_id;
     const navigate=useNavigate();
     const isUniversityAccount=isLoggedIn ? accountType === 'University': false;
     const isCollegeAccount=isLoggedIn ? accountType === 'College': false;
@@ -66,12 +70,54 @@ const Navbar=()=>{
     const collapseHandler=(s)=>{
         if(!activatedList.includes(s))
         setActivatedList(prev=>{
-                                 return [...prev,s]});
+                    return [...prev,s]});
         else
         setActivatedList(prev=>{
     console.log(prev.filter(l=> (l !== s)));
     return prev.filter(l=> (l !== s))});
     }  
+    // useEffect(() => {
+    //     if(!Department_id)
+    //     return;
+    //     if(Department_id.length===0)
+    //     return;
+    //     // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
+    //     // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
+    //     const q=query(collection(db, "reports"),where("Department_id","==",Department_id))
+      //   const unsubscribe = onSnapshot(q, (snapshot) => {
+      //     let count = 0;
+      //     let x=[]
+      //     snapshot.docs.forEach((d)=>{
+      //       console.log(d.data());
+      //       x.push({...d.data(),id:d.id})
+      //     })
+      //     snapshot.docChanges().forEach((change) => {
+      //       if (change.type === "added"&&
+      //       (change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id)&&
+      //       change.doc.data().uid!==auth.currentUser.uid
+      //       ) 
+      //       {
+      //         console.log("location",location.pathname);
+      //         const temp=doc(db,change.doc.ref.path);
+      //        console.log(temp);
+             
+      //         console.log(change.doc.data());
+      //         count++;
+      //         console.log("notfacation",count);
+      //       }
+      //     });
+      //   });
+      //   return () => unsubscribe;
+      // }, [Department_id]);
+      useEffect(()=>{
+       const f=async()=>{  
+       let x= await check("ICE");
+       console.log(x);
+       console.log(55);
+       }
+       f();
+
+      },[])
 return(
 <>
 <div className={backdrop} onClick={showAsideListHandler}/>

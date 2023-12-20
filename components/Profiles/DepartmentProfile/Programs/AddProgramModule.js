@@ -3,7 +3,10 @@ import classes from './AddProgramModule.module.css';
 import { useState,useContext } from "react";
 import ModuleInfo from "./ModuleInfo";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../../../store/fire";
+import { auth, db } from "../../../../store/fire";
+import { useLocation } from "react-router-dom";
+import { setreport } from "../../../../store/getandset";
+import { useSelector } from "react-redux";
 let initialValue={
     program:"",
     module:"",
@@ -44,7 +47,7 @@ const [header,setHeader]=useState({title:"Module Information"});
 const clickHandler=(probs)=>{
     switch(probs){
         case 'MInfo':
-            setRightContainer(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} setForm={setForm} form={form}/>)
+            setRightContainer(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} setForm={setForm} form={form} setm={setModules}/>)
             setHeader({title:"Module Information"})
             break;
         case 'MTheor':
@@ -59,6 +62,9 @@ setRightContainer(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} set
 else if(header.title==="Theoritical Curriculum")
 setRightContainer(<></>);
 },[form])
+const location=useLocation()
+const profile=useSelector(state=>state.profile.profile);
+const Department_id=profile.Department_id;
 const submithandler =async()=>{
     const filteredObject = Object.entries(form).reduce((acc, [key, value]) => {
         if (value !== "") {
@@ -69,7 +75,19 @@ const submithandler =async()=>{
       console.log(filteredObject);
       let x=modules.filter((m)=>m.id===form.module);
       console.log(x);
-      await addDoc(collection(db,"activemodule"),{...x[0],...filteredObject});
+      const id=await addDoc(collection(db,"activemodule"),{...x[0],...filteredObject});
+      const reportinfo={
+        page:location.pathname,
+        type:"add",
+        id:id.id,
+        uid:auth.currentUser.uid,
+        name:profile.name,
+        describtion:"add a Program module",
+        Department_id:Department_id,
+        seen:[],
+      }
+    
+      setreport(reportinfo,Department_id) 
 }
     return(
         <main className={classes.mainContainer}>

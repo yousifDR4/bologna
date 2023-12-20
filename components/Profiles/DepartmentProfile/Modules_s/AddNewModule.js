@@ -169,7 +169,8 @@ const location=useLocation();
       uid:auth.currentUser.uid,
       name:profile.name,
       describtion:"add a module",
-      Department_id,
+      Department_id:Department_id,
+      seen:[],
 
     } 
     await Promise.all ([setreport(reportinfo,Department_id),update])

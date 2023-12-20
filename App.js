@@ -99,8 +99,6 @@ function App() {
         {
           path: "/ProfessorList",
           element: <ProfessorTable/>
-
-
         },
         {
           path: "/Classrooms",
