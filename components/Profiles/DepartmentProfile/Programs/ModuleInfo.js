@@ -139,7 +139,6 @@ const ModuleInfo = (probs) => {
   }, [auth.currentUser]);
   return (
     <div className={`${classes.container}`}>
-      <button onClick={() => probs.showAddProgram(false)}>X</button>
       <form action="" className=" form">
         <div className={classes.fields}>
           <span>

@@ -18,7 +18,7 @@ const PreviewBachelor=(probs)=>{
     const profile=useSelector(state=> state.profile.profile);
     const {program}=probs;
     const x=[]
-    for (let i = 0; i < +program.levels; i++) {
+    for (let i = 0; i < +program.type; i++) {
         x.push(<DisplayLevels key={i} index={i} />);
     }
     console.log(x,program.levels);
@@ -55,11 +55,11 @@ const PreviewBachelor=(probs)=>{
                 </span>
                 <span>
                     <p>Evening Study</p>
-                    <p>{program.eveningStudy ?"exists" :"doesn't exist" }</p>
+                    <p>{program.eveningStudy == "true" ?"exists" :"doesn't exist" }</p>
                 </span>
                 <span>
                     <p>Summer Internship</p>
-                    <p> {program.summerInternhsip? "exists":"doesn't exist"}</p>
+                    <p> {program.summerInternhsip == "true"? "exists":"doesn't exist"}</p>
                 </span>
                 <span>
                     <p>Department</p>

@@ -5,7 +5,7 @@ import Select from "react-select";
 
 import classes from "./AddProffessor.module.css";
 import { getIdToken } from "firebase/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addDoc,
   arrayUnion,
@@ -19,13 +19,13 @@ import {
 } from "firebase/firestore";
 import { setreport } from "../../../../store/getandset";
 import { useLocation } from "react-router-dom";
+import { profileActions } from "../../../../store/profile-slice";
 
 const intilistate = {
   name: "",
   nametouched: false,
   describtion: "",
   describtiontouched: false,
-
   ECTStouched: false,
   Country: "",
   Countrytouched: false,
@@ -37,7 +37,6 @@ const intilistate = {
   passwordtouched: false,
   email: "",
   emailtouched: false,
-
 };
 function reducer(state, action) {
   let newstate = {};
@@ -54,7 +53,6 @@ function reducer(state, action) {
         nametouched: false,
         describtion: "",
         describtiontouched: false,
-
         password: "",
         passwordtouched: false,
         email: "",
@@ -76,7 +74,8 @@ function reducer(state, action) {
 
 const AddProffessor = () => {
   const [state, dispatch] = useReducer(reducer, intilistate);
-   const location=useLocation()
+  const dispatchRedux=useDispatch();
+  const location=useLocation();
   const [uploading, setUploading] = useState(false);
   const inputsValid = {
     describtion: state.describtion.trim() !== "",
@@ -168,10 +167,11 @@ console.log(formIsValid);
       
       console.log(info);
       const res=await creatuser(info);
-      if (!res.uid) {
+if (!res.uid) {
         console.log("error");
       }
       else{
+        dispatchRedux(profileActions.addOnProfileProfessors({value:res.uid}));
         const reportinfo={
           page:location.pathname,
           type:"create",
@@ -194,6 +194,9 @@ console.log(formIsValid);
       console.log(e);
       setUploading(false);
     }
+
+ 
+
   };
   return (
     <div className={`${classes.container}`}>

@@ -19,7 +19,7 @@ const clickHandler=(probs)=>{
             setHeader({title:"Bachelor's 4 Years",desc:"Manage Bachelor's 4 Years Program."})
             break;
         case 'bach5':
-            setRightContainer("h")
+            setRightContainer(<BachelorFour  ECTS="320" levels="5"/>)
             setProgram(5)
             setHeader({title:"Bachelor's 5 Years",desc:"Manage Bachelor's 4 Years Program."})
             break;

@@ -192,6 +192,12 @@ margin: 0rem 1rem 0 1rem;
     justify-self: end;
     margin-right: 0.1rem !important;
   }
+  .notifications{
+    color:red;
+    margin-left: 0.1rem;
+    font-size: 60%;
+    vertical-align: text-top;
+  }
 @media (max-width:1250px) {
     .nav  ul:first-of-type div:nth-child(2){
         display: none;

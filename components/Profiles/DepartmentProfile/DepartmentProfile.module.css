@@ -166,7 +166,8 @@ background-color: #fff;
 }
 .deptsContainer{
     padding-top: 4rem;
-    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+    display: flex;
+    justify-content: center;
 }
 .aboutContainer{
     display: flex;
@@ -321,6 +322,7 @@ min-height: 4rem;
     margin-top: 6px;
     margin-left: 0;
 }
+.deptsContainer
 @media (max-width:650px) {
     .editProfile{
         width: 80%;

@@ -55,7 +55,7 @@ text-align: left;
 .rightContainer{
     border: 1px solid #d1d7dc;
     flex: 1;
-    min-width: 1px;
+   
 }
 .rightContainer .header{
     text-align: center;

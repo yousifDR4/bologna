@@ -10,18 +10,26 @@ import  login from "../../Images/enter.png";
 import  university from "../../Images/university.png";
 import idea from "../../Images/idea.png";
 import { profileActions } from "../../store/profile-slice";
-import { auth, db, getprofile } from "../../store/fire";
+import { auth, db, getprofile, listnerq } from "../../store/fire";
 import { onAuthStateChanged } from "firebase/auth";
 import profilePicture from "../../Images/userprofile.png";
 import moduleIcon from "../../Images/bookb.png";
 import professor from "../../Images/professor.png"
 import collapse from "../../Images/downArrow.png";
+import addUser from "../../Images/addUser.png";
+import table from "../../Images/table.png";
+import addModule from "../../Images/addModule.png";
+import bell from "../../Images/bell.png";
+import manage from "../../Images/manage.png";
+import program from "../../Images/program.png";
+
 import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
+import { notifyActions } from "../../store/notify-slice";
 let reF=true;
 let x=true;
 const Navbar=()=>{
-  
+    const [notifications,setNotifications]=useState(0);
     const [loading,setLoading]=useState(true);
     const [activatedList,setActivatedList]=useState([]);
     const dispatchRedux=useDispatch();
@@ -76,39 +84,40 @@ const Navbar=()=>{
     console.log(prev.filter(l=> (l !== s)));
     return prev.filter(l=> (l !== s))});
     }  
-    // useEffect(() => {
-    //     if(!Department_id)
-    //     return;
-    //     if(Department_id.length===0)
-    //     return;
-    //     // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
-    //     // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
-    //     const q=query(collection(db, "reports"),where("Department_id","==",Department_id))
-      //   const unsubscribe = onSnapshot(q, (snapshot) => {
-      //     let count = 0;
-      //     let x=[]
-      //     snapshot.docs.forEach((d)=>{
-      //       console.log(d.data());
-      //       x.push({...d.data(),id:d.id})
-      //     })
-      //     snapshot.docChanges().forEach((change) => {
-      //       if (change.type === "added"&&
-      //       (change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id)&&
-      //       change.doc.data().uid!==auth.currentUser.uid
-      //       ) 
-      //       {
-      //         console.log("location",location.pathname);
-      //         const temp=doc(db,change.doc.ref.path);
-      //        console.log(temp);
-             
-      //         console.log(change.doc.data());
-      //         count++;
-      //         console.log("notfacation",count);
-      //       }
-      //     });
-      //   });
-      //   return () => unsubscribe;
-      // }, [Department_id]);
+     useEffect(() => {
+      if (!profile.name ) return;
+      if(!accountType) return;
+        // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
+        // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
+        const q =listnerq(accountType,profile.Department_id);
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let count = 0;
+          setNotifications(0);
+          let x=[];
+          snapshot.docs.forEach((d)=>{
+            console.log(d.data());
+            if(d.data()){
+            x.push({...d.data(),id:d.id});
+            }
+          });
+          dispatchRedux(notifyActions.setNotify(x));
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === "added"&&
+            (change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id)
+            ) 
+            {
+              console.log("location",location.pathname);
+              const temp=doc(db,change.doc.ref.path);
+             console.log(temp);
+              console.log(change.doc.data());
+              count++;
+              setNotifications(prev=>++prev);
+              console.log("notfacation",count);
+            }
+          });
+        });
+        return () => unsubscribe;
+      }, [Department_id]);
       useEffect(()=>{
        const f=async()=>{  
        let x= await check("ICE");
@@ -150,14 +159,23 @@ return(
                 {isCollegeAccount && <li><Link to="/CollegeProfile"><img src={profilePicture} alt=""/>College Profile</Link></li>}
                 {isDepartmentAccount && <li><Link to="/DepartmentProfile"><img src={profilePicture} alt=""/>Department Profile</Link></li>}
                {isUniversityAccount && <li><Link to="/UniversityProfile"><img src={profilePicture} alt=""/>University Profile</Link></li>}
-               {isDepartmentAccount && <li><Link to="/ProgramManage"><img src={profilePicture} alt=""/>Manage Program</Link></li>}
+               {isDepartmentAccount && <li><Link to="/ProgramManage"><img src={manage} alt=""/>Manage Program</Link></li>}
                {isDepartmentAccount && <li><Link to="/Classrooms"><img src={profilePicture} alt=""/>Classrooms Table</Link></li>}
+               { isDepartmentAccount && <div className={classes.container}>
+              <li onClick={()=>collapseHandler('pr')} className={activatedList.includes('pr')? classes.activeList :""}><img src={program} alt=""/> Program  <img src={collapse}/></li>
+              { activatedList.includes('pr') &&
+              <>
+               <li><Link to="/ProgramModules"><img src={moduleIcon} alt=""/> Program Modules</Link></li>
+            <li><Link to="/AddProgramModule"><img src={addModule} alt=""/> Add Module</Link> </li> 
+            </>
+            }  </div> 
+            }
               { isDepartmentAccount && <div className={classes.container}>
               <li onClick={()=>collapseHandler('m')} className={activatedList.includes('m')? classes.activeList :""}><img src={moduleIcon} alt=""/> Modules  <img src={collapse}/></li>
               { activatedList.includes('m') &&
               <>
-               <li><Link to="/AddModule"><img src={profilePicture} alt=""/> Add Module</Link></li>
-            <li><Link to="/ModuleTable"><img src={profilePicture} alt=""/> Modules Table</Link></li> 
+               <li><Link to="/AddModule"><img src={addModule} alt=""/> Add Module</Link></li>
+            <li><Link to="/ModuleTable"><img src={table} alt=""/> Modules Table</Link></li> 
             </>
             }  </div> 
             }
@@ -165,11 +183,11 @@ return(
                <li onClick={()=>collapseHandler('p')} className={activatedList.includes('p')? classes.activeList :""}><img src={professor} alt=""/> Professors <img src={collapse}/></li>
                { activatedList.includes('p') &&
                <>
-               <li><Link to="/AddProfessor"><img src={profilePicture} alt=""/> Add Proffessor</Link></li>
-               <li><Link to="/ProfessorList"><img src={profilePicture} alt=""/> Professors Table</Link></li>
+               <li><Link to="/AddProfessor"><img src={addUser} alt=""/> Add Proffessor</Link></li>
+               <li><Link to="/ProfessorList"><img src={table} alt=""/> Professors Table</Link></li>
                </>}
                </div>}
-               {isLoggedIn && <li><Link to="/Notifications" ><img src={profilePicture} alt=""/>Notifications</Link></li>}
+               {isLoggedIn  && <li><Link to="/Notifications" ><img src={bell} alt=""/>Notifications{<span className={classes.notifications}>{notifications >0 ? notifications:"" }</span>}</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>
     </nav>

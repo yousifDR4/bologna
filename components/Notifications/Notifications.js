@@ -10,12 +10,15 @@ import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import Myloader from "../UI/Loader/Myloader";
 import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
 import { useLocation } from "react-router-dom";
+import addIcon from "../../Images/addColored.png";
+import addUser from "../../Images/addU.png"
 const universities = [];
 const Notifications = () => {
   const setRef = useRef(true);
   const [university, setUniversity] = useState(universities);
-  const [initalUniversityValue, setInitialUniversityValue] =
-    useState(universities);
+  const notifitcations=useSelector(state=>state.notify.notifications);
+  const [loading,setLoading]=useState(true);
+  console.log(notifitcations);
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
@@ -36,57 +39,52 @@ const f=async ()=>{
 
   
   useEffect(() => {
+    if(notifitcations.length === 0) return;
     const f = async () => {
-      if(seen==="")return;
+      setLoading(true);
+      try{
+     notifitcations.forEach(async element => {
+      if(element.seen.includes(auth.currentUser.uid))return;
       console.log("seen");
-      try {
-        updateDoc(seen,{
-          seen:arrayUnion(Department_id)
-        })
-        }
+        await updateDoc(doc(db,"reports",element.id),{
+          seen:arrayUnion(auth.currentUser.uid)
+        });
+      });
+      setLoading(false);
+
+    }
        catch (e) {
         console.log(e);
+        setLoading(false);
+
       }
+  
     };
     f();
-  }, [seen]);
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
-    return () => clearTimeout(timer);
-  }, [searchValue]);
-
-  useEffect(() => {
-    performSearch(debouncedSearchValue);
-  }, [debouncedSearchValue]);
-  const performSearch = (value) => {
-    console.log(11);
-    if (value) {
-      console.log("enter");
-      if (value.trim() !== "") {
-        setUniversity(
-          initalUniversityValue.filter((university) =>
-            university.name.toLowerCase().match(value.toLowerCase())
-          )
-        );
-      } else {
-        console.log(university);
-      }
-    } else {
-      setUniversity(initalUniversityValue);
+  }, [notifitcations]);
+    if(loading){
+      console.log(loading);
+      return(
+      <Loader/>
+      )
     }
-  };
-  const searchChangeHandler = (e) => {
-    setSearchValue(e.target.value);
-  };
+   else if(!loading && notifitcations.length ===  0){
+    console.log(loading,notifitcations);
     return (
+      <main className={classes.main}>
+      <h2>No notifications were found!</h2>
+      </main>
+    )
+  }
+    else {return (
       <main className={classes.main}>
         <div className={classes.universities}>
           <ul>
-            {university.map((university) => (
-              <li key={university.uid}>
-                <img src={uob} alt="" />
+            {notifitcations.map((not) => (
+              <li key={not.id}>
+                <img src={not.type==="add" ? not.describtion ==="add a module" ? addIcon:addUser:addUser } alt="" />
                 <div>
-                  <p>{university.name}</p> <span></span> <br />
+                  <p>{not.type==="add" ? not.describtion ==="add a module" ? "A new module was added":"A new account was created":"A new account was created"} by {not.uid}</p> <span></span> <br />
                 </div>
               </li>
             ))}
@@ -95,5 +93,5 @@ const f=async ()=>{
         </div>
       </main>
     );
-};
+};}
 export default Notifications;

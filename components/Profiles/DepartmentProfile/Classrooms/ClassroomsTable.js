@@ -147,8 +147,10 @@ const updateTable=()=>{
  {showAdd && <div className={classes.backDrop} onClick={()=>setShowAdd(false)}/>}
     <div className={classes.container}>
         <div className={classes.table}>
-        <h3>View modules</h3>
+        <h3>View Classrooms</h3>
+        <div className={classes.button}>
         <button onClick={()=>setShowAdd(true)}>Add</button>
+        </div>
     <Table data={data} theme={theme} sort={sort}>
       {(tableList) => (
         <>

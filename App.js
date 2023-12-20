@@ -21,6 +21,8 @@ import ProgramManage from './components/Profiles/DepartmentProfile/Programs/Prog
 import ProfessorTable from './components/Profiles/DepartmentProfile/Proffessor/PrefessorTable.js';
 import ClassroomsTable from './components/Profiles/DepartmentProfile/Classrooms/ClassroomsTable.js';
 import Notifications from './components/Notifications/Notifications.js';
+import ProgramModulesTable from './components/Profiles/DepartmentProfile/Programs/ProgramModules/ProgramModulesTable.js';
+import AddProgramModule from './components/Profiles/DepartmentProfile/Programs/AddProgramModule.js';
 
 let firstInitilize=true;
 function App() {
@@ -107,6 +109,14 @@ function App() {
         {
           path: "/Notifications",
           element:<Notifications/>
+        },
+        {
+          path: "/ProgramModules",
+          element:<ProgramModulesTable/>
+        },
+        {
+          path: "/AddProgramModule",
+          element:<AddProgramModule/>
         }
 
     ]

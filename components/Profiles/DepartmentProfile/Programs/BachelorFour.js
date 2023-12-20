@@ -5,6 +5,7 @@ import PreviewBachelor from "./PreviewBachelor";
 import { get_prog } from "../../../../store/getandset";
 import { auth } from "../../../../store/fire";
 import { useSelector } from "react-redux";
+import Loader from "../../../UI/Loader/Loader";
 // let Program1={
 //     activated:true,
 //     ECTS:240,
@@ -24,7 +25,7 @@ const BachelorFour=(probs)=>{
     const [program,setProgram]=useState({});
     const [showAddProgram,setShowAddProgram]=useState(false);
     const [error,setError]=useState(false);
-    const [loading,setLoading]=useState(false);
+    const [loading,setLoading]=useState(true);
 
     useEffect(()=>{
       
@@ -42,10 +43,6 @@ const BachelorFour=(probs)=>{
             setProgram(obj);
         else
         setProgram({activated:false});
-        
-       
-      
-           
             }
           catch(e){
             setError(true);
@@ -59,6 +56,9 @@ const BachelorFour=(probs)=>{
         f();
         // ;
     },[profile])
+    if(loading){
+        return<div className={classes.loading}><Loader/></div>
+    }
     return(
         <>
         

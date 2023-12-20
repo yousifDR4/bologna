@@ -165,7 +165,7 @@ const location=useLocation();
     const reportinfo={
       page:location.pathname,
       type:"add",
-      id:id.id,
+      moduleId:id.id,
       uid:auth.currentUser.uid,
       name:profile.name,
       describtion:"add a module",
