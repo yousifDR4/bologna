@@ -29,13 +29,14 @@ const ModulesTable = () => {
     if(!auth.currentUser)
     return;
     const f=async()=>{
+      console.log(1111);
 const data=await get_modules(Department_id)
 console.log(data);
 setModules(data);
     }
     f();
 
-  },[auth.currentUser])
+  },[profile])
   const data = {
     nodes:modules
 

@@ -168,9 +168,11 @@ const location=useLocation();
       id:id.id,
       uid:auth.currentUser.uid,
       name:profile.name,
-      describtion:"add a module"
-    }
-    
+      describtion:"add a module",
+      Department_id:Department_id,
+      seen:[],
+
+    } 
     await Promise.all ([setreport(reportinfo,Department_id),update])
     setUploading(false);
   }
@@ -179,12 +181,12 @@ const location=useLocation();
     console.log(e);
   }
  
-  // const action={
-  //   type:"reset"
-  // };
-  // dispatch(action);
-  // };
-}
+  const action={
+    type:"reset"
+  };
+  dispatch(action);
+  };
+
 useEffect(()=>{
   if (!auth.currentUser)
   return; 

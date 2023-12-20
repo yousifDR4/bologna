@@ -91,11 +91,9 @@ export async function signinWithUsername(username) {
   try {
     const q = query(collection(db, "users"), where("username", "==", username));
     const querySnapshot = await getDocs(q);
-    console.log(querySnapshot.docs[0].data());
-    return !querySnapshot.empty ? querySnapshot.docs[0].data() : "not found";
+    return !querySnapshot.empty ? querySnapshot.docs[0].data() : {email:null};
   } catch (error) {
-    console.error(error);
-    return null; // Handle errors and return null
+    return {email:null}; // Handle errors and return null
   }
 }
 export const creatuser = async (info) => {

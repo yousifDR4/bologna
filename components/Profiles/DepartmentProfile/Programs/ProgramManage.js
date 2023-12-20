@@ -3,16 +3,18 @@ import classes from './ProgramManage.module.css';
 import { useState,useContext } from "react";
 import BachelorFour from "./BachelorFour";
 import Speciality from "./Speciality";
+import AddProgram from "./AddProgram";
+import AddNewModule from "../Modules_s/AddNewModule";
 import AddProgramModule from "./AddProgramModule";
 const ProgramManage=()=>{
-   
+
 const [rightContainer,setRightContainer]=useState(<BachelorFour  ECTS="240" levels="4"/>);
 const [program,setProgram]=useState(4);
 const [header,setHeader]=useState({title:"Bachelor's 4 Years",desc:"Manage Bachelor's 4 Years."});
 const clickHandler=(probs)=>{
     switch(probs){
         case 'bach4':
-            setRightContainer(<BachelorFour ECTS="240" levels="4" />)
+            setRightContainer(<BachelorFour ECTS="240" levels="4"/>)
             setProgram(4);
             setHeader({title:"Bachelor's 4 Years",desc:"Manage Bachelor's 4 Years Program."})
             break;
@@ -23,7 +25,6 @@ const clickHandler=(probs)=>{
             break;
     }
 }
-
     return(
         <main className={classes.mainContainer}>
             <div className={classes.secondaryContainer}>
@@ -50,7 +51,7 @@ const clickHandler=(probs)=>{
                 <h3>Specialities</h3>
                 <Speciality program={program}/>
             </div>
-            
+
                 <AddProgramModule/>
         </main>
 

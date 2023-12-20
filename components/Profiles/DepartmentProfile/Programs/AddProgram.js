@@ -125,6 +125,7 @@ const AddProgram = (probs) => {
       input: e.target.name,
       value: e.target.value,
     };
+   
     console.log(action);
     dispatch(action);
   }
@@ -154,8 +155,6 @@ const AddProgram = (probs) => {
        updateDoc(doc(db,"users",auth.currentUser.uid),
         {programs : arrayUnion(id.id) }
       )
-
-
       console.log();
       setUploading(false);
     } catch (e) {

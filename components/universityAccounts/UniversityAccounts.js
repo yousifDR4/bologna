@@ -84,7 +84,6 @@ const UniversityAccounts = () => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       let count = 0;
       snapshot.docChanges().forEach((change) => {
-     
         if (change.type === "added"&&
         change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id
         ) {

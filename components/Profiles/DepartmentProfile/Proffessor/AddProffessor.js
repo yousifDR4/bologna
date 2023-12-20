@@ -17,6 +17,8 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { setreport } from "../../../../store/getandset";
+import { useLocation } from "react-router-dom";
 
 const intilistate = {
   name: "",
@@ -74,7 +76,7 @@ function reducer(state, action) {
 
 const AddProffessor = () => {
   const [state, dispatch] = useReducer(reducer, intilistate);
-
+   const location=useLocation()
   const [uploading, setUploading] = useState(false);
   const inputsValid = {
     describtion: state.describtion.trim() !== "",
@@ -87,7 +89,7 @@ const AddProffessor = () => {
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
-  const Department_id=profile.id;
+  const Department_id=profile.Department_id;
   useEffect(() => {
 console.log(formIsValid);
     console.log(inputsValid.Country);
@@ -165,7 +167,24 @@ console.log(formIsValid);
       };
       
       console.log(info);
-      await creatuser(info);
+      const res=await creatuser(info);
+      if (!res.uid) {
+        console.log("error");
+      }
+      else{
+        const reportinfo={
+          page:location.pathname,
+          type:"create",
+          id:res.uid,
+          uid:auth.currentUser.uid,
+          name:profile.name,
+          describtion:"create Proffessor accout",
+          Department_id:Department_id,
+          seen:[]
+        }
+        
+       await setreport(reportinfo,Department_id)
+      }
       setUploading(false);
       const action={
         type:"reset"
@@ -175,9 +194,6 @@ console.log(formIsValid);
       console.log(e);
       setUploading(false);
     }
-
- 
-
   };
   return (
     <div className={`${classes.container}`}>
