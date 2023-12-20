@@ -27,10 +27,13 @@ import {
   getDoc,
   getDocs,
   where,
+  getCountFromServer,
+  and,
 } from "firebase/firestore";
 import Modules from "./Modules.js";
 const DepartmentProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
+  const Department_id=profile.Department_id;
   const [professors,setProfessors]=useState(0);
   const [students,setStudents]=useState(0);
   const loaded = useSelector((state) => state.profile.loaded);
@@ -45,6 +48,18 @@ const DepartmentProfile = () => {
   const isContactSelected = activatedSection === "contact";
   const [modules, setDepartments] = useState([]);
   console.log(profile); 
+  useEffect(()=>{
+    if(!Department_id)return;
+    const f=async()=>{
+      const q=query(collection(db,"users"),and (where("role","==","Proffessor"),where(
+        "Department_id","==",Department_id
+      )));
+      const sum=await getCountFromServer(q);
+      console.log(sum.data().count);
+      setProfessors(sum.data().count)
+    }
+    f();
+  },[Department_id])
 if(!loaded){
   return(
     <>
@@ -146,7 +161,7 @@ else{
                   <span>
                     <img src={group}/>
                     <p>Total Students</p>
-                    <p>{professors}</p>
+                    <p>{students}</p>
                   </span>
                 </div>
               </div>
