@@ -9,6 +9,7 @@ import twitter from "../../../Images/twitter.png";
 import instagram from "../../../Images/instagram.png";
 import email from "../../../Images/email.png";
 import edit from "../../../Images/pencil.png";
+import group from "../../../Images/group.png";
 import options from "../../../Images/option.png";
 import { useEffect, useState } from "react";
 import EditProfile from "../UniversityProfile/EditProfile.js";
@@ -16,6 +17,7 @@ import CustomInput from "../UniversityProfile/CustomInput.js";
 import { useSelector } from "react-redux";
 import AboutComponent from "../UniversityProfile/AboutComponent.js";
 import { auth, db } from "../../../store/fire.jsx";
+
 import Loader from "../../UI/Loader/Loader.js";
 import {
   collection, 
@@ -117,7 +119,7 @@ else{
                 onClick={() => setActivatedList("modules")}
                 className={isModulesActivated ? classes.activated : ``}
               >
-                Modules
+               General
               </li>
               <li
                 onClick={() => setActivatedList("about")}
@@ -132,8 +134,8 @@ else{
                 <h2>Professors</h2>
                 <div>
                   <span>
-                    <img/>
-                    <p>total professors</p>
+                    <img src={group}/>
+                    <p>Total Professors</p>
                     <p>{professors}</p>
                   </span>
                 </div>
@@ -142,13 +144,12 @@ else{
               <h2>Students</h2>
                 <div>
                   <span>
-                    <img/>
-                    <p>total students</p>
+                    <img src={group}/>
+                    <p>Total Students</p>
                     <p>{professors}</p>
                   </span>
                 </div>
               </div>
-              <div></div>
               </div>
             )}
             {isAboutActivated && (
