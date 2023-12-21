@@ -1,20 +1,25 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import classes from "./Navbar.module.css";
-import menu from "../../Images/menu.png"
+import menu from "../../Images/menu.png";
 import { useEffect, useState } from "react";
-import {  useSelector } from "react-redux/es/hooks/useSelector";
-import { useDispatch } from 'react-redux';
-import { authActions, onLogin, selectUid, selectuid } from "../../store/auth-slice";
-import  question from "../../Images/question.png";
-import  login from "../../Images/enter.png";
-import  university from "../../Images/university.png";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { useDispatch } from "react-redux";
+import {
+  authActions,
+  onLogin,
+  selectUid,
+  selectuid,
+} from "../../store/auth-slice";
+import question from "../../Images/question.png";
+import login from "../../Images/enter.png";
+import university from "../../Images/university.png";
 import idea from "../../Images/idea.png";
 import { profileActions } from "../../store/profile-slice";
 import { auth, db, getprofile, listnerq } from "../../store/fire";
 import { onAuthStateChanged } from "firebase/auth";
 import profilePicture from "../../Images/userprofile.png";
 import moduleIcon from "../../Images/bookb.png";
-import professor from "../../Images/professor.png"
+import professor from "../../Images/professor.png";
 import collapse from "../../Images/downArrow.png";
 import addUser from "../../Images/addUser.png";
 import table from "../../Images/table.png";
@@ -24,133 +29,179 @@ import manage from "../../Images/manage.png";
 import program from "../../Images/program.png";
 import classroom from "../../Images/classroom.png";
 
-import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
-let reF=true;
-let x=true;
-const Navbar=()=>{
-    const [notifications,setNotifications]=useState(0);
-    const [loading,setLoading]=useState(true);
-    const [activatedList,setActivatedList]=useState([]);
-    const dispatchRedux=useDispatch();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const [showAsideList,setShowAsideList]=useState(false);
-    const isLoggedIn=useSelector(state=> state.auth.loggedIn);
-    const accountType=useSelector(state=> state.auth.accountType);
-    const profile=useSelector(state=>state.profile.profile);
-    const Department_id=profile.Department_id;
-    const navigate=useNavigate();
-    const isUniversityAccount=isLoggedIn ? accountType === 'University': false;
-    const isCollegeAccount=isLoggedIn ? accountType === 'College': false;
-    const isDepartmentAccount=isLoggedIn ? accountType === 'Department': false;
-    const dispatch=useDispatch();
-    const showAsideListHandler=()=>{
-        setShowAsideList((state)=> !state);
-    }
-    const active=showAsideList ? classes.active :'';
-    const backdrop=showAsideList ? classes.backdrop:'';
-    const logoutHandler=async()=>{
-        await auth.signOut();
-        dispatch(authActions.logOut());
-        dispatch(profileActions.logOut());
-        setShowAsideList(false);
-       navigate('/');
-    }
-    const uid = useSelector(selectuid);
-    onAuthStateChanged(auth,async(user)=>{
-        console.log(location.pathname);
-      if(user&&reF){
-        if((user.uid!==uid && uid===null)&& location.pathname!=="/Login"){
-            console.log("inside",location.pathname);
-            console.log("onauthstatechange");
-      const k=await getprofile()
-      dispatchRedux(onLogin(k));
-      reF=false;
-      setLoading(false)
+let reF = true;
+let x = true;
+let count = 0;
+const Navbar = () => {
+  const [notifications, setNotifications] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [activatedList, setActivatedList] = useState([]);
+  const dispatchRedux = useDispatch();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const [showAsideList, setShowAsideList] = useState(false);
+  const isLoggedIn = useSelector((state) => state.auth.loggedIn);
+  const accountType = useSelector((state) => state.auth.accountType);
+  const profile = useSelector((state) => state.profile.profile);
+  const Department_id = profile.Department_id;
+  const navigate = useNavigate();
+  const isUniversityAccount = isLoggedIn ? accountType === "University" : false;
+  const isCollegeAccount = isLoggedIn ? accountType === "College" : false;
+  const isDepartmentAccount = isLoggedIn ? accountType === "Department" : false;
+  const dispatch = useDispatch();
+  const showAsideListHandler = () => {
+    setShowAsideList((state) => !state);
+  };
+  const active = showAsideList ? classes.active : "";
+  const backdrop = showAsideList ? classes.backdrop : "";
+  const logoutHandler = async () => {
+    await auth.signOut();
+    dispatch(authActions.logOut());
+    dispatch(profileActions.logOut());
+    setShowAsideList(false);
+    navigate("/");
+  };
+  const uid = useSelector(selectuid);
+  onAuthStateChanged(
+    auth,
+    async (user) => {
+      console.log(location.pathname);
+      if (user && reF) {
+        if (
+          user.uid !== uid &&
+          uid === null &&
+          location.pathname !== "/Login"
+        ) {
+          console.log("inside", location.pathname);
+          console.log("onauthstatechange");
+          const k = await getprofile();
+          dispatchRedux(onLogin(k));
+          reF = false;
+          setLoading(false);
         }
-      }
-      else if(reF){
+      } else if (reF) {
         setLoading(false);
-        reF=false;
+        reF = false;
       }
-    },[]);
-    const collapseHandler=(s)=>{
-        if(!activatedList.includes(s))
-        setActivatedList(prev=>{
-                    return [...prev,s]});
-        else
-        setActivatedList(prev=>{
-    console.log(prev.filter(l=> (l !== s)));
-    return prev.filter(l=> (l !== s))});
-    }  
-     useEffect(() => {
-      if (!profile.name ) return;
-      if(!accountType) return;
-        // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
-        // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
-        const q =listnerq(accountType,profile.Department_id);
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let count = 0;
-          setNotifications(0);
-          let x=[];
-          snapshot.docs.forEach((d)=>{
-            console.log(d.data());
-            if(d.data()){
-            x.push({...d.data(),id:d.id});
-            }
-          });
-          dispatchRedux(notifyActions.setNotify(x));
-          snapshot.docChanges().forEach((change) => {
-            if (change.type === "added"&&
-            (change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id)
-            ) 
-            {
-              console.log("location",location.pathname);
-              const temp=doc(db,change.doc.ref.path);
-             console.log(temp);
-              console.log(change.doc.data());
-              count++;
-              setNotifications(prev=>++prev);
-              console.log("notfacation",count);
-            }
-          });
-        });
-        return () => unsubscribe;
-      }, [Department_id]);
-      useEffect(()=>{
-       const f=async()=>{  
-       let x= await check("ICE");
-       console.log(x);
-       console.log(55);
-       }
-       f();
+    },
+    []
+  );
+  const collapseHandler = (s) => {
+    if (!activatedList.includes(s))
+      setActivatedList((prev) => {
+        return [...prev, s];
+      });
+    else
+      setActivatedList((prev) => {
+        console.log(prev.filter((l) => l !== s));
+        return prev.filter((l) => l !== s);
+      });
+  };
+  useEffect(() => {
+    if (!profile.name) return;
+    if (!accountType) return;
+    // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
+    // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
+    const q = listnerq(accountType, profile.Department_id);
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      
+      setNotifications(0);
+      let x = [];
+      snapshot.docs.forEach((d) => {
+        console.log(d.data());
+        if (d.data()) {
+          x.push({ ...d.data(), id: d.id });
+        }
+      });
+      const k = [1, 2];
 
-      },[])
-return(
-<>
-<div className={backdrop} onClick={showAsideListHandler}/>
-    <nav className={classes.nav}>
+      dispatchRedux(notifyActions.setNotify(x));
+      snapshot.docChanges().forEach((change) => {
+        if (
+          change.type === "added" &&
+          !change.doc.data().seen.includes(auth.currentUser.uid) &&
+          change.doc.data().uid !== auth.currentUser.uid
+        ) {
+          console.log(change.doc.data().seen);
+        count++;
+          setNotifications(count);
+          console.log("notfacation", count);
+        }
+      });
+    });
+    return () => unsubscribe;
+  }, [Department_id]);
+  useEffect(() => {
+    const f = async () => {
+      let x = await check("ICE");
+      console.log(x);
+      console.log(55);
+    };
+    f();
+  }, []);
+  return (
+    <>
+      <div className={backdrop} onClick={showAsideListHandler} />
+      <nav className={classes.nav}>
         <ul className={classes.navList}>
-            <div>
-                <li><Link to="/">APS</Link></li>
-            </div>
-            <div>
-                <li><Link to="/">what's APS</Link></li>
-                <li><Link to="/">How it works</Link></li>
-                <li><Link to="/Universities">Universities using it</Link></li>
-               {isUniversityAccount && <li><Link to="/UniversityProfile">University Profile</Link></li>}
-               {isCollegeAccount && <li><Link to="/CollegeProfile">College Profile</Link></li>}
-               {isDepartmentAccount && <li><Link to="/DepartmentProfile">Department Profile</Link></li>}
-               {!loading && !isLoggedIn && <li><Link to="/Login">Login</Link></li>}
-            </div>
-           <div> 
-                <li className={classes.line}></li>
-                <li><button onClick={showAsideListHandler}><img src={menu} alt="menu icon"/></button></li>
-           </div>
+          <div>
+            <li>
+              <Link to="/">APS</Link>
+            </li>
+          </div>
+          <div>
+            <li>
+              <Link to="/">what's APS</Link>
+            </li>
+            <li>
+              <Link to="/">How it works</Link>
+            </li>
+            <li>
+              <Link to="/Universities">Universities using it</Link>
+            </li>
+            {isUniversityAccount && (
+              <li>
+                <Link to="/UniversityProfile">University Profile</Link>
+              </li>
+            )}
+            {isCollegeAccount && (
+              <li>
+                <Link to="/CollegeProfile">College Profile</Link>
+              </li>
+            )}
+            {isDepartmentAccount && (
+              <li>
+                <Link to="/DepartmentProfile">Department Profile</Link>
+              </li>
+            )}
+            {!loading && !isLoggedIn && (
+              <li>
+                <Link to="/Login">Login</Link>
+              </li>
+            )}
+          </div>
+          <div>
+            <li className={classes.line}></li>
+            <li>
+              <button onClick={showAsideListHandler}>
+                <img src={menu} alt="menu icon" />
+              </button>
+            </li>
+          </div>
         </ul>
         <div className={`${active} ${classes.asideList}`}>
+
         <ul >
                 <li><Link to="/"  onClick={showAsideListHandler}>APS</Link></li>
                {!isLoggedIn && <li><Link to="/Login" onClick={showAsideListHandler}><img src={login} alt="" className={classes.login}/>Login</Link> <div className={classes.innerLine}/></li>}
@@ -197,3 +248,4 @@ return(
 );
 }
 export default Navbar;
+

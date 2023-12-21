@@ -36,10 +36,9 @@ const f=async ()=>{
   return data;
 }
   },[])
-
-  
   useEffect(() => {
-    if(notifitcations.length === 0) return;
+    if(notifitcations.length === 0) {
+      return;}
     const f = async () => {
       setLoading(true);
       try{
@@ -50,15 +49,16 @@ const f=async ()=>{
           seen:arrayUnion(auth.currentUser.uid)
         });
       });
-      setLoading(false);
+     
 
     }
        catch (e) {
         console.log(e);
         setLoading(false);
-
       }
-  
+      finally{
+        setLoading(false);
+      }
     };
     f();
   }, [notifitcations]);
@@ -88,7 +88,7 @@ const f=async ()=>{
                 </div>
               </li>
             ))}
-            {myload && <PlaceHolderLoader />}
+            {loading && <PlaceHolderLoader />}
           </ul>
         </div>
       </main>
