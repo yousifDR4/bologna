@@ -48,9 +48,9 @@ const sort = useSort(data,{
     NAME: (array) =>
       array.sort((a, b) => a.name.localeCompare(b.name)),
     MIDTERM: (array) =>
-      array.sort((a, b) => a.midtermExamHours - b.midtermExamHours),
+      array.sort((a, b) => +a.midTermHours - +b.midTermHours),
     ENDTERM: (array) =>
-      array.sort((a, b) => a.endtermExamHours - b.endtermExamHours),
+      array.sort((a, b) => +a.endTermHours - +b.endTermHours),
   },});
   const theme = useTheme([getTheme(
    
@@ -119,7 +119,7 @@ function onSortChange(action, state) {
 
         <Body>
             {tableList.map((module) => (
-              <Row key={module.code} item={module}>
+              <Row key={module.code + module.name} item={module}>
                 <Cell>{module.code}</Cell>
                 <Cell>
                   {module.name}

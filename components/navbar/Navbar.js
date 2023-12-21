@@ -22,6 +22,7 @@ import addModule from "../../Images/addModule.png";
 import bell from "../../Images/bell.png";
 import manage from "../../Images/manage.png";
 import program from "../../Images/program.png";
+import classroom from "../../Images/classroom.png";
 
 import { collection, doc, getDoc, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
@@ -159,14 +160,15 @@ return(
                 {isCollegeAccount && <li><Link to="/CollegeProfile"><img src={profilePicture} alt=""/>College Profile</Link></li>}
                 {isDepartmentAccount && <li><Link to="/DepartmentProfile"><img src={profilePicture} alt=""/>Department Profile</Link></li>}
                {isUniversityAccount && <li><Link to="/UniversityProfile"><img src={profilePicture} alt=""/>University Profile</Link></li>}
-               {isDepartmentAccount && <li><Link to="/ProgramManage"><img src={manage} alt=""/>Manage Program</Link></li>}
-               {isDepartmentAccount && <li><Link to="/Classrooms"><img src={profilePicture} alt=""/>Classrooms Table</Link></li>}
+               {isDepartmentAccount && <li><Link to="/Classrooms"><img src={classroom} alt=""/>Classrooms Table</Link></li>}
                { isDepartmentAccount && <div className={classes.container}>
               <li onClick={()=>collapseHandler('pr')} className={activatedList.includes('pr')? classes.activeList :""}><img src={program} alt=""/> Program  <img src={collapse}/></li>
               { activatedList.includes('pr') &&
               <>
                <li><Link to="/ProgramModules"><img src={moduleIcon} alt=""/> Program Modules</Link></li>
             <li><Link to="/AddProgramModule"><img src={addModule} alt=""/> Add Module</Link> </li> 
+            {isDepartmentAccount && <li><Link to="/ProgramManage"><img src={manage} alt=""/>Manage Program</Link></li>}
+
             </>
             }  </div> 
             }
