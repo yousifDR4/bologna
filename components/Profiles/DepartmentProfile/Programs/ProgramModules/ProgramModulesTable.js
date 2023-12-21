@@ -46,11 +46,11 @@ const sort = useSort(data,{
     NAME: (array) =>
       array.sort((a, b) => a.name.localeCompare(b.name)),
       ECTS: (array) =>
-      array.sort((a, b) => a.ECTS - b.ECTS),
+      array.sort((a, b) => +a.ECTS - +b.ECTS),
     LANGUAGE: (array) =>
       array.sort((a, b) => a.language.localeCompare(b.language)),
     LEVEL: (array) =>
-      array.sort((a, b) => a.level - b.level),
+      array.sort((a, b) => +a.level - +b.level),
   },});
   const theme = useTheme([getTheme(
    
@@ -119,14 +119,14 @@ function onSortChange(action, state) {
 
         <Body>
             {tableList.map((module) => (
-              <Row key={module.code} item={module}>
+              <Row key={module.code + module.name} item={module}>
                 <Cell>{module.code}</Cell>
                 <Cell>
                   {module.name}
                 </Cell>
-                <Cell><p>{module.ECTS}</p></Cell>
-                <Cell><p>{module.language}</p></Cell>
-                <Cell><p>{module.level}</p></Cell>
+                <Cell>{module.ECTS}</Cell>
+                <Cell>{module.language}</Cell>
+                <Cell>{module.level}</Cell>
               </Row>
             ))}
           </Body>
