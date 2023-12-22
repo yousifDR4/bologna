@@ -163,7 +163,7 @@ const updateTable=()=>{
         </Header>
 
         <Body>
-            {classroom.map((classroom) => (
+            {tableList.map((classroom) => (
               <Row key={classroom.id} item={classroom}>
                 <Cell>
                   {classroom.name}

@@ -73,7 +73,7 @@ f();
     },
     {
       sortFns: {
-        NAME: (array) => array.sort((a, b) => a.game.localeCompare(b.game)),
+        NAME: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
         MIDTERM: (array) =>
           array.sort((a, b) => a.midtermExamHours - b.midtermExamHours),
         ENDTERM: (array) =>
@@ -144,8 +144,8 @@ img{
             <>
               <Header>
                 <HeaderRow>
-                  <HeaderCell>Name</HeaderCell>
-                  <HeaderCellSort sortKey="password">password</HeaderCellSort>
+                  <HeaderCellSort sortKey="NAME">Name</HeaderCellSort>
+                  <HeaderCell>password</HeaderCell>
                   
                 </HeaderRow>
               </Header>
