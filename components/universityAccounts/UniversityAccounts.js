@@ -11,6 +11,9 @@ import {
   query,
   doc,
   onSnapshot,
+  orderBy,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import Loader from "../UI/Loader/Loader";
@@ -35,11 +38,25 @@ const UniversityAccounts = () => {
   const fetchRef = useRef(true);
   const updateRef = useRef(false);
   const limitNumber =5;
+  const q1 = query(
+    collection(db, "users"),
+    where("accountType", "==", "University"),
+    orderBy("name"),
+    limit(limitNumber)
+  );
+  const q2 = query(
+    collection(db, "users"),
+    where("accountType", "==", "University"),
+    orderBy("name"),
+    limit(limitNumber),
+    startAfter(nextdoc)
+  );
+  
   const { data, load: myload } = usePaginationFetch(
     nextdoc,
     fetchRef.current,
     limitNumber,
-    updateRef,
+    updateRef,q1,q2
   );
   useEffect(() => {
     const f = async () => {

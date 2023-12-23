@@ -160,6 +160,7 @@ const Navbar = () => {
       <nav className={classes.nav}>
         <ul className={classes.navList}>
           <div>
+          
             <li>
               <Link to="/">APS</Link>
             </li>
@@ -179,6 +180,7 @@ const Navbar = () => {
                 <Link to="/UniversityProfile">University Profile</Link>
               </li>
             )}
+
             {isCollegeAccount && (
               <li>
                 <Link to="/CollegeProfile">College Profile</Link>
@@ -206,6 +208,7 @@ const Navbar = () => {
         </ul>
         <div className={`${active} ${classes.asideList}`}>
           <ul>
+         
             <li>
               <Link to="/" onClick={showAsideListHandler}>
                 APS
@@ -249,6 +252,13 @@ const Navbar = () => {
                 </Link>
               </li>
             )}
+             {accountType==="College" && (
+              <li>
+                <Link to="/AddStudent">Add Studnt</Link>
+              </li>
+            )}
+
+
             {isDepartmentAccount && (
               <li>
                 <Link to="/DepartmentProfile">
