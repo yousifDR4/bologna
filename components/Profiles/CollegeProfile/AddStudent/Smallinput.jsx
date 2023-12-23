@@ -1,8 +1,6 @@
-import { Field, FormikContext } from "formik";
+import { ErrorMessage, Field, FormikContext } from "formik";
 import "./AddStudent.css";
-const Smallinput = (probs) => {
-  
-  
+const Smallinput = (probs) => {  
   return (
     <span className="spanflex">
       <label htmlFor={probs.name}className="mylabel">
@@ -11,9 +9,9 @@ const Smallinput = (probs) => {
       <Field
         type={probs.type}
         name={probs.name}
-      
         className="myform"
         />
+      <ErrorMessage name={probs.name} component="div"/>
     </span>
   );
 };

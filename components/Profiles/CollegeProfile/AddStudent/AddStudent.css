@@ -3,10 +3,11 @@
     box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
     border-color: #4A8BDF;
   width: 100%;
-  max-width: 80rem;
+  max-width: 100rem;
   border-radius: 20px;
   margin-left: 20px;
   margin-right: 20px;
+
  
 }
 .mydiv .title{
@@ -35,7 +36,7 @@
     margin-right: 1rem;
     margin-left: 0.5rem;
     margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
+   
     width: 12rem;
     height: 2.2rem;
     border: 1px solid #6B6C6D;
@@ -60,14 +61,14 @@
     margin-right: 1rem;
     margin-left: 0.5rem;
     margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
     width: 12rem;
-    height: 2.2rem;
+    height: 2.5rem;
     border: 2px solid black;
     font-size: 1rem;
     color:#6B6C6D;
     border: 1px solid #6B6C6D;
     border-radius: 7px;
+
   }
   .myemail {
     outline: none;
@@ -76,9 +77,9 @@
     margin-right: 1rem;
     margin-left: 0.5rem;
     margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
+   
     width: 20rem;
-    flex-grow: 3;
+   
     height: 2.2rem;
     font-family: GraphikThin;
     color:#6B6C6D;
@@ -92,6 +93,9 @@
   .spanflex{
 display: flex;
 flex-direction: column;
+margin-bottom: 1rem;
+margin-top: 0.5rem;
+height: 5rem;
 
   }
  .parent button{
@@ -113,7 +117,7 @@ border:#4A8BDF;}
 display: flex;
 align-items: end;
  }
- @media screen and (max-width: 707px) {
+ @media screen and (max-width: 730px) {
   .spanflex {
     flex-grow: 20;
   }
@@ -157,4 +161,15 @@ padding-right:15px ;
  .blue-border{
  
   border-bottom: 4px solid #4A8BDF ;
+ }
+ .spancolor{
+color: red;
+margin-left: 5px;
+ }
+ .spanflex div{
+  color: red;
+  margin-left: 5px;
+  font-size: 0.9rem;
+  margin-left: 0.9rem;
+  margin-bottom: 0px;
  }

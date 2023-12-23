@@ -23,8 +23,7 @@ import ClassroomsTable from './components/Profiles/DepartmentProfile/Classrooms/
 import Notifications from './components/Notifications/Notifications.js';
 import ProgramModulesTable from './components/Profiles/DepartmentProfile/Programs/ProgramModules/ProgramModulesTable.js';
 import AddProgramModule from './components/Profiles/DepartmentProfile/Programs/AddProgramModule.js';
-
-import AddStudent from './components/Profiles/CollegeProfile/AddStudent/AddStudent.jsx';
+import AddStudent from "./components/Profiles/CollegeProfile/AddStudent/AddStudent.jsx"
 
 
 let firstInitilize=true;

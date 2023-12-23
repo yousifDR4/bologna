@@ -191,3 +191,13 @@ else{
 }
 }
 
+export const get_progs_as_college = async (Deprartment_id) => {
+  const q = query(
+    collection(db, "programs"),
+    where("Deprartment_id", "in", Deprartment_id)
+  );
+  const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+  return data;
+};
