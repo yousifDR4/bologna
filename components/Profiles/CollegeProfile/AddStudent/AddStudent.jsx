@@ -1,5 +1,11 @@
-
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import * as Yup from "yup";
 import "./AddStudent.css";
 import {
@@ -18,7 +24,7 @@ import { get_progs, get_progs_as_college } from "../../../../store/getandset";
 import { useSelector } from "react-redux";
 import { auth, db } from "../../../../store/fire";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import Select from "./Select";
+import SelectProgram from "./SelectProgram.jsx";
 import SelectLevel from "./SelectLevel";
 let initialValues = {
   department: "",
@@ -31,24 +37,20 @@ let initialValues = {
   password: "",
   email: "",
   level: 1,
-  maxlevel:6,
+  maxlevel: 6,
   birth: "",
   sex: "male",
   location: "",
 };
-var form1={};
-let mount=0;
 const AddStudent = () => {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   const [stetp, setStep] = useState(0);
-  const programs=useRef([]);
-  const myprograms=useRef([]);
-  const [departments,setDepartments]=useState([]);
-  const [maxlevel,setMaxLevel]=useState(2);
+  const programs = useRef([]);
+  const myprograms = useRef([]);
+  const [departments, setDepartments] = useState([]);
   const initRef = useRef(null);
   const [change, setchange] = useState(false);
-  const [boolen,setbolen]=useState(true);
   const validationSchema = Yup.object({
     password: Yup.string().required("required").min(8, "invalid password"),
     email: Yup.string().required("required").email("invalid email"),
@@ -62,7 +64,7 @@ const AddStudent = () => {
       try {
         console.log("works");
         console.log(Department_id);
-      
+
         const q = query(
           collection(db, "users"),
           where("uid", "in", Department_id)
@@ -72,18 +74,12 @@ const AddStudent = () => {
           name: doc.data().name,
           id: doc.id,
         }));
-        console.log(names);
-        console.log(names);
         setDepartments(names);
-        if (names.length >0){ initialValues.department = names[0].id;
-           const p2 = await get_progs(initialValues.department);
-           myprograms.current=p2;
-               programs.current=p2;
-               initRef.current.setFieldValue("department",initialValues.department)
-        
-      }
+        if (names.length > 0) {
+          initialValues.department = names[0].id;
+          initRef.current.setFieldValue("department", initialValues.department);
+        }
         setchange(true);
-      
       } catch (e) {
         console.log(e);
       } finally {
@@ -92,37 +88,7 @@ const AddStudent = () => {
     f();
     // ;
   }, [Department_id]);
-  const loop=()=>{
-    const arr=[];
-    for (let index = 0; index < maxlevel; index++) {
-     arr.push(<option value={index+1}>{index+1}</option>)
-    }
-    return arr;
-  }
-  let m=0;
- const changeprogram=()=>{
- console.log(initRef.current.values);
- }
-  if(initRef.current)
-  console.log(initRef.current);
-  useEffect(() => {
-    console.log(initRef.current.values.department);
-    const fetchData = async () => {
-      if (initRef.current ) {
-        try {
-          
-          const data = await get_progs(initRef.current.values.department);
-           initialValues.program=data[0];
-           console.log("kkkkkkkkkkk");
-          initialValues.programs=data;
-          console.log( initRef.current.values.department, "useEffect");
-        } catch (error) {
-          console.error("Error fetching programs:", error);
-        }
-      }
-    };
-    fetchData();
-  }, [initRef.current]);
+  if (initRef.current) console.log(initRef.current);
   const Stepone = () => (
     <Form className="parent" autoComplete="on">
       <Smallinput name="firstname" word="first name" type="text" />
@@ -138,39 +104,23 @@ const AddStudent = () => {
         </Field>
       </span>
       <span className="spanflex">
-        <label htmlFor="department" name="department"className="mylabel">
+        <label htmlFor="department" name="department" className="mylabel">
           Department
         </label>
-        
-         
-   <Field as ="select"className="myselect" name="department">
-  {departments.length > 0 ? (
-    departments.map((prog) => (
-      <option key={prog.name} value={prog.id}>
-        {prog.name}
-      </option>
-    ))
-  ) : (
-    <></>
-  )}
-</Field>
-
-      
+        <Field as="select" className="myselect" name="department">
+          {departments.length > 0 ? (
+            departments.map((prog) => (
+              <option key={prog.name} value={prog.id}>
+                {prog.name}
+              </option>
+            ))
+          ) : (
+            <></>
+          )}
+        </Field>
       </span>
-     
-      <span className="spanflex">
-        <label htmlFor="program" className="mylabel" name="program">
-          Program
-        </label>
-        <Select/>
-     
-      </span>
-      <span className="spanflex">
-        <label htmlFor="level" className="mylabel">
-          Level
-        </label>
-        <SelectLevel/>
-      </span>
+      <SelectProgram />
+      <SelectLevel />
       <Largeinput word="email" name="email" type="text" />
       <Largeinput word="password" name="password" type="password" />
       <Largeinput word="number" name="number" type="text" />
@@ -180,7 +130,6 @@ const AddStudent = () => {
         <Field>
           {(props) => {
             const { form } = props;
-          
             return (
               <button
                 type="submit"
@@ -208,14 +157,9 @@ const AddStudent = () => {
     </Form>
   );
   const currentstep = [<Stepone />, <Steptwo />];
-  const check = true;
   const selectStep = (e) => {
-    setbolen(false)
     console.log(+e.target.getAttribute("name"));
     setStep(+e.target.getAttribute("name") - 1);
-    console.log(initRef.current.values);
-    console.log(initRef.current.values);
-    console.log(stetp);
   };
   const handelsubmit = (v) => {
     const filteredObject = Object.entries(v).reduce((acc, [key, value]) => {
@@ -262,9 +206,7 @@ const AddStudent = () => {
         innerRef={initRef}
         enableReinitialize={true}
         validationSchema={validationSchema}
-        onSubmit={handelsubmit}
-      >
-        
+        onSubmit={handelsubmit}>
         {currentstep[stetp]}
       </Formik>
     </div>

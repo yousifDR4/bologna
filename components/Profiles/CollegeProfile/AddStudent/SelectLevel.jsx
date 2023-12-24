@@ -19,9 +19,16 @@ useEffect(()=>{
  
 },[formik.values.program])
   return (
+    <span className="spanflex">
+    <label htmlFor="level" className="mylabel">
+      Level
+    </label>
+   
+ 
     <Field as="select" name="level" className="myselect">
     {(loop())} 
     </Field>
+    </span>
   );
 };
 export default SelectLevel;

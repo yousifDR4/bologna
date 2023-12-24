@@ -4,7 +4,7 @@ import { useContext, useEffect } from "react";
 import { get_prog, get_progs } from "../../../../store/getandset";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../../../store/fire";
-const SelectLevel = ({programs}) => {
+const SelectProgram = ({programs}) => {
 const formik=useFormikContext();
 console.log(formik.values.department);
 useEffect(()=>{
@@ -12,7 +12,6 @@ useEffect(()=>{
     const id=formik.values.department;
     const d=await get_progs(id)
     formik.setFieldValue("programs",d)
-   
     }
     f();
 },[formik.values.department])
@@ -22,17 +21,18 @@ useEffect(()=>{
   
     formik.setFieldValue("maxlevel",level);
     }
-    catch(e){
-        
+    catch(e){   
     }
-
 },[formik.values.programs])
 const changemaxlevel=(e)=>{
 const max=formik.values.programs.filter((prog)=>prog.id===e.target.value)[0].type;
 console.log(max);
 formik.setFieldValue("maxlevel",max);
 }
-  return (
+  return ( <span className="spanflex">
+    <label htmlFor="program" className="mylabel" name="program">
+    Program
+  </label>
     <select className="myselect" name="program" onChange={(e)=>{formik.handleChange(e);
         changemaxlevel(e);
     }} value={formik.values.program}>
@@ -45,9 +45,8 @@ formik.setFieldValue("maxlevel",max);
         ) : (
           <></>
         )}
- 
-          
       </select>
+      </span>
   );
 };
-export default SelectLevel;
+export default SelectProgram;
