@@ -112,8 +112,9 @@ border:#4A8BDF;}
  .buttonflex{
     width: 100%;
     margin-top: auto;
-    margin-bottom: 50vh;
+    margin-bottom: 0vh;
     margin-right: 6rem;
+
 display: flex;
 align-items: end;
  }
@@ -157,11 +158,30 @@ padding-right:15px ;
 }
 .mylist li{
  cursor: pointer;
+ display: flex;
+
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
  }
- .blue-border{
- 
-  border-bottom: 4px solid #4A8BDF ;
- }
+ .blue-border {
+  background-color: aqua;
+
+  border-bottom: 4px solid #4A8BDF;
+  width: 6rem;
+  opacity: 0;
+  animation: fadeIn 0.2s ease-out forwards;
+
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
  .spancolor{
 color: red;
 margin-left: 5px;

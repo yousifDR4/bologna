@@ -11,14 +11,14 @@ const SelectStep = (probs) => {
    console.log(check);
    })
     return(
-      <>
+    
      
   <li
-    className={check+1==probs.name ? "blue-border" : ""}
     onClick={probs.selectStep}
     name={probs.name}
   >
    {probs.text}
-  </li> </>);
+  <span  className={check+1==probs.name ? "blue-border" : ""}></span>
+  </li> );
 };
 export default SelectStep;
