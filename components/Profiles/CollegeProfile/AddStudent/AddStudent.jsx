@@ -20,18 +20,21 @@ import {
 import Smallinput from "./Smallinput";
 import Largeinput from "./Largeinput";
 import SelectStep from "./SelectStep";
-import { get_progs, get_progs_as_college } from "../../../../store/getandset";
 import { useSelector } from "react-redux";
 import { auth, db } from "../../../../store/fire";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import SelectProgram from "./SelectProgram.jsx";
 import SelectLevel from "./SelectLevel";
+import { current } from "@reduxjs/toolkit";
+import select from "select";
+import Steptwo from "./Steptwo.jsx";
+import { get_progs } from "../../../../store/getandset.js";
 let initialValues = {
   department: "",
   firstname: "",
   lastname: "",
   programs: [],
-  program: {},
+  program: "",
   mothername: "",
   number: "",
   password: "",
@@ -41,6 +44,11 @@ let initialValues = {
   birth: "",
   sex: "male",
   location: "",
+  birthcountry:"",
+  city:"",
+  country:"",
+  city:"",
+  selectedCountry:""
 };
 const AddStudent = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -78,6 +86,8 @@ const AddStudent = () => {
         if (names.length > 0) {
           initialValues.department = names[0].id;
           initRef.current.setFieldValue("department", initialValues.department);
+          const progs=await get_progs(names[0].id)
+          initRef.current.setFieldValue("program", progs[0].id);
         }
         setchange(true);
       } catch (e) {
@@ -114,9 +124,11 @@ const AddStudent = () => {
                 {prog.name}
               </option>
             ))
+           
           ) : (
             <></>
           )}
+           <option key={"null"} value={""}>no department!</option>
         </Field>
       </span>
       <SelectProgram />
@@ -130,11 +142,12 @@ const AddStudent = () => {
         <Field>
           {(props) => {
             const { form } = props;
+            console.log(form.isValid);
             return (
               <button
                 type="submit"
-                className="button"
-                disabled={!form.dirty}
+                className={!form.isValid? "disablebutton":"mybutton"}
+                disabled={!form.isValid}
                 onSubmit={form.handleSubmit}
               >
                 submit
@@ -145,33 +158,23 @@ const AddStudent = () => {
       </span>
     </Form>
   );
-  const Steptwo = () => (
-    <Form className="parent">
-      <Smallinput name="location" word="location" type="text" />
-      <span className="spanflex buttonflex">
-        <label htmlFor="button" className="mylabel"></label>
-        <button type="" className="button">
-          submit
-        </button>
-      </span>
-    </Form>
-  );
-  const currentstep = [<Stepone />, <Steptwo />];
+  const Stepthere=()=>(<></>);
+  const currentstep = [<Stepone />, <Steptwo />,<Stepthere/>];
   const selectStep = (e) => {
     console.log(+e.target.getAttribute("name"));
     setStep(+e.target.getAttribute("name") - 1);
   };
+  
   const handelsubmit = (v) => {
     const filteredObject = Object.entries(v).reduce((acc, [key, value]) => {
       if (value !== "" && key !== "departments") {
         acc[key] = value;
       }
-
       return acc;
     }, {});
     console.log(filteredObject);
   };
-  console.log(departments);
+  console.log(initRef.current);
   return (
     <div className="mydiv">
       <span>

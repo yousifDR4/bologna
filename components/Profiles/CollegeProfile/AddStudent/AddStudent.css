@@ -98,15 +98,15 @@ margin-top: 0.5rem;
 height: 5rem;
 
   }
- .parent button{
+ .mybutton{
 width: 7rem;
 height: 2rem;
 font-size: 110%;
 border-radius: 7px;
 background-color: #4A8BDF;
 border:#4A8BDF;}
- .parent button:hover{
-  color: black;
+ .mybutton:hover{
+  background-color: #4A8BDF;
  cursor: pointer;
  }
  .buttonflex{
@@ -169,18 +169,11 @@ padding-right:15px ;
 
   border-bottom: 4px solid #4A8BDF;
   width: 6rem;
-  opacity: 0;
-  animation: fadeIn 0.2s ease-out forwards;
+ 
+ transition: all 0.2s;
 
 }
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+
 
  .spancolor{
 color: red;
@@ -193,3 +186,25 @@ margin-left: 5px;
   margin-left: 0.9rem;
   margin-bottom: 0px;
  }
+ .disablebutton{
+  width: 7rem;
+height: 2rem;
+font-size: 110%;
+border-radius: 7px;
+background-color: #75767B;
+border:#75767B;
+color: aliceblue;
+
+ }
+ .disablebutton:hover{
+  width: 7rem;
+height: 2rem;
+font-size: 110%;
+border-radius: 7px;
+background-color: #75767B;
+border:#75767B;
+color: aliceblue;
+
+ }
+
+
