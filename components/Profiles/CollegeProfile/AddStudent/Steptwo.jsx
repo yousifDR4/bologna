@@ -57,7 +57,7 @@ const Steptwo = () => {
       <Smallinput name="address" word="address" type="text" />
       <Smallinput name="secaddress" word="second address" type="text" />
       <span className="flexspan">
-      <label htmlFor={"birthcountry"} className="mylabel">select country</label>
+      <label htmlFor={"birthcountry"} className="mylabel">select birth country</label>
       <Select
       placeholder={"select country"}
         className="myselect spanreact"
