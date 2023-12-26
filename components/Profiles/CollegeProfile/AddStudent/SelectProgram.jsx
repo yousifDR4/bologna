@@ -9,10 +9,18 @@ const SelectProgram = () => {
   console.log(formik.values.department);
   useEffect(() => {
     const f = async () => {
-      const id = formik.values.department;
-      const d = await get_progs(id);
-      formik.setFieldValue("programs", d);
-      console.log("programs fetch");
+      if (formik.values.department !== "") {
+        const d = await get_progs(formik.values.department);
+        formik.setFieldValue("programs", d);
+        console.log(d,"programs");
+        if (d.length===0) {
+          formik.setFieldValue("program", "");
+        }
+        console.log("programs fetch");
+      } else {
+        formik.setFieldValue("programs", "");
+        formik.setFieldValue("program", "");
+      }
     };
     f();
   }, [formik.values.department]);
@@ -56,8 +64,11 @@ const SelectProgram = () => {
           changemaxlevel(e);
         }}
         value={formik.values.program}
+        disabled={formik.values.department===""}
       >
-        <option value="">no selected program</option>
+        <option value="">
+          {formik.values.department !== "" ? "no selected program" : "no department selected"}
+        </option>
         {formik.values.programs.length > 0 ? (
           formik.values.programs.map((prog) => (
             <option key={prog.name} value={prog.id}>

@@ -137,14 +137,12 @@ img{
 
       <div className={classes.table}>
         <h3>View Professors</h3>
-
-
         <Table data={data} theme={theme} sort={sort}>
           {(tableList) => (
             <>
               <Header>
                 <HeaderRow>
-                  <HeaderCellSort sortKey="NAME">Name</HeaderCellSort>
+                  <HeaderCellSort sortKey="NAME">username</HeaderCellSort>
                   <HeaderCell>password</HeaderCell>
                   
                 </HeaderRow>

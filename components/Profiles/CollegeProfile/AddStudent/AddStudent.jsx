@@ -85,10 +85,10 @@ const AddStudent = () => {
         }));
         setDepartments(names);
         if (names.length > 0) {
-          initialValues.department = names[0].id;
-          initRef.current.setFieldValue("department", initialValues.department);
-          const progs = await get_progs(names[0].id);
-          initRef.current.setFieldValue("program", progs[0].id);
+      
+          initRef.current.setFieldValue("department", names[0].id);
+          
+         
         }
         setchange(true);
       } catch (e) {

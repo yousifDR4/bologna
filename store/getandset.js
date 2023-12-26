@@ -124,11 +124,9 @@ export const get_progs = async (Deprartment_id) => {
   );
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-   if (data) {
+  
     return data;
-   }
-   else
-   return ""
+ 
 
 };
 export const get_sp = async (Department_id, levels) => {
