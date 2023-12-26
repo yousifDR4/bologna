@@ -37,7 +37,7 @@ const UniversityAccounts = () => {
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
   const updateRef = useRef(false);
-  const limitNumber =5;
+  const limitNumber =10;
   const q1 = query(
     collection(db, "users"),
     where("accountType", "==", "University"),

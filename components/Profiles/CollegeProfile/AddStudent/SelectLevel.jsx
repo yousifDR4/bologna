@@ -9,6 +9,8 @@ const formik=useFormikContext();
 console.log(formik.values.maxlevel);
 const loop=()=>{
   const arr=[];
+  arr.push(<option value="">no level selected</option>)
+  console.log(formik.values.maxlevel,"level");
   for (let index = 0; index < formik.values.maxlevel; index++) {
     
    arr.push(<option value={index+1}>{index+1}</option>)
@@ -23,8 +25,6 @@ useEffect(()=>{
     <label htmlFor="level" className="mylabel">
       Level
     </label>
-   
- 
     <Field as="select" name="level" className="myselect">
     {(loop())} 
     </Field>

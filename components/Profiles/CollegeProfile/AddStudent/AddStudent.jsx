@@ -39,16 +39,17 @@ let initialValues = {
   number: "",
   password: "",
   email: "",
-  level: 1,
+  level: "",
   maxlevel: 6,
   birth: "",
   sex: "male",
   location: "",
-  birthcountry:"",
-  city:"",
-  country:"",
-  city:"",
-  selectedCountry:""
+  birthcountry: "",
+  city: "",
+  country: "",
+  city: "",
+  selectedCountry: "",
+  countries: [],
 };
 const AddStudent = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -86,7 +87,7 @@ const AddStudent = () => {
         if (names.length > 0) {
           initialValues.department = names[0].id;
           initRef.current.setFieldValue("department", initialValues.department);
-          const progs=await get_progs(names[0].id)
+          const progs = await get_progs(names[0].id);
           initRef.current.setFieldValue("program", progs[0].id);
         }
         setchange(true);
@@ -124,11 +125,12 @@ const AddStudent = () => {
                 {prog.name}
               </option>
             ))
-           
           ) : (
             <></>
           )}
-           <option key={"null"} value={""}>no department!</option>
+          <option key={"null"} value={""}>
+            no department!
+          </option>
         </Field>
       </span>
       <SelectProgram />
@@ -146,8 +148,7 @@ const AddStudent = () => {
             return (
               <button
                 type="submit"
-                className={!form.isValid? "disablebutton":"mybutton"}
-                disabled={!form.isValid}
+                className={"mybutton"}
                 onSubmit={form.handleSubmit}
               >
                 submit
@@ -158,16 +159,20 @@ const AddStudent = () => {
       </span>
     </Form>
   );
-  const Stepthere=()=>(<></>);
-  const currentstep = [<Stepone />, <Steptwo />,<Stepthere/>];
+  const Stepthere = () => <></>;
+  const currentstep = [<Stepone />, <Steptwo />, <Stepthere />];
   const selectStep = (e) => {
     console.log(+e.target.getAttribute("name"));
     setStep(+e.target.getAttribute("name") - 1);
   };
-  
+
   const handelsubmit = (v) => {
     const filteredObject = Object.entries(v).reduce((acc, [key, value]) => {
-      if (value !== "" && key !== "departments") {
+      if (
+        value !== "" &&
+        key !== "departments" &&
+        (key !== "maxlevel") && (key !== "countries")&&key!=="countries"&&key!=="programs"
+      ) {
         acc[key] = value;
       }
       return acc;
@@ -209,7 +214,8 @@ const AddStudent = () => {
         innerRef={initRef}
         enableReinitialize={true}
         validationSchema={validationSchema}
-        onSubmit={handelsubmit}>
+        onSubmit={handelsubmit}
+      >
         {currentstep[stetp]}
       </Formik>
     </div>

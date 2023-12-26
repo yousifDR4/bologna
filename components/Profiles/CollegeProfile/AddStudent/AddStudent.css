@@ -119,6 +119,9 @@ display: flex;
 align-items: end;
  }
  @media screen and (max-width: 730px) {
+  .flexspan{
+  flex-grow: 15;
+  }
   .spanflex {
     flex-grow: 20;
   }
@@ -130,9 +133,11 @@ align-items: end;
   }
   .myselect{
     width: 90%;
+    min-width: 15rem;
   }
   .myemail{
     width: 90%;
+    min-width: 15rem;
   }
   .buttonflex{
     justify-content: center;
@@ -206,5 +211,19 @@ border:#75767B;
 color: aliceblue;
 
  }
-
+.spanreact{
+  margin-top: 0px;
+  gap: 0px;
+}
+.selectspan{
+  margin-left: 1rem;
+}
+.flexspan{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  height: 5rem;
+  gap: 1.4rem;
+}
 
