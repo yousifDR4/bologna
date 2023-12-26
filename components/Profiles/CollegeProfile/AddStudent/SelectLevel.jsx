@@ -12,7 +12,6 @@ const SelectLevel = ({ programs }) => {
 const check=()=>{
 return formik.values.program==="" &&formik.values.department===""? formik.values.program===""?
  "no department selected":"no departmentkkk selected":"no program selected"
-
 }
 
     arr.push(
@@ -39,7 +38,7 @@ return formik.values.program==="" &&formik.values.department===""? formik.values
         as="select"
         name="level"
         className="myselect"
-        disabled={formik.values.program === ""}
+        disabled={formik.values.program===""}
       >
         {loop()}
       </Field>

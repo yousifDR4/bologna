@@ -4,17 +4,30 @@ import { useContext, useEffect } from "react";
 import { get_prog, get_progs } from "../../../../store/getandset";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../../../store/fire";
+let mount=false;
 const SelectProgram = () => {
   const formik = useFormikContext();
   console.log(formik.values.department);
   useEffect(() => {
+    try{
+      let arr=[];
     const f = async () => {
+      console.log(mount,"mount");
       if (formik.values.department !== "") {
+        if(formik.values.programs.length>0){
+          const temp=formik.values.programs.filter((prog)=>prog.Deprartment_id===formik.values.department).length;
+          console.log(temp,"my logic value");
+          if(temp>0)
+          return;
+        }
+        console.log("fetch program");
         const d = await get_progs(formik.values.department);
         formik.setFieldValue("programs", d);
         console.log(d,"programs");
         if (d.length===0) {
           formik.setFieldValue("program", "");
+          formik.setFieldValue("level", "");
+
         }
         console.log("programs fetch");
       } else {
@@ -23,7 +36,15 @@ const SelectProgram = () => {
       }
     };
     f();
+  }
+  catch(e){    
+  }
+  finally{
+   
+  }
   }, [formik.values.department]);
+ 
+
   useEffect(() => {
     try {
       if (formik.values.program !== "" && formik.values.programs.length > 0) {
