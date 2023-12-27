@@ -257,6 +257,11 @@ const Navbar = () => {
                 <Link to="/AddStudent">Add Studnt</Link>
               </li>
             )}
+              {accountType==="College" && (
+              <li>
+                <Link to="/StudentsTable">Students Table</Link>
+              </li>
+            )}
 
 
             {isDepartmentAccount && (

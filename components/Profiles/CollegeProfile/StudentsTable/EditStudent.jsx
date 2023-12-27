@@ -22,7 +22,15 @@ import Largeinput from "./Largeinput";
 import SelectStep from "./SelectStep";
 import { useSelector } from "react-redux";
 import { auth, createST, creatuser, db } from "../../../../store/fire";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import SelectProgram from "./SelectProgram.jsx";
 import SelectLevel from "./SelectLevel";
 import { current } from "@reduxjs/toolkit";
@@ -30,6 +38,7 @@ import select from "select";
 import Steptwo from "./Steptwo.jsx";
 import { get_progs } from "../../../../store/getandset.js";
 import { getIdToken } from "firebase/auth";
+import { Await, useLocation } from "react-router-dom";
 let initialValues = {
   department: "",
   firstname: "",
@@ -38,8 +47,6 @@ let initialValues = {
   program: "",
   mothername: "",
   number: "",
-  password: "",
-  email: "",
   level: "",
   maxlevel: 6,
   birth: "",
@@ -52,24 +59,22 @@ let initialValues = {
   selectedCountry: "",
   countries: [],
 };
-const AddStudent = () => {
+const EditStudent = (props) => {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   const [stetp, setStep] = useState(0);
-  const programs = useRef([]);
-  const myprograms = useRef([]);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id") || ""; //getting module id from url
   const [departments, setDepartments] = useState([]);
   const initRef = useRef(null);
   const [change, setchange] = useState(false);
-  const [error,setError]=useState(false);
+  const [error, setError] = useState(false);
+  const [maxlevel, setmaxlevel] = useState(false);
   const validationSchema = Yup.object({
-    password: Yup.string().required("required").min(8, "invalid password"),
-    email: Yup.string()
-      .required("required")
-      .matches(/^[^@.]+$/, "Username cannot contain '@' or '.com'"),
     program: Yup.string().required("required"),
     department: Yup.string().required("required"),
-    level:Yup.string().required("required")
+    level: Yup.string().required("required"),
   });
   console.log();
   useEffect(() => {
@@ -80,19 +85,57 @@ const AddStudent = () => {
       try {
         console.log("works");
         console.log(Department_id);
-        const q = query(
-          collection(db, "users"),
-          where("uid", "in", Department_id)
-        );
-        const p1 = await getDocs(q);
-        const names = p1.docs.map((doc) => ({
+      
+        const p1 = async()=>{
+          const q = query(
+            collection(db, "users"),
+            where("uid", "in", Department_id)
+          );
+          const b=await getDocs(q);
+        const names = b.docs.map((doc) => ({
           name: doc.data().name,
           id: doc.id,
         }));
-        setDepartments(names);
-        if (names.length > 0) {
-          initRef.current.setFieldValue("department", names[0].id);
-        }
+        console.log(Department_id);
+        setDepartments(names)
+      }
+        const p2 = async() => {
+        
+          const a=await getDoc(doc(db, "users", id));
+          const student = a.data();
+          console.log(student,"ssssssssssssssssssssssss");
+          const filteredObject = Object.entries(student).reduce(
+            (acc, [key, value]) => {
+              if (
+                value !== "" &&
+                key !== "Department_id" &&
+                key !== "University_id" &&
+                key !== "College_id" &&
+                key !== "password" &&
+                key !== "email" &&
+                key !== "uid" &&
+                key !== "lowerdepartmentName" &&
+                key !== "departmentName" &&
+                key !== "accountType" &&
+                key !== "username"
+              ) {
+                acc[key] = value;
+              }
+              return acc;
+            },
+            {}
+          );
+          console.log(filteredObject);
+          const d = await get_progs(filteredObject.department);
+     
+          initRef.current.setValues((state) => ({
+            ...state,
+            ...filteredObject,
+            programs: d,
+          }));
+        };
+
+        await Promise.all([p1(),p2()])
         setchange(true);
       } catch (e) {
         console.log(e);
@@ -138,8 +181,6 @@ const AddStudent = () => {
       </span>
       <SelectProgram />
       <SelectLevel />
-      <Largeinput word="email" name="email" type="text" />
-      <Largeinput word="password" name="password" type="password" />
       <Largeinput word="number" name="number" type="text" />
       <Largeinput word="mother name" name="mothername" type="text" />
       <span className="spanflex buttonflex">
@@ -169,7 +210,7 @@ const AddStudent = () => {
     setStep(+e.target.getAttribute("name") - 1);
   };
 
-  const handelsubmit = async(v) => {
+  const handelsubmit = async (v) => {
     const filteredObject = Object.entries(v).reduce((acc, [key, value]) => {
       if (
         value !== "" &&
@@ -179,42 +220,30 @@ const AddStudent = () => {
         key !== "countries" &&
         key !== "programs" &&
         key !== "password" &&
-        key!=="email"
+        key !== "email"
       ) {
         acc[key] = value;
       }
       return acc;
     }, {});
     console.log(departments);
-    const departmentName=departments.filter((depart)=>depart.id===v.department)[0].name;
-    const lowerdepartmentName=departmentName.toLocaleLowerCase();
+    const departmentName = departments.filter(
+      (depart) => depart.id === v.department
+    )[0].name;
+    const lowerdepartmentName = departmentName.toLocaleLowerCase();
     console.log(initRef.current.isSubmitting);
-    const IdToken=await getIdToken(auth.currentUser)
     const info = {
-      IdToken:IdToken,
-      createType:"username",
-    email:v.email,
-    password:v.password,
-    accountType:"student",
-    random:false,
       path: {
         Department_id: v.department,
-        University_id: profile.University_id,
-        College_id: profile.College_id,
       },
-      pinfo: {...filteredObject,
-        departmentName:departmentName,
-        lowerdepartmentName:lowerdepartmentName
+      pinfo: {
+        ...filteredObject,
+        departmentName: departmentName,
+        lowerdepartmentName: lowerdepartmentName,
       },
     };
-    const res=await createST(info);
-    if(res.uid)
-    console.log("upload with no p");
-  else if(res.code==="auth/uid-already-exists"){
-  console.log("username already exist");
-  setError(true)
-  }
-
+    await setDoc(doc(db,"users",id),{...info.path,...info.pinfo},{merge:true});
+ 
   };
   console.log(initRef.current);
   return (
@@ -223,7 +252,7 @@ const AddStudent = () => {
         {" "}
         <h3 className="title">
           {" "}
-          <img alt="" /> Add a new student
+          <img alt="" /> Edit student
         </h3>
       </span>
       <ul className="mylist">
@@ -258,4 +287,4 @@ const AddStudent = () => {
     </div>
   );
 };
-export default AddStudent;
+export default EditStudent;

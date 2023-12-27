@@ -7,8 +7,6 @@ import { db } from "../../../../store/fire";
 let mount = false;
 const SelectProgram = () => {
   const formik = useFormikContext();
-
-  console.log(formik.values.department);
   useEffect(() => {
     try {
       const f = async () => {
@@ -25,14 +23,20 @@ const SelectProgram = () => {
           const d = await get_progs(formik.values.department);
           formik.setFieldValue("programs", d);
           console.log(d, "programs");
+          formik.setFieldValue("maxlevel", 0);
           if (d.length === 0) {
             formik.setFieldValue("program", "");
             formik.setFieldValue("level", "");
+            formik.setFieldValue("maxlevel", 0);
           }
+          console.log("keowfk33pewrod32ko32opq]");
           console.log("programs fetch");
+          console.log("lol");
+          console.log("keowfk33pewrod32ko32opq]");
         } else {
-          formik.setFieldValue("programs", "");
+        
           formik.setFieldValue("program", "");
+          formik.setFieldValue("programs", "");
         }
       };
       f();
@@ -44,8 +48,10 @@ const SelectProgram = () => {
     try {
       if (formik.values.program !== "" && formik.values.programs.length > 0) {
         const id = formik.values.program;
-        const level = formik.values.programs.filter((prog) => prog.id === id)[0]
-          .type;
+       console.log(formik.values.program);
+       console.log(formik.values.programs[0].id);
+        const level = formik.values.programs.filter((prog) => prog.id === id)[0].type
+         console.log(level);
         formik.setFieldValue("maxlevel", level);
       } else {
         formik.setFieldValue("maxlevel", 0);
