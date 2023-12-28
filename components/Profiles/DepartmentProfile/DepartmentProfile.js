@@ -113,7 +113,7 @@ else{
                   ? profile.profilePicture.length > 0
                     ? profile.profilePicture
                     : defaultProfilePicture
-                  : defaultProfilePicture
+                  : alkawarizmiPicture
               }
               className={classes.profilePicture}
               alt=""

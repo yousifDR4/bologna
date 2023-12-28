@@ -21,7 +21,7 @@ const clickHandler=(probs)=>{
         case 'bach5':
             setRightContainer(<BachelorFour  ECTS="320" levels="5"/>)
             setProgram(5)
-            setHeader({title:"Bachelor's 5 Years",desc:"Manage Bachelor's 4 Years Program."})
+            setHeader({title:"Bachelor's 5 Years",desc:"Manage Bachelor's 5 Years Program."})
             break;
     }
 }
@@ -52,7 +52,6 @@ const clickHandler=(probs)=>{
                 <Speciality program={program}/>
             </div>
 
-                <AddProgramModule/>
         </main>
 
     );

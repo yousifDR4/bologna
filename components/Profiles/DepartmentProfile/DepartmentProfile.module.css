@@ -169,11 +169,12 @@ background-color: #fff;
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-content:space-around;
-
+    margin-bottom: 1rem;
 }
 .deptsContainer > div{
     background-color: #fff;
-    width: 40rem;
+    max-width: 40rem;
+    width: 80%;
     justify-self: center;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
@@ -204,7 +205,7 @@ padding-top: 0;
     padding: 0.4rem;
     border-radius: 10px;
 }
-.deptsContainer
+
 .aboutContainer{
     display: flex;
     flex-direction: row;
@@ -358,9 +359,18 @@ min-height: 4rem;
     margin-top: 6px;
     margin-left: 0;
 }
+
 @media (max-width:650px) {
     .editProfile{
         width: 80%;
+    }
+    .deptsContainer{
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        row-gap: 0.5rem;
+    }
+    .deptsContainer{
+
     }
     .upperBanner img{
         height: 25vh;
@@ -410,5 +420,6 @@ min-height: 4rem;
     .mainInfo{
         height: 25vh;
     }
+   
 }
 

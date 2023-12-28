@@ -37,10 +37,13 @@ const BachelorFour=(probs)=>{
                 setLoading(true);
                
         const d=await get_prog(levels,Department_id);
+        console.log(d);
         const obj=d[0];
         console.log(obj,"kkkkkkkkkkkk");
-        if(obj)
+        if(obj && +obj.type=== +levels){
             setProgram(obj);
+            console.log(obj.type ,levels);
+        }
         else
         setProgram({activated:false});
             }
@@ -50,6 +53,7 @@ const BachelorFour=(probs)=>{
           }
           finally{
             setLoading(false);
+            console.log(program);
           }
             
         }
