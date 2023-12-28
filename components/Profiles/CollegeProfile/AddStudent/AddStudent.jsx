@@ -20,8 +20,8 @@ import {
 import Smallinput from "./Smallinput";
 import Largeinput from "./Largeinput";
 import SelectStep from "./SelectStep";
-import { useSelector } from "react-redux";
-import { auth, createST, creatuser, db } from "../../../../store/fire";
+import { useDispatch, useSelector } from "react-redux";
+import { auth, createSTEM, createSTUS, creatuser, db } from "../../../../store/fire";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import SelectProgram from "./SelectProgram.jsx";
 import SelectLevel from "./SelectLevel";
@@ -30,6 +30,7 @@ import select from "select";
 import Steptwo from "./Steptwo.jsx";
 import { get_progs } from "../../../../store/getandset.js";
 import { getIdToken } from "firebase/auth";
+import { errorActions } from "../../../../store/error-slice.js";
 let initialValues = {
   department: "",
   firstname: "",
@@ -62,6 +63,7 @@ const AddStudent = () => {
   const initRef = useRef(null);
   const [change, setchange] = useState(false);
   const [error, setError] = useState(false);
+  const dispatchRedux = useDispatch();
   const emailSchema = Yup.object({
     email: Yup.string()
       .email("Invalid email address")
@@ -108,8 +110,8 @@ const AddStudent = () => {
     program: Yup.string().required("Program is required"),
     department: Yup.string().required("Department is required"),
     level: Yup.string().required("Level is required"),
-    firstname:Yup.string().required("first name is required"),
-    lastname:Yup.string().required("last name is required")
+    firstname: Yup.string().required("first name is required"),
+    lastname: Yup.string().required("last name is required"),
   });
 
   console.log();
@@ -176,6 +178,7 @@ const AddStudent = () => {
             no department!
           </option>
         </Field>
+        <ErrorMessage name={"department"} component="div" />
       </span>
       <SelectProgram />
       <SelectLevel />
@@ -194,7 +197,7 @@ const AddStudent = () => {
                 type="submit"
                 className={"mybutton"}
                 onSubmit={form.handleSubmit}
-                disabled={!form.isValid||form.isSubmitting}
+                disabled={!form.isValid || form.isSubmitting}
               >
                 submit
               </button>
@@ -212,6 +215,7 @@ const AddStudent = () => {
   };
 
   const handelsubmit = async (v) => {
+    console.log(Object.entries(v));
     const filteredObject = Object.entries(v).reduce((acc, [key, value]) => {
       if (
         value !== "" &&
@@ -224,6 +228,8 @@ const AddStudent = () => {
         key !== "email"
       ) {
         acc[key] = value;
+        console.log(key);
+        console.log(value);
       }
       return acc;
     }, {});
@@ -233,30 +239,82 @@ const AddStudent = () => {
     )[0].name;
     const lowerdepartmentName = departmentName.toLocaleLowerCase();
     console.log(initRef.current.isSubmitting);
-    const IdToken = await getIdToken(auth.currentUser);
-    const info = {
-      IdToken: IdToken,
-      createType: "username",
-      email: v.email,
-      password: v.password,
-      accountType: "student",
-      random: false,
-      path: {
-        Department_id: v.department,
-        University_id: profile.University_id,
-        College_id: profile.College_id,
-      },
-      pinfo: {
-        ...filteredObject,
-        departmentName: departmentName,
-        lowerdepartmentName: lowerdepartmentName,
-      },
-    };
-    const res = await createST(info);
-    if (res.uid) console.log("upload with no p");
-    else if (res.code === "auth/uid-already-exists") {
-      console.log("username already exist");
-      setError(true);
+    try {
+      if(!v.email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/)){
+        console.log("trueee");
+      const IdToken = await getIdToken(auth.currentUser);
+      const info = {
+        IdToken: IdToken,
+        createType: "username",
+        email: v.email,
+        password: v.password,
+        accountType: "student",
+        random: false,
+        path: {
+          Department_id: v.department,
+          University_id: profile.University_id,
+          College_id: profile.College_id,
+        },
+        pinfo: {
+          ...filteredObject,
+          departmentName: departmentName,
+          lowerdepartmentName: lowerdepartmentName,
+        },
+      };
+      const res = await createSTUS(info);
+      console.log(res);
+      if (res.code === "auth/uid-already-exists") {
+        console.log("username already exist");
+        const error = new Error("uername already exist");
+        throw error;
+      }
+    }
+    else{
+      const IdToken = await getIdToken(auth.currentUser);
+      const info = {
+        IdToken: IdToken,
+        createType: "email",
+        email: v.email,
+        password: v.password,
+        accountType: "student",
+        random: false,
+        path: {
+          Department_id: v.department,
+          University_id: profile.University_id,
+          College_id: profile.College_id,
+        },
+        pinfo: {
+          ...filteredObject,
+          departmentName: departmentName,
+          lowerdepartmentName: lowerdepartmentName,
+        },
+      };
+      const res = await createSTEM(info);
+      console.log(res);
+       if (res.code === "auth/email-already-exists") {
+        console.log("email already exist");
+        const error = new Error();
+        throw error;
+      }
+    }
+     
+    } catch (e) {
+      if (e.message === "username already exist") {
+      dispatchRedux(
+        errorActions.setError({
+          title: "Creating Account Faild",
+          message: "Sorry, you unable to create account with this username",
+        })
+      );
+      }
+      else{
+        console.log("kkkkk");
+        dispatchRedux(  errorActions.setError({
+          title: "Creating Account Faild",
+          message: "Sorry, you unable to create account with this email",
+        }));
+      }
+      console.log(e);
     }
   };
   console.log(initRef.current);

@@ -60,7 +60,7 @@ const StudentsTable = () => {
       );
       const [d1, d2] = await Promise.all([p1, p2]);
       const newpbj = d1.docs.map((doc) => ({
-        name: doc.data().username,
+        name: doc.data().username?doc.data().username:doc.data().email,
         id: doc.id,
         departmentName: doc.data().departmentName,
       }));
@@ -158,7 +158,7 @@ img{
               <Header>
                 <HeaderRow>
                   <HeaderCellSort sortKey="departmentName">department name</HeaderCellSort>
-                   <HeaderCell>username</HeaderCell>
+                   <HeaderCell>email or username</HeaderCell>
                   <HeaderCell>password</HeaderCell>
                   <HeaderCell>option</HeaderCell>
                 </HeaderRow>

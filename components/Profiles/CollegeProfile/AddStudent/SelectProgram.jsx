@@ -85,6 +85,8 @@ const SelectProgram = () => {
         }}
         value={formik.values.program}
         disabled={formik.values.department === ""}
+        onBlur={formik.handleBlur}
+        onAbort={formik.validateOnChange}
       >
         <option value="">
           {formik.values.department !== ""
