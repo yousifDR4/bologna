@@ -44,7 +44,7 @@ let reF = true;
 let x = true;
 let count = 0;
 const Navbar = () => {
-  const [notifications, setNotifications] = useState(0);
+  const [notifications, setNotifications] = useState(count);
   const [loading, setLoading] = useState(true);
   const [activatedList, setActivatedList] = useState([]);
   const dispatchRedux = useDispatch();
@@ -108,6 +108,9 @@ const Navbar = () => {
         return prev.filter((l) => l !== s);
       });
   };
+  const clearNotif=()=>{
+    setNotifications(0);
+  }
   useEffect(() => {
     if (!profile.name) return;
     if (!accountType) return;
@@ -115,8 +118,6 @@ const Navbar = () => {
     // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
     const q = listnerq(accountType, profile.Department_id);
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      
-      setNotifications(0);
       let x = [];
       snapshot.docs.forEach((d) => {
         console.log(d.data());
@@ -124,9 +125,10 @@ const Navbar = () => {
           x.push({ ...d.data(), id: d.id });
         }
       });
-      const k = [1, 2];
-
       dispatchRedux(notifyActions.setNotify(x));
+      if (snapshot.docs.length === 0) {
+        dispatchRedux(notifyActions.setNotify("empty"));
+      }
       snapshot.docChanges().forEach((change) => {
         if (
           change.type === "added" &&
@@ -134,28 +136,31 @@ const Navbar = () => {
           change.doc.data().uid !== auth.currentUser.uid
         ) {
           console.log(change.doc.data().seen);
-        count++;
-          setNotifications(count);
-          console.log("notfacation", count);
+          console.log(notifications);
+          setNotifications((prev) => {
+            return prev + 1;
+          });
+          console.log("notfacation", notifications);
+          console.log("lol");
+          count =notifications;
         }
       });
+
+
     });
     return () => unsubscribe;
   }, [Department_id]);
-  useEffect(() => {
-    const f = async () => {
-      let x = await check("ICE");
-      console.log(x);
-      console.log(55);
-    };
-    f();
-  }, []);
+  useEffect(()=>{
+    count =notifications;
+    console.log("useeff",count);
+    },[notifications])
   return (
     <>
       <div className={backdrop} onClick={showAsideListHandler} />
       <nav className={classes.nav}>
         <ul className={classes.navList}>
           <div>
+          
             <li>
               <Link to="/">APS</Link>
             </li>
@@ -175,6 +180,7 @@ const Navbar = () => {
                 <Link to="/UniversityProfile">University Profile</Link>
               </li>
             )}
+
             {isCollegeAccount && (
               <li>
                 <Link to="/CollegeProfile">College Profile</Link>
@@ -201,51 +207,200 @@ const Navbar = () => {
           </div>
         </ul>
         <div className={`${active} ${classes.asideList}`}>
+          <ul>
+         
+            <li>
+              <Link to="/" onClick={showAsideListHandler}>
+                APS
+              </Link>
+            </li>
+            {!isLoggedIn && (
+              <li>
+                <Link to="/Login" onClick={showAsideListHandler}>
+                  <img src={login} alt="" className={classes.login} />
+                  Login
+                </Link>{" "}
+                <div className={classes.innerLine} />
+              </li>
+            )}
+            <li>
+              <Link to="/" onClick={showAsideListHandler}>
+                <img src={question} alt="" />
+                what's APS
+              </Link>
+              <div className={classes.innerLine} />
+            </li>
+            <li>
+              <Link to="/" onClick={showAsideListHandler}>
+                <img src={idea} alt="" />
+                How it works
+              </Link>
+              <div className={classes.innerLine} />
+            </li>
+            <li>
+              <Link to="/Universities" onClick={showAsideListHandler}>
+                <img src={university} alt="" />
+                Colleges using it
+              </Link>
+              <div className={classes.innerLine} />
+            </li>
+            {isCollegeAccount && (
+              <li>
+                <Link to="/CollegeProfile">
+                  <img src={profilePicture} alt="" />
+                  College Profile
+                </Link>
+              </li>
+            )}
+             {accountType==="College" && (
+              <li>
+                <Link to="/AddStudent">Add Studnt</Link>
+              </li>
+            )}
+              {accountType==="College" && (
+              <li>
+                <Link to="/StudentsTable">Students Table</Link>
+              </li>
+            )}
 
-        <ul >
-                <li><Link to="/"  onClick={showAsideListHandler}>APS</Link></li>
-               {!isLoggedIn && <li><Link to="/Login" onClick={showAsideListHandler}><img src={login} alt="" className={classes.login}/>Login</Link> <div className={classes.innerLine}/></li>}
-                <li><Link to="/" onClick={showAsideListHandler}><img src={question} alt=""/>what's APS</Link><div className={classes.innerLine}/></li>
-                <li><Link to="/" onClick={showAsideListHandler}><img src={idea} alt=""/>How it works</Link><div className={classes.innerLine}/></li>
-                <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/>Colleges using it</Link><div className={classes.innerLine}/></li>
-                {isCollegeAccount && <li><Link to="/CollegeProfile"><img src={profilePicture} alt=""/>College Profile</Link></li>}
-                {isDepartmentAccount && <li><Link to="/DepartmentProfile"><img src={profilePicture} alt=""/>Department Profile</Link></li>}
-               {isUniversityAccount && <li><Link to="/UniversityProfile"><img src={profilePicture} alt=""/>University Profile</Link></li>}
-               {isDepartmentAccount && <li><Link to="/Classrooms"><img src={classroom} alt=""/>Classrooms Table</Link></li>}
-               { isDepartmentAccount && <div className={classes.container}>
-              <li onClick={()=>collapseHandler('pr')} className={activatedList.includes('pr')? classes.activeList :""}><img src={program} alt=""/> Program  <img src={collapse}/></li>
-              { activatedList.includes('pr') &&
-              <>
-               <li><Link to="/ProgramModules"><img src={moduleIcon} alt=""/> Program Modules</Link></li>
-            <li><Link to="/AddProgramModule"><img src={addModule} alt=""/> Add Module</Link> </li> 
-            {isDepartmentAccount && <li><Link to="/ProgramManage"><img src={manage} alt=""/>Manage Program</Link></li>}
 
-            </>
-            }  </div> 
-            }
-              { isDepartmentAccount && <div className={classes.container}>
-              <li onClick={()=>collapseHandler('m')} className={activatedList.includes('m')? classes.activeList :""}><img src={moduleIcon} alt=""/> Modules  <img src={collapse}/></li>
-              { activatedList.includes('m') &&
-              <>
-               <li><Link to="/AddModule"><img src={addModule} alt=""/> Add Module</Link></li>
-            <li><Link to="/ModuleTable"><img src={table} alt=""/> Modules Table</Link></li> 
-            </>
-            }  </div> 
-            }
-            { isDepartmentAccount &&  <div className={classes.container}>
-               <li onClick={()=>collapseHandler('p')} className={activatedList.includes('p')? classes.activeList :""}><img src={professor} alt=""/> Professors <img src={collapse}/></li>
-               { activatedList.includes('p') &&
-               <>
-               <li><Link to="/AddProfessor"><img src={addUser} alt=""/> Add Proffessor</Link></li>
-               <li><Link to="/ProfessorList"><img src={table} alt=""/> Professors Table</Link></li>
-               </>}
-               </div>}
-               {isLoggedIn  && <li><Link to="/Notifications" ><img src={bell} alt=""/>Notifications{<span className={classes.notifications}>{notifications >0 ? notifications:"" }</span>}</Link></li>}
-                { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
-        </ul></div>
-    </nav>
-</>
-);
-}
+            {isDepartmentAccount && (
+              <li>
+                <Link to="/DepartmentProfile">
+                  <img src={profilePicture} alt="" />
+                  Department Profile
+                </Link>
+              </li>
+            )}
+            {isUniversityAccount && (
+              <li>
+                <Link to="/UniversityProfile">
+                  <img src={profilePicture} alt="" />
+                  University Profile
+                </Link>
+              </li>
+            )}
+            {isDepartmentAccount && (
+              <li>
+                <Link to="/Classrooms">
+                  <img src={classroom} alt="" />
+                  Classrooms Table
+                </Link>
+              </li>
+            )}
+            {isDepartmentAccount && (
+              <div className={classes.container}>
+                <li
+                  onClick={() => collapseHandler("pr")}
+                  className={
+                    activatedList.includes("pr") ? classes.activeList : ""
+                  }
+                >
+                  <img src={program} alt="" /> Program <img src={collapse} />
+                </li>
+                {activatedList.includes("pr") && (
+                  <>
+                    <li>
+                      <Link to="/ProgramModules">
+                        <img src={moduleIcon} alt="" /> Program Modules
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/AddProgramModule">
+                        <img src={addModule} alt="" /> Add Module
+                      </Link>{" "}
+                    </li>
+                    {isDepartmentAccount && (
+                      <li>
+                        <Link to="/ProgramManage">
+                          <img src={manage} alt="" />
+                          Manage Program
+                        </Link>
+                      </li>
+                    )}
+                  </>
+                )}{" "}
+              </div>
+            )}
+            {isDepartmentAccount && (
+              <div className={classes.container}>
+                <li
+                  onClick={() => collapseHandler("m")}
+                  className={
+                    activatedList.includes("m") ? classes.activeList : ""
+                  }
+                >
+                  <img src={moduleIcon} alt="" /> Modules <img src={collapse} />
+                </li>
+                {activatedList.includes("m") && (
+                  <>
+                    <li>
+                      <Link to="/AddModule">
+                        <img src={addModule} alt="" /> Add Module
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/ModuleTable">
+                        <img src={table} alt="" /> Modules Table
+                      </Link>
+                    </li>
+                  </>
+                )}{" "}
+              </div>
+            )}
+            {isDepartmentAccount && (
+              <div className={classes.container}>
+                <li
+                  onClick={() => collapseHandler("p")}
+                  className={
+                    activatedList.includes("p") ? classes.activeList : ""
+                  }
+                >
+                  <img src={professor} alt="" /> Professors{" "}
+                  <img src={collapse} />
+                </li>
+                {activatedList.includes("p") && (
+                  <>
+                    <li>
+                      <Link to="/AddProfessor">
+                        <img src={addUser} alt="" /> Add Proffessor
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/ProfessorList">
+                        <img src={table} alt="" /> Professors Table
+                      </Link>
+                    </li>
+                  </>
+                )}
+              </div>
+            )}
+            {isLoggedIn && (
+              <li  onClick={clearNotif}>
+              
+                <Link to="/Notifications">
+                  <img src={bell} alt="" />
+                  Notifications
+                  {
+                   <span className={classes.notifications}>
+                     {notifications > 0 ? notifications : ""}
+                    </span>
+                  }
+  
+                
+                </Link>
+              
+              </li>
+            )}
+            {isLoggedIn && (
+              <li>
+                <button onClick={logoutHandler}>Logout</button>
+              </li>
+            )}
+          </ul>
+        </div>
+      </nav>
+    </>
+  );
+};
 export default Navbar;
-

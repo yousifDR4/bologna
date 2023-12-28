@@ -101,7 +101,7 @@ export async function signinWithUsername(username) {
 export const creatuser = async (info) => {
   console.log(JSON.stringify(info));
   try {
-    const res = await fetch(process.env.REACT_APP_url, {
+    const res = await fetch("http://localhost:4000/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -169,5 +169,24 @@ export const listnerq = (accountType, Department_id) => {
         where("uid", "!=", auth.currentUser.uid)
       )
     );
+  }
+};
+
+export const createST = async (info) => {
+  console.log(JSON.stringify(info));
+  try {
+    const res = await fetch("http://localhost:4000/createSTUS", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(info),
+    });
+    console.log(res.status);
+    const k = await res.json();
+    console.log(k,"");
+    return k;
+  } catch (e) {
+   console.log(e);
   }
 };

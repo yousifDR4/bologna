@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import classes from "./ProfessorTable.module.css";
+import classes from "./StudentsTable.module.css";
 import {
   Table,
   Header,
@@ -15,54 +15,70 @@ import {
   HeaderCellSort,
   useSort,
 } from "@table-library/react-table-library/sort";
-import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  and,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "../../../../store/fire";
 import { useSelector } from "react-redux";
+import Options from "./Options";
 const key = "Compact Table";
 
-const ProfessorTable = () => {
+const StudentsTable = () => {
   const profile = useSelector((state) => state.profile.profile);
+  const College_id = profile.College_id;
   const [modules, setModules] = useState([]);
   useEffect(() => {
     //fetch
-    setModules([
-     
-    ]);
-    const f=async()=>{
-      if(!profile.professors)
-      return;
-    else if(profile.professors.length === 0){
-      return;
-    }
-      console.log(profile.professors);
-     const m= profile.professors
-   const p1=getDocs(query(collection(db,"users"),where("uid","in",profile.professors)));
-   const p2=m.map(async(id)=>{
-  const t=await getDoc(doc(db,"passwords",id))
-    return  {password: t.data().password,id:t.id}
-  });
-  const [d1,d2]=await Promise.all([p1,p2]);
-  const arr1=d1.docs.map((doc)=>({name:doc.data().username,id:doc.id}))
-const d3=await Promise.all(d2);
-console.log(arr1);
-console.log(d3);
-const newpbj=[];
-arr1.map((professor)=>{
-  newpbj.push(professor);
-})
-const compose=newpbj.map((obj)=>{
-  let m=d3.filter((obj2)=>(obj2.id===obj.id))[0].password;
-  console.log(m);
-  return obj={...obj,password:m}
-})
-console.log(newpbj);
-setModules(compose)
-   
-    }
+    setModules([]);
+    console.log(profile);
+    const f = async () => {
+      if (!College_id) return;
 
-f();
+      const p1 = getDocs(
+        query(
+          collection(db, "users"),
+          and(
+            where("College_id", "==", College_id),
+            where("accountType", "==", "student")
+          )
+        )
+      );
+      const p2 = getDocs(
+        query(
+          collection(db, "passwords"),
+          and(
+            where("accountType", "==", "student"),
+            where("College_id", "==", College_id)
+          )
+        )
+      );
+      const [d1, d2] = await Promise.all([p1, p2]);
+      const newpbj = d1.docs.map((doc) => ({
+        name: doc.data().username,
+        id: doc.id,
+        departmentName: doc.data().departmentName,
+      }));
+      console.log(d2.docs[0].data());
+      const compose = newpbj.map((obj) => {
+        const rightPassword = d2.docs
+          .filter((pass) => pass.id === obj.id)[0]
+          .data().password;
+        console.log(obj);
+        return { ...obj, password: rightPassword };
+      });
+      console.log(compose);
+      console.log(newpbj);
+      setModules(compose);
+    };
 
-  }, [auth.currentUser]);
+    f();
+  }, [profile]);
   const data = {
     nodes: modules,
   };
@@ -134,26 +150,27 @@ img{
   }
   return (
     <div className={classes.container}>
-
       <div className={classes.table}>
-        <h3>View Professors</h3>
+        <h3>View Student</h3>
         <Table data={data} theme={theme} sort={sort}>
           {(tableList) => (
             <>
               <Header>
                 <HeaderRow>
-                  <HeaderCellSort sortKey="NAME">username</HeaderCellSort>
+                  <HeaderCellSort sortKey="departmentName">department name</HeaderCellSort>
+                   <HeaderCell>username</HeaderCell>
                   <HeaderCell>password</HeaderCell>
-                  
+                  <HeaderCell>option</HeaderCell>
                 </HeaderRow>
               </Header>
 
               <Body>
                 {tableList.map((module) => (
-                  <Row key={module.name} item={module}>
+                  <Row key={module.departmentName} item={module}>
+                   <Cell>{module.departmentName}</Cell>
                     <Cell>{module.name}</Cell>
                     <Cell>{module.password}</Cell>
-                    
+                    <Cell><div className='relative'><Options id={module.id} code={module.code}/></div></Cell>
                   </Row>
                 ))}
               </Body>
@@ -164,4 +181,4 @@ img{
     </div>
   );
 };
-export default ProfessorTable;
+export default StudentsTable;

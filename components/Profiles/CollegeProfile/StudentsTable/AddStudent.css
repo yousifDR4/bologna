@@ -1,0 +1,206 @@
+.mydiv{
+    background-color: white;
+    box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
+    border-color: #4A8BDF;
+  width: 100%;
+  max-width: 100rem;
+  border-radius: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.mydiv .title{
+    background-color: #4A8BDF;
+    color: aliceblue;
+    padding: 1.2rem;
+    margin-bottom: auto;
+    border-top-right-radius: 20px;
+    border-top-left-radius:20px;
+ }
+.parent {
+  margin-left: 10px;
+    display: flex;
+    flex-wrap: wrap;   
+    flex-direction: row;
+    justify-content: flex-start;
+ margin-top: 3rem;
+    gap: 5px;
+    margin-top: 1rem;
+  }
+  .myform {
+    outline: none;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 1rem;
+    margin-left: 0.5rem;
+    margin-top: 1.5rem;
+    width: 12rem;
+    height: 2.2rem;
+    border: 1px solid #6B6C6D;
+    font-family: GraphikThin;
+    color:#6B6C6D;
+    padding-left: 0.5rem;
+   height: 2.5rem;
+    border-radius: 7px;
+    font-size:110%;
+  }
+  .mylabel {
+    margin-bottom: 0px; /* Adjust as needed */
+  width: fit-content;
+  height: 0px;
+  margin-left: 0.5rem;
+  }
+  .myselect {
+    outline: none;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 1rem;
+    margin-left: 0.5rem;
+    margin-top: 1.5rem;
+    width: 12rem;
+    height: 2.5rem;
+    border: 2px solid black;
+    font-size: 1rem;
+    color:#6B6C6D;
+    border: 1px solid #6B6C6D;
+    border-radius: 7px;
+  }
+  .myemail {
+    outline: none;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 1rem;
+    margin-left: 0.5rem;
+    margin-top: 1.5rem;
+    width: 20rem;
+    height: 2.2rem;
+    font-family: GraphikThin;
+    color:#6B6C6D;
+    padding-left: 0.5rem;
+   height: 2.5rem;
+    border-radius: 7px;
+    font-size: 110%;
+    border: 1px solid #6B6C6D;
+  }
+  .spanflex{
+display: flex;
+flex-direction: column;
+margin-bottom: 1rem;
+margin-top: 0.5rem;
+height: 5rem;
+  }
+ .mybutton{
+width: 7rem;
+height: 2rem;
+font-size: 110%;
+border-radius: 7px;
+background-color: #4A8BDF;
+border:#4A8BDF;}
+ .mybutton:hover{
+  background-color: #4A8BDF;
+ cursor: pointer;
+ }
+ .buttonflex{
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: 0vh;
+    margin-right: 6rem;
+display: flex;
+align-items: end;
+ }
+ @media screen and (max-width: 730px) {
+  .flexspan{
+  flex-grow: 15;
+  }
+  .spanflex {
+    flex-grow: 20;
+  }
+  .parent{
+ 
+  }
+  .myform{
+    width: 90%;
+  }
+  .myselect{
+    width: 90%;
+    min-width: 15rem;
+  }
+  .myemail{
+    width: 90%;
+    min-width: 15rem;
+  }
+  .buttonflex{
+    justify-content: center;
+    margin-right: 0px;
+    align-items: center;
+  }
+}
+.mylist{
+ list-style: none;
+ display: flex;
+}
+.mylist li {
+ margin: 0px;
+padding-left: 15px;
+padding-right:15px ;
+  color: #4A8BDF;
+  /* Add a border with a specific color */
+  margin: 0px;
+}
+.mylist li{
+ cursor: pointer;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ }
+ .blue-border {
+  background-color: aqua;
+  border-bottom: 4px solid #4A8BDF;
+  width: 6rem;
+ transition: all 0.2s;
+}
+ .spancolor{
+color: red;
+margin-left: 5px;
+ }
+ .spanflex div{
+  color: red;
+  margin-left: 5px;
+  font-size: 0.9rem;
+  margin-left: 0.9rem;
+  margin-bottom: 0px;
+ }
+ .disablebutton{
+  width: 7rem;
+height: 2rem;
+font-size: 110%;
+border-radius: 7px;
+background-color: #75767B;
+border:#75767B;
+color: aliceblue;
+ }
+ .disablebutton:hover{
+  width: 7rem;
+height: 2rem;
+font-size: 110%;
+border-radius: 7px;
+background-color: #75767B;
+border:#75767B;
+color: aliceblue;
+ }
+.spanreact{
+  margin-top: 0px;
+  gap: 0px;
+}
+.selectspan{
+  margin-left: 1rem;
+}
+.flexspan{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  height: 5rem;
+  gap: 1.4rem;
+}
+

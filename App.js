@@ -23,6 +23,10 @@ import ClassroomsTable from './components/Profiles/DepartmentProfile/Classrooms/
 import Notifications from './components/Notifications/Notifications.js';
 import ProgramModulesTable from './components/Profiles/DepartmentProfile/Programs/ProgramModules/ProgramModulesTable.js';
 import AddProgramModule from './components/Profiles/DepartmentProfile/Programs/AddProgramModule.js';
+import AddStudent from "./components/Profiles/CollegeProfile/AddStudent/AddStudent.jsx"
+import StudentsTable from './components/Profiles/CollegeProfile/StudentsTable/StudentsTable.jsx';
+import EditStudent from './components/Profiles/CollegeProfile/StudentsTable/EditStudent.jsx';
+
 
 let firstInitilize=true;
 function App() {
@@ -117,6 +121,18 @@ function App() {
         {
           path: "/AddProgramModule",
           element:<AddProgramModule/>
+        },
+        {
+          path: "/AddStudent",
+        
+          element:<AddStudent/>
+        },{
+          path:"/StudentsTable",
+          element:<StudentsTable/>
+        }
+        ,{
+          path:"/EditStudent",
+          element:<EditStudent/>
         }
 
     ]

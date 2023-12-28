@@ -185,15 +185,16 @@ if (!res.uid) {
         
        await setreport(reportinfo,Department_id)
       }
-      setUploading(false);
-      const action={
-        type:"reset"
-      };
-      dispatch(action);
+      // setUploading(false);
+      // const action={
+      //   type:"reset"
+      // };
+      // dispatch(action);
     } catch (e) {
       console.log(e);
       setUploading(false);
     }
+    setUploading(false);
 
  
 

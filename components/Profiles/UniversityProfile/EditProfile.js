@@ -17,12 +17,14 @@ import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import Button from "../../UI/Loader/Button/Button";
 const EditProfile = (probs) => {
   const profile = useSelector((state) => state.profile.profile);
+  const Department_id=profile.Department_id;
   const [uploading,setUploading]=useState(false);
   const imgref = useRef("");
   const wimgRef = useRef("");
   const typeRef = useRef(["", ""]);
   const hasuplaod = useRef([false, false]);
   const dispatch = useDispatch();
+  const accountType = useSelector((state) => state.auth.accountType);
   const [imagesValid, setImagesValid] = useState({
     profilePicture: true,
     bannerPicture: true,
@@ -86,12 +88,12 @@ const EditProfile = (probs) => {
       hasuplaod.current[1] = true;
     }
   }, []);
-  const uploadprofilepicture = async() => {
+  const uploadprofilepicture = async(id) => {
     if (imagesValid.profilePictureTouched) {
       const name = imgref.current;
       const storegRef = ref(
         storage,
-        `${typeRef.current[0]}/${auth.currentUser.uid}/${name.name}`
+        `${typeRef.current[0]}/${id}/${name.name}`
       );
       const uploadtask = uploadBytesResumable(storegRef, name);
       if (hasuplaod.current[0]) {
@@ -131,8 +133,9 @@ const EditProfile = (probs) => {
               })
             );
             setUploading(false);
+            console.log(id);
             setDoc(
-              doc(db, "users", auth.currentUser.uid),
+              doc(db, "users", id),
               { [typeRef.current[0]]: res },
               { merge: true }
             ).then();
@@ -142,12 +145,13 @@ const EditProfile = (probs) => {
     }
     return "ok"
   }
-  const uploadbannerPicture=async()=>{
+  const uploadbannerPicture=async(id)=>{
+
   if (imagesValid.bannerPictureTouched) {
     const name = wimgRef.current;
     const storegRef = ref(
       storage,
-      `${typeRef.current[2]}/${auth.currentUser.uid}/${name.name}`
+      `${typeRef.current[2]}/${id}/${name.name}`
     );
     const uploadtask = uploadBytesResumable(storegRef, name);
     if (hasuplaod.current[1]) {
@@ -189,7 +193,7 @@ const EditProfile = (probs) => {
           );
           setUploading(false);
           setDoc(
-            doc(db, "users", auth.currentUser.uid),
+            doc(db, "users", id),
             { [typeRef.current[2]]: res },
             { merge: true }
           ).then();
@@ -201,12 +205,21 @@ const EditProfile = (probs) => {
 }
   const sumbitHandler = async(e) => {
     e.preventDefault();
+    let id="";
+    if(accountType==="College")
+    id=profile.College_id;
+  else if(accountType==="University"){
+   id=profile.College_id
+  }
+  else{
+    id=profile.Department_id;
+  }
     setUploading(true);
     setImagesValid((prev) => {
       return { ...prev, bannerPictureTouched: false, profilePictureTouched: false };
     });
     try{
-   await Promise.all([uploadbannerPicture(),uploadprofilepicture()])
+   await Promise.all([uploadbannerPicture(id),uploadprofilepicture(id)])
     }
     catch(e){
       setUploading(false);

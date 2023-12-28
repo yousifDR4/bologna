@@ -68,7 +68,7 @@ const f=async ()=>{
       <Loader/>
       )
     }
-   else if(!loading && notifitcations.length ===  0){
+   else if(notifitcations===  "empty"){
     console.log(loading,notifitcations);
     return (
       <main className={classes.main}>
