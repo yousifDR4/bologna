@@ -101,7 +101,7 @@ export async function signinWithUsername(username) {
 export const creatuser = async (info) => {
   console.log(JSON.stringify(info));
   try {
-    const res = await fetch("http://localhost:4000/create", {
+    const res = await fetch(process.env.REACT_APP_url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -173,9 +173,10 @@ export const listnerq = (accountType, Department_id) => {
 };
 
 export const createST = async (info) => {
-  console.log(JSON.stringify(info));
+  // console.log(JSON.stringify(info));
+  console.log(process.env.REACT_APP_createSTUS);
   try {
-    const res = await fetch("http://localhost:4000/createSTUS", {
+    const res = await fetch(process.env.REACT_APP_createSTUS, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

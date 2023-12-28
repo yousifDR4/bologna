@@ -24,15 +24,20 @@ const SelectProgram = () => {
           console.log("fetch program");
           const d = await get_progs(formik.values.department);
           formik.setFieldValue("programs", d);
+          formik.setFieldValue("maxlevel", 0);
           console.log(d, "programs");
           if (d.length === 0) {
+            formik.setFieldValue("program", []);
             formik.setFieldValue("program", "");
             formik.setFieldValue("level", "");
           }
+          else
+          formik.setFieldValue("program", "");
           console.log("programs fetch");
         } else {
           formik.setFieldValue("programs", "");
           formik.setFieldValue("program", "");
+          formik.setFieldValue("maxlevel", 0);
         }
       };
       f();
@@ -56,10 +61,10 @@ const SelectProgram = () => {
   }, [formik.values.program]);
   const changemaxlevel = (e) => {
     if (e.target.value === "") {
+      console.log("000000000000000");
       formik.setFieldValue("maxlevel", 0);
       return;
     }
-
     const max = formik.values.programs.filter(
       (prog) => prog.id === e.target.value
     )[0].type;
@@ -100,7 +105,6 @@ const SelectProgram = () => {
       <ErrorMessage name={"program"} component="div"/>
     </span>
       
-
   );
 };
 export default SelectProgram;

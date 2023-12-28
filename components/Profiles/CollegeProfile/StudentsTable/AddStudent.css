@@ -90,6 +90,7 @@ height: 5rem;
   }
  .mybutton{
 width: 7rem;
+margin-right: 6rem;
 height: 2rem;
 font-size: 110%;
 border-radius: 7px;
@@ -97,6 +98,7 @@ background-color: #4A8BDF;
 border:#4A8BDF;}
  .mybutton:hover{
   background-color: #4A8BDF;
+  color: aliceblue;
  cursor: pointer;
  }
  .buttonflex{
@@ -202,5 +204,8 @@ color: aliceblue;
   margin-top: 0.5rem;
   height: 5rem;
   gap: 1.4rem;
+}
+.buttonflex{
+  margin-right: auto;
 }
 

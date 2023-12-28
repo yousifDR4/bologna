@@ -61,16 +61,55 @@ const AddStudent = () => {
   const [departments, setDepartments] = useState([]);
   const initRef = useRef(null);
   const [change, setchange] = useState(false);
-  const [error,setError]=useState(false);
-  const validationSchema = Yup.object({
-    password: Yup.string().required("required").min(8, "invalid password"),
+  const [error, setError] = useState(false);
+  const emailSchema = Yup.object({
     email: Yup.string()
-      .required("required")
-      .matches(/^[^@.]+$/, "Username cannot contain '@' or '.com'"),
-    program: Yup.string().required("required"),
-    department: Yup.string().required("required"),
-    level:Yup.string().required("required")
+      .email("Invalid email address")
+      .required("Email is required"),
   });
+
+  const usernameSchema = Yup.object({
+    email: Yup.string()
+      .matches(/^[a-zA-Z0-9]+$/, "Invalid username format")
+      .required("Username is required"),
+  });
+  const validationSchema = Yup.object().shape({
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters"),
+    email: Yup.string().test(
+      "is-email-or-username",
+      "Invalid email or username",
+      function (value) {
+        if (!value) {
+          return this.createError({
+            message: "Email or username is required",
+            path: "email",
+          });
+        }
+        const isEmail = Yup.string().email().isValidSync(value);
+        const isUsername = Yup.string()
+          .matches(/^[a-zA-Z0-9]+$/, "Invalid username format")
+          .isValidSync(value);
+        console.log(isUsername, "username");
+        console.log(value);
+        console.log(isEmail, "isEmail");
+
+        if (!(isEmail || isUsername)) {
+          return this.createError({
+            message: "Invalid email or username",
+            path: "email",
+          });
+        }
+
+        return true;
+      }
+    ),
+    program: Yup.string().required("Program is required"),
+    department: Yup.string().required("Department is required"),
+    level: Yup.string().required("Level is required"),
+  });
+
   console.log();
   useEffect(() => {
     if (!auth.currentUser) return;
@@ -153,6 +192,7 @@ const AddStudent = () => {
                 type="submit"
                 className={"mybutton"}
                 onSubmit={form.handleSubmit}
+                disabled={!form.isValid||form.isSubmitting}
               >
                 submit
               </button>
@@ -169,7 +209,7 @@ const AddStudent = () => {
     setStep(+e.target.getAttribute("name") - 1);
   };
 
-  const handelsubmit = async(v) => {
+  const handelsubmit = async (v) => {
     const filteredObject = Object.entries(v).reduce((acc, [key, value]) => {
       if (
         value !== "" &&
@@ -179,44 +219,46 @@ const AddStudent = () => {
         key !== "countries" &&
         key !== "programs" &&
         key !== "password" &&
-        key!=="email"
+        key !== "email"
       ) {
         acc[key] = value;
       }
       return acc;
     }, {});
     console.log(departments);
-    const departmentName=departments.filter((depart)=>depart.id===v.department)[0].name;
-    const lowerdepartmentName=departmentName.toLocaleLowerCase();
+    const departmentName = departments.filter(
+      (depart) => depart.id === v.department
+    )[0].name;
+    const lowerdepartmentName = departmentName.toLocaleLowerCase();
     console.log(initRef.current.isSubmitting);
-    const IdToken=await getIdToken(auth.currentUser)
+    const IdToken = await getIdToken(auth.currentUser);
     const info = {
-      IdToken:IdToken,
-      createType:"username",
-    email:v.email,
-    password:v.password,
-    accountType:"student",
-    random:false,
+      IdToken: IdToken,
+      createType: "username",
+      email: v.email,
+      password: v.password,
+      accountType: "student",
+      random: false,
       path: {
         Department_id: v.department,
         University_id: profile.University_id,
         College_id: profile.College_id,
       },
-      pinfo: {...filteredObject,
-        departmentName:departmentName,
-        lowerdepartmentName:lowerdepartmentName
+      pinfo: {
+        ...filteredObject,
+        departmentName: departmentName,
+        lowerdepartmentName: lowerdepartmentName,
       },
     };
-    const res=await createST(info);
-    if(res.uid)
-    console.log("upload with no p");
-  else if(res.code==="auth/uid-already-exists"){
-  console.log("username already exist");
-  setError(true)
-  }
-
+    const res = await createST(info);
+    if (res.uid) console.log("upload with no p");
+    else if (res.code === "auth/uid-already-exists") {
+      console.log("username already exist");
+      setError(true);
+    }
   };
   console.log(initRef.current);
+
   return (
     <div className="mydiv">
       <span>
