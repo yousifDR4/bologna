@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, useFormikContext } from "formik";
+import { Field, Form, useFormikContext } from "formik";
 import Smallinput from "./Smallinput";
 import axios from "axios";
 import Select from "react-select";
@@ -70,19 +70,28 @@ const Steptwo = () => {
         onBlur={() => handleBlur("birthcountry")}
       />
       </span>
-     
-
-
-
-
-      <span className="spanflex buttonflex">
+      <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
-        <button type="submit" className="mybutton" onClick={handleSubmit}>
-          Submit
-        </button>
+        <Field>
+          {(props) => {
+            const { form } = props;
+            console.log(form.isValid);
+            return (
+              <button
+                type="submit"
+                className={"mybutton"}
+                onSubmit={form.handleSubmit}
+                disabled={!form.isValid||form.isSubmitting}
+              >
+                submit
+              </button>
+            );
+          }}
+        </Field>
       </span>
     </Form>
   );
 };
+
 
 export default Steptwo;

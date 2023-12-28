@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, FormikContext } from "formik";
-import "./AddStudent.css";
+import "./EditStudent.css";
 const Smallinput = (probs) => {  
   return (
     <span className="spanflex">

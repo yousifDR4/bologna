@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import * as Yup from "yup";
-import "./AddStudent.css";
+import "./EditStudent.css";
 import {
   Formik,
   useFormik,
@@ -76,6 +76,8 @@ const EditStudent = (props) => {
     program: Yup.string().required("required"),
     department: Yup.string().required("required"),
     level: Yup.string().required("required"),
+    firstname:Yup.string().required("first name is required"),
+    lastname:Yup.string().required("last name is required")
   });
   console.log();
   useEffect(() => {

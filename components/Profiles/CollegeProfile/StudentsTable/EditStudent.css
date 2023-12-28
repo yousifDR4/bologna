@@ -1,0 +1,77 @@
+
+ 
+
+
+.mylist{
+ list-style: none;
+ display: flex;
+}
+.mylist li {
+ margin: 0px;
+padding-left: 15px;
+padding-right:15px ;
+  color: #4A8BDF;
+  /* Add a border with a specific color */
+  margin: 0px;
+}
+.mylist li{
+ cursor: pointer;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ }
+ .blue-border {
+  background-color: aqua;
+  border-bottom: 4px solid #4A8BDF;
+  width: 6rem;
+ transition: all 0.2s;
+}
+ .spancolor{
+color: red;
+margin-left: 5px;
+ }
+ .spanflex div{
+  color: red;
+  margin-left: 5px;
+  font-size: 0.9rem;
+  margin-left: 0.9rem;
+  margin-bottom: 0px;
+ }
+ .disablebutton{
+  width: 7rem;
+height: 2rem;
+font-size: 110%;
+border-radius: 7px;
+background-color: #75767B;
+border:#75767B;
+color: aliceblue;
+ }
+ .disablebutton:hover{
+  width: 7rem;
+height: 2rem;
+font-size: 110%;
+border-radius: 7px;
+background-color: #75767B;
+border:#75767B;
+color: aliceblue;
+ }
+.spanreact{
+  margin-top: 0px;
+  gap: 0px;
+}
+.selectspan{
+  margin-left: 1rem;
+}
+.flexspan{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  height: 5rem;
+  gap: 1.4rem;
+}
+.buttonflex{
+ 
+}
+

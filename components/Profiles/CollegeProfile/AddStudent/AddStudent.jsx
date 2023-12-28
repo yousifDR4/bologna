@@ -108,6 +108,8 @@ const AddStudent = () => {
     program: Yup.string().required("Program is required"),
     department: Yup.string().required("Department is required"),
     level: Yup.string().required("Level is required"),
+    firstname:Yup.string().required("first name is required"),
+    lastname:Yup.string().required("last name is required")
   });
 
   console.log();
@@ -181,7 +183,7 @@ const AddStudent = () => {
       <Largeinput word="password" name="password" type="password" />
       <Largeinput word="number" name="number" type="text" />
       <Largeinput word="mother name" name="mothername" type="text" />
-      <span className="spanflex buttonflex">
+      <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
         <Field>
           {(props) => {
