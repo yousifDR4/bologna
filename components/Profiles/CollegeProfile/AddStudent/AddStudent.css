@@ -45,8 +45,9 @@
   }
   .mylabel {
     margin-bottom: 0px; /* Adjust as needed */
-  width: fit-content;
+  
   height: 0px;
+  flex-shrink: 0;
   margin-left: 0.5rem;
   }
   .myselect {
@@ -80,6 +81,8 @@
     border-radius: 7px;
     font-size: 110%;
     border: 1px solid #6B6C6D;
+    flex-shrink: 0;
+
   }
   .spanflex{
 display: flex;
@@ -87,18 +90,9 @@ flex-direction: column;
 margin-bottom: 1rem;
 margin-top: 0.5rem;
 height: 5rem;
+flex-shrink: 0;
   }
- .mybutton{
-width: 7rem;
-height: 2rem;
-font-size: 110%;
-border-radius: 7px;
-background-color: #4A8BDF;
-border:#4A8BDF;}
- .mybutton:hover{
-  background-color: #4A8BDF;
- cursor: pointer;
- }
+
  .buttonflex{
     width: 100%;
     margin-top: auto;
@@ -198,9 +192,52 @@ color: aliceblue;
 .flexspan{
   display: flex;
   flex-direction: column;
+
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
   height: 5rem;
   gap: 1.4rem;
 }
-
+.mybutton{
+  background-color:var(--styling1) ;
+  color: white;
+  margin: 40px 0 20px 0;
+  border: 1px solid #6B6C6D;
+  border-radius: 7px;
+width: 9rem;
+height: 2.2rem;
+font-family: Graphik;
+cursor: pointer;
+}
+ .mybutton:hover{
+  color:var(--styling1);
+  background-color: white;
+}
+ .mybuttonbutton p{
+  color: #6B6C6D;
+  font-family: GraphikThin;
+  font-size: 80%;
+}
+.container form .button a{
+  color:var(--styling1);
+  font-size: 100%;
+}
+.mybutton:disabled{
+  background-color: #B8BFC6;
+  color: white;
+  border: none;
+  
+  }
+.mybutton:disabled:hover{
+    background-color: #B8BFC6;
+    border: none;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+.mybutton{
+  height: 5rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

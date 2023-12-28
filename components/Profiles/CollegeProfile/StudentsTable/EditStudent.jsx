@@ -71,6 +71,7 @@ const EditStudent = (props) => {
   const [change, setchange] = useState(false);
   const [error, setError] = useState(false);
   const [maxlevel, setmaxlevel] = useState(false);
+  const studentdepartment=useRef({});
   const validationSchema = Yup.object({
     program: Yup.string().required("required"),
     department: Yup.string().required("required"),
@@ -103,6 +104,7 @@ const EditStudent = (props) => {
         
           const a=await getDoc(doc(db, "users", id));
           const student = a.data();
+          studentdepartment.current={name:student.departmentName,Department_id:student.id};
           console.log(student,"ssssssssssssssssssssssss");
           const filteredObject = Object.entries(student).reduce(
             (acc, [key, value]) => {
@@ -209,7 +211,6 @@ const EditStudent = (props) => {
     console.log(+e.target.getAttribute("name"));
     setStep(+e.target.getAttribute("name") - 1);
   };
-
   const handelsubmit = async (v) => {
     const filteredObject = Object.entries(v).reduce((acc, [key, value]) => {
       if (
@@ -243,7 +244,9 @@ const EditStudent = (props) => {
       },
     };
     await setDoc(doc(db,"users",id),{...info.path,...info.pinfo},{merge:true});
- 
+    if(studentdepartment.Department_id!==v.department){
+      await setDoc(doc(db,"password",id),{Department_id:v.department},{merge:true});
+    }
   };
   console.log(initRef.current);
   return (

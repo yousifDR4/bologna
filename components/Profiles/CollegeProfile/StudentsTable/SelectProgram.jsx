@@ -29,8 +29,8 @@ const SelectProgram = () => {
             formik.setFieldValue("level", "");
             formik.setFieldValue("maxlevel", 0);
           }
-          console.log("keowfk33pewrod32ko32opq]");
-          console.log("programs fetch");
+           else
+          formik.setFieldValue("program", "");
           console.log("lol");
           console.log("keowfk33pewrod32ko32opq]");
         } else {
@@ -62,6 +62,7 @@ const SelectProgram = () => {
   }, [formik.values.program]);
   const changemaxlevel = (e) => {
     if (e.target.value === "") {
+      console.log("000000000000000");
       formik.setFieldValue("maxlevel", 0);
       return;
     }
