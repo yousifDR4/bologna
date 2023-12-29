@@ -11,10 +11,20 @@ const Options=(probs)=>{
     const editHandler=()=>{
         navigate(`/EditStudent?id=${id}`)
     }
+    const changeusername=()=>{
+        navigate(`/ChangeUsername?id=${id}`)
+    }
+    const onabort=(e)=>{
+        console.log(e);
+
+    }
     return(
-        <><img src={options} onClick={()=>setShowDropDown((prev)=>!prev)}/> <div  className={`${classes.dropDown} ${showDropDown?classes.active:''}`}>
+        <><img src={options} onClick={()=>{setShowDropDown((prev)=>!prev)}
+        }/> <div  className={`${classes.dropDown} ${showDropDown?classes.active:''}`} onAbort={onabort}>
+            
             <span onClick={deleteHandler}>Delete</span>
            <span onClick={editHandler}>Edit</span>
+           <span onClick={changeusername}>Change username</span>
          </div></>
     )
 }

@@ -1,0 +1,44 @@
+.parent {
+    margin-left: 10px;
+      display: flex;
+      flex-wrap: wrap;   
+      flex-direction: row;
+      justify-content: flex-start;
+   margin-top: 3rem;
+      gap: 5px;
+      margin-top: 1rem;
+      flex: 1;
+    }
+    .mydiv{
+        background-color: white;
+        box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
+        border-color: #4A8BDF;
+      width: 100%;
+      max-width: 100rem;
+      border-radius: 20px;
+      margin-left: 20px;
+      margin-right: 20px;
+      box-sizing: border-box;
+    }
+    .mydiv .title{
+        background-color: #4A8BDF;
+        color: aliceblue;
+        padding: 1.2rem;
+        margin-bottom: auto;
+        border-top-right-radius: 20px;
+        border-top-left-radius:20px;
+     }
+     .coonst{
+       display: flex;
+       flex-wrap: wrap;
+       width: 100%;
+  
+     }
+  
+     .buttonconst{
+      justify-content: center;
+      display: flex;     
+      width: 100%;
+      margin-top: 0rem;
+
+     }

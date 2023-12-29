@@ -26,6 +26,7 @@ import AddProgramModule from './components/Profiles/DepartmentProfile/Programs/A
 import AddStudent from "./components/Profiles/CollegeProfile/AddStudent/AddStudent.jsx"
 import StudentsTable from './components/Profiles/CollegeProfile/StudentsTable/StudentsTable.jsx';
 import EditStudent from './components/Profiles/CollegeProfile/StudentsTable/EditStudent.jsx';
+import Changeusername from './components/Profiles/CollegeProfile/StudentsTable/Changeusername.jsx';
 
 
 let firstInitilize=true;
@@ -133,6 +134,10 @@ function App() {
         ,{
           path:"/EditStudent",
           element:<EditStudent/>
+        }
+        ,{
+          path:"/Changeusername",
+          element:<Changeusername/>
         }
 
     ]
