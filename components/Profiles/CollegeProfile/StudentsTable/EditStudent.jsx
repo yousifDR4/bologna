@@ -187,7 +187,7 @@ const EditStudent = (props) => {
       <SelectLevel />
       <Largeinput word="number" name="number" type="text" />
       <Largeinput word="mother name" name="mothername" type="text" />
-      <span className="spanflex buttonflex">
+      <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
         <Field>
           {(props) => {
@@ -198,8 +198,9 @@ const EditStudent = (props) => {
                 type="submit"
                 className={"mybutton"}
                 onSubmit={form.handleSubmit}
+                disabled={!form.isValid || form.isSubmitting}
               >
-                submit
+                {form.isSubmitting?"...uploading":"submit"}
               </button>
             );
           }}
