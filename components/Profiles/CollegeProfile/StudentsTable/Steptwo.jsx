@@ -3,6 +3,7 @@ import { Field, Form, useFormikContext } from "formik";
 import Smallinput from "./Smallinput";
 import axios from "axios";
 import Select from "react-select";
+import Button from "../AddStudent/Button";
 const Steptwo = () => {
   const { handleSubmit, values, handleChange, handleBlur,setFieldValue } = useFormikContext();
   const [countries, setCountries] = useState([]);
@@ -71,22 +72,7 @@ const Steptwo = () => {
       </span>
       <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
-        <Field>
-          {(props) => {
-            const { form } = props;
-            console.log(form.isValid);
-            return (
-              <button
-                type="submit"
-                className={"mybutton"}
-                onSubmit={form.handleSubmit}
-                disabled={!form.isValid || form.isSubmitting}
-              >
-                {form.isSubmitting?"...uploading":"submit"}
-              </button>
-            );
-          }}
-        </Field>
+     <Button/>
     
       </span>
     </Form>

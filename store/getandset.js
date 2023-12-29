@@ -7,6 +7,7 @@ import {
   collectionGroup,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
@@ -203,3 +204,14 @@ export const get_progs_as_college = async (Deprartment_id) => {
 
   return data;
 };
+export const usernameprofile=async(id)=>{
+const p1=getDoc(doc(db,"users",id))
+  const p2=getDoc(doc(db,"passwords",id))
+  const [doc1,doc2]=await Promise.all([p1,p2]);
+  console.log(doc1.data(),doc2.data());
+const password=doc1.data().username;
+const username=doc2.data().password;
+const info={password:password,username:username}
+console.log(info);
+return info;
+}

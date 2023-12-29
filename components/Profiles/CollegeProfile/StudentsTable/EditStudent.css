@@ -38,24 +38,7 @@ margin-left: 5px;
   margin-left: 0.9rem;
   margin-bottom: 0px;
  }
- .disablebutton{
-  width: 7rem;
-height: 2rem;
-font-size: 110%;
-border-radius: 7px;
-background-color: #75767B;
-border:#75767B;
-color: aliceblue;
- }
- .disablebutton:hover{
-  width: 7rem;
-height: 2rem;
-font-size: 110%;
-border-radius: 7px;
-background-color: #75767B;
-border:#75767B;
-color: aliceblue;
- }
+
 .spanreact{
   margin-top: 0px;
   gap: 0px;

@@ -42,3 +42,32 @@
       margin-top: 0rem;
 
      }
+     .button:hover{
+      background-color:#4A8BDF;
+      color: white;
+     }
+     .button{
+      background-color:var(--styling1) ;
+      color: white;
+      margin: 40px 0 20px 0;
+      border: 1px solid #6B6C6D;
+      border-radius: 7px;
+     width: 9rem;
+    height: 2.2rem;
+    font-family: Graphik;
+     cursor: pointer;
+      background-color:#4A8BDF;
+      font-size: 100%;
+     }
+      .button:disabled{
+      background-color: #B8BFC6;
+      color: white;
+      border: none;
+      
+      }
+  .button:disabled:hover{
+        background-color: #B8BFC6;
+        border: none;
+        box-shadow: none;
+        cursor: not-allowed;
+      }

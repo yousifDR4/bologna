@@ -17,6 +17,7 @@ import {
   useFormikContext,
   ErrorMessage,
 } from "formik";
+import classes from "./style.module.css"
 import Smallinput from "./Smallinput";
 import Largeinput from "./Largeinput";
 import SelectStep from "./SelectStep";
@@ -195,7 +196,7 @@ const AddStudent = () => {
             return (
               <button
                 type="submit"
-                className={"mybutton"}
+                className={classes.button}
                 onSubmit={form.handleSubmit}
                 disabled={!form.isValid || form.isSubmitting}
               >
@@ -215,7 +216,7 @@ const AddStudent = () => {
   };
 
   const handelsubmit = async (v) => {
-    console.log(Object.entries(v));
+   
     const filteredObject = Object.entries(v).reduce((acc, [key, value]) => {
       if (
         value !== "" &&
@@ -228,8 +229,7 @@ const AddStudent = () => {
         key !== "email"
       ) {
         acc[key] = value;
-        console.log(key);
-        console.log(value);
+        console.log(acc[key]);
       }
       return acc;
     }, {});

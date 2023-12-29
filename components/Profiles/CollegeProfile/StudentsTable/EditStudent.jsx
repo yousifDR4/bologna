@@ -39,6 +39,7 @@ import Steptwo from "./Steptwo.jsx";
 import { get_progs } from "../../../../store/getandset.js";
 import { getIdToken } from "firebase/auth";
 import { Await, useLocation } from "react-router-dom";
+import Button from "../AddStudent/Button.jsx";
 let initialValues = {
   department: "",
   firstname: "",
@@ -189,22 +190,8 @@ const EditStudent = (props) => {
       <Largeinput word="mother name" name="mothername" type="text" />
       <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
-        <Field>
-          {(props) => {
-            const { form } = props;
-            console.log(form.isValid);
-            return (
-              <button
-                type="submit"
-                className={"mybutton"}
-                onSubmit={form.handleSubmit}
-                disabled={!form.isValid || form.isSubmitting}
-              >
-                {form.isSubmitting?"...uploading":"submit"}
-              </button>
-            );
-          }}
-        </Field>
+        <Button/>
+
       </span>
     </Form>
   );
