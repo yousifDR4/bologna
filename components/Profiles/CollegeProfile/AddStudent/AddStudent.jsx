@@ -199,7 +199,7 @@ const AddStudent = () => {
                 onSubmit={form.handleSubmit}
                 disabled={!form.isValid || form.isSubmitting}
               >
-                submit
+                {form.isSubmitting?"...uploading":"submit"}
               </button>
             );
           }}

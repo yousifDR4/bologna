@@ -21,7 +21,7 @@ import Smallinput from "./Smallinput";
 import Largeinput from "./Largeinput";
 import SelectStep from "./SelectStep";
 import { useSelector } from "react-redux";
-import { auth, createST, creatuser, db } from "../../../../store/fire";
+import { auth, creatuser, db } from "../../../../store/fire";
 import {
   collection,
   doc,
