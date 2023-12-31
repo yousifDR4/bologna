@@ -74,6 +74,7 @@ const SelectProgram = () => {
   return (
     <span className="spanflex">
       <label htmlFor="program" className="mylabel" name="program">
+      {true&& (<span className="spancolor">*</span>)}
         Program
       </label>
       <select

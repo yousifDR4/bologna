@@ -27,6 +27,7 @@ import AddStudent from "./components/Profiles/CollegeProfile/AddStudent/AddStude
 import StudentsTable from './components/Profiles/CollegeProfile/StudentsTable/StudentsTable.jsx';
 import EditStudent from './components/Profiles/CollegeProfile/StudentsTable/EditStudent.jsx';
 import Changeusername from './components/Profiles/CollegeProfile/StudentsTable/Changeusername.jsx';
+import Schedule from './components/Profiles/DepartmentProfile/Schedule/Schedule.jsx';
 
 
 let firstInitilize=true;
@@ -138,6 +139,10 @@ function App() {
         ,{
           path:"/Changeusername",
           element:<Changeusername/>
+        }
+        ,{
+          path:"/Schedule",
+          element:<Schedule/>
         }
 
     ]

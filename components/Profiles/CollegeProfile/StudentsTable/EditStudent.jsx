@@ -153,11 +153,12 @@ const EditStudent = (props) => {
   if (initRef.current) console.log(initRef.current);
   const Stepone = () => (
     <Form className="parent" autoComplete="on">
-      <Smallinput name="firstname" word="first name" type="text" />
-      <Smallinput name="lastname" word="last name" type="text" />
+      <Smallinput name="firstname" word="first name" type="text" required="*"/>
+      <Smallinput name="lastname" word="last name" type="text"  required="*" />
       <Smallinput name="birth" word="birth day" type="date" />
       <span className="spanflex">
         <label htmlFor="sex" className="mylabel">
+        
           sex
         </label>
         <Field as="select" name="sex" className="myselect">
@@ -167,6 +168,7 @@ const EditStudent = (props) => {
       </span>
       <span className="spanflex">
         <label htmlFor="department" name="department" className="mylabel">
+        {true&& (<span className="spancolor">*</span>)}
           Department
         </label>
         <Field as="select" className="myselect" name="department">

@@ -7,7 +7,6 @@ import Button from "../AddStudent/Button";
 const Steptwo = () => {
   const { handleSubmit, values, handleChange, handleBlur,setFieldValue } = useFormikContext();
   const [countries, setCountries] = useState([]);
-
   useEffect(() => {
     console.log(values.countries.length);
     if(values.countries.length>0)
@@ -33,10 +32,8 @@ const Steptwo = () => {
         console.error("Error fetching countries:", error);
       }
     };
-
     fetchData();
   }, []);
-
   return (
     <Form className="parent">
       <span className="flexspan">
@@ -73,7 +70,6 @@ const Steptwo = () => {
       <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
      <Button/>
-    
       </span>
     </Form>
   );

@@ -4,7 +4,7 @@ const Largeinput = (probs) => {
     return (
       <span className="spanflex">
         <label htmlFor={probs.name} className="mylabel">
-            <span className="spancolor">*</span>
+        {probs.requried&& (<span className="spancolor">*</span>)}
           {probs.word}
         </label>
         <Field

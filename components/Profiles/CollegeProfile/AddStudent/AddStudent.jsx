@@ -17,7 +17,7 @@ import {
   useFormikContext,
   ErrorMessage,
 } from "formik";
-import classes from "./style.module.css"
+
 import Smallinput from "./Smallinput";
 import Largeinput from "./Largeinput";
 import SelectStep from "./SelectStep";
@@ -32,6 +32,7 @@ import Steptwo from "./Steptwo.jsx";
 import { get_progs } from "../../../../store/getandset.js";
 import { getIdToken } from "firebase/auth";
 import { errorActions } from "../../../../store/error-slice.js";
+import Button from "./Button.jsx";
 let initialValues = {
   department: "",
   firstname: "",
@@ -149,8 +150,8 @@ const AddStudent = () => {
   if (initRef.current) console.log(initRef.current);
   const Stepone = () => (
     <Form className="parent" autoComplete="on">
-      <Smallinput name="firstname" word="first name" type="text" />
-      <Smallinput name="lastname" word="last name" type="text" />
+      <Smallinput name="firstname" word="first name" type="text" required="*"/>
+      <Smallinput name="lastname" word="last name" type="text" required="*"/>
       <Smallinput name="birth" word="birth day" type="date" />
       <span className="spanflex">
         <label htmlFor="sex" className="mylabel">
@@ -163,6 +164,7 @@ const AddStudent = () => {
       </span>
       <span className="spanflex">
         <label htmlFor="department" name="department" className="mylabel">
+        {true&& (<span className="spancolor">*</span>)}
           Department
         </label>
         <Field as="select" className="myselect" name="department">
@@ -183,28 +185,13 @@ const AddStudent = () => {
       </span>
       <SelectProgram />
       <SelectLevel />
-      <Largeinput word="email" name="email" type="text" />
-      <Largeinput word="password" name="password" type="password" />
+      <Largeinput word="email" name="email" type="text" required="*"/>
+      <Largeinput word="password" name="password" type="password"required="*" />
       <Largeinput word="number" name="number" type="text" />
       <Largeinput word="mother name" name="mothername" type="text" />
       <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
-        <Field>
-          {(props) => {
-            const { form } = props;
-            console.log(form.isValid);
-            return (
-              <button
-                type="submit"
-                className={classes.button}
-                onSubmit={form.handleSubmit}
-                disabled={!form.isValid || form.isSubmitting}
-              >
-                {form.isSubmitting?"...uploading":"submit"}
-              </button>
-            );
-          }}
-        </Field>
+        <Button/>
       </span>
     </Form>
   );

@@ -59,7 +59,8 @@ const StudentsTable = () => {
         )
       );
       const [d1, d2] = await Promise.all([p1, p2]);
-      if(d1.empty||d2.empty)return;
+      console.log(d2.docs[0]);
+    
       const newpbj = d1.docs.map((doc) => ({
         name: doc.data().username?doc.data().username:doc.data().email,
         id: doc.id,

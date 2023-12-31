@@ -210,7 +210,7 @@ catch(e){
 export const changeusername = async (info) => {
   console.log(JSON.stringify(info));
 try{
-    const res = await fetch(process.env.REACT_APP_changeusername, {
+    const res = await fetch("http://localhost:4000/changeusername", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

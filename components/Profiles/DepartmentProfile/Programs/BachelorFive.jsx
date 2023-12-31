@@ -18,7 +18,7 @@ import HOC from "./HOC";
 //     summerInternhsipYear:3,
 //     speciality:true,
 // }
-const BachelorFour = ({
+const BachelorFive = ({
   ECTS,
   levels,
   profile,
@@ -71,4 +71,4 @@ const BachelorFour = ({
       </>   
   );
 };
-export default HOC(BachelorFour);
+export default HOC(BachelorFive);
