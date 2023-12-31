@@ -21,23 +21,19 @@ import HOC from "./HOC";
 const BachelorFour = ({
   ECTS,
   levels,
-  profile,
-  Department_id,
   program,
-  loading,
   showAddProgram,
   clickHandler,
+  setShowAddProgram
 }) => {
-  console.log(ECTS);
-  console.log(program,"program");
-  console.log(showAddProgram, "showwwwwwwwww");
+
 
   return (
     <>
-       {program?.activated ===true ?(<PreviewBachelor program={program} />):(<>
+       {program?.activated ===true ?(<PreviewBachelor program={program} ECTS={ECTS} levels={levels} />):(<>
         {showAddProgram && (
             <div className={classes.add}>
-              <AddProgram showAddProgram={showAddProgram} ECTS={ECTS} />
+              <AddProgram showAddProgram={setShowAddProgram} ECTS={ECTS} />
             </div>
           )}
           {showAddProgram && (

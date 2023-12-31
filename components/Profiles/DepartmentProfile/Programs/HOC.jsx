@@ -71,12 +71,10 @@ const HOC = (Orgianlcomponet) => {
       <Orgianlcomponet
         ECTS={ECTS}
         levels={levels}
-        profile={profile}
-        Department_id={Department_id}
         program={program}
-        loading={loading}
         showAddProgram={showAddProgram}
         clickHandler={clickHandler}
+        setShowAddProgram={setShowAddProgram}
       />
     );
   }; 

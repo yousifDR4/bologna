@@ -8,7 +8,6 @@ import AddNewModule from "../Modules_s/AddNewModule";
 import AddProgramModule from "./AddProgramModule";
 import BachelorFive from "./BachelorFive";
 const ProgramManage=()=>{
-
 const [rightContainer,setRightContainer]=useState( <BachelorFour ECTS="240" levels="4" />);
 const [program,setProgram]=useState(4);
 const [header,setHeader]=useState({title:"Bachelor's 4 Years",desc:"Manage Bachelor's 4 Years."});
