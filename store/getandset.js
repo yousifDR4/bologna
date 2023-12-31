@@ -215,3 +215,13 @@ const info={password:password,username:username}
 console.log(info);
 return info;
 }
+export const get_prog_promise=(Deprartment_id,levels)=>{
+  const q = query(
+    collection(db, "programs"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("type", "==", +levels)
+    )
+  );
+  return getDocs(q);
+}
