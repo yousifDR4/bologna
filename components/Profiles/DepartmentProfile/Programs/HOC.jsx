@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import classes from "./BachelorFour.module.css";
-import AddProgram from "./AddProgram";
-import PreviewBachelor from "./PreviewBachelor";
 import { get_prog, get_prog_promise } from "../../../../store/getandset";
-import { auth } from "../../../../store/fire";
 import { useSelector } from "react-redux";
 import Loader from "../../../UI/Loader/Loader";
 import { useQuery } from "react-query";
@@ -21,9 +18,10 @@ const HOC = (Orgianlcomponet) => {
       levels,
     promise,
       {
-       
         enabled: !!Department_id,
-        staleTime: 2 * (60 * 1000),
+       
+     
+        
       }
     );
     const [showAddProgram, setShowAddProgram] = useState(false);
