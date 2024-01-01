@@ -40,6 +40,7 @@ import {
 } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
+import { errorActions } from "../../store/error-slice";
 let reF = true;
 let x = true;
 let count = 0;
@@ -76,6 +77,7 @@ const Navbar = () => {
   onAuthStateChanged(
     auth,
     async (user) => {
+      try{
       console.log(location.pathname);
       if (user && reF) {
         if (
@@ -94,6 +96,16 @@ const Navbar = () => {
         setLoading(false);
         reF = false;
       }
+    }
+    catch(e){
+      
+      dispatchRedux(
+        errorActions.setError({
+          title: "Connection Faild",
+          message: "plese try agin!",
+        })
+      );
+    }
     },
     []
   );

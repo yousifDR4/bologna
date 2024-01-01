@@ -19,7 +19,7 @@ const PreviewBachelor=(probs)=>{
     const {program,levels,ECTS}=probs;
     const x=[]
     for (let i = 0; i < +program.type; i++) {
-        x.push(<DisplayLevels key={i} index={i} />);
+        x.push(<DisplayLevels key={i} index={i} type={program.type} />);
     }
     console.log(x,program.levels);
     console.log(program);

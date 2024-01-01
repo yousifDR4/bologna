@@ -5,13 +5,16 @@ import {
   arrayUnion,
   collection,
   collectionGroup,
+  count,
   deleteDoc,
   doc,
+  getAggregateFromServer,
   getDoc,
   getDocs,
   orderBy,
   query,
   setDoc,
+  sum,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -224,4 +227,27 @@ export const get_prog_promise=(Deprartment_id,levels)=>{
     )
   );
   return getDocs(q);
+}
+export const get_progs_promise=(Deprartment_id)=>{
+  const q = query(
+    collection(db, "programs"),
+      where("Deprartment_id", "==", Deprartment_id)
+    );
+  return getDocs(q);
+}
+export const get_modules_count=async(type,level,Deprartment_id)=>{
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+ 
+      where("level","==",level),
+      where("type","==",type),
+    where("Deprartment_id","==",Deprartment_id)
+    ), 
+    );
+  return getAggregateFromServer(q,{
+      toatl_ECTS:sum("ECTS"),
+      count:count()
+     
+    });
 }

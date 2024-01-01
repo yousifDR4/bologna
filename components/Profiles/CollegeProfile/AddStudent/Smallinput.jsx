@@ -7,7 +7,6 @@ const Smallinput = (probs) => {
       {probs.required&& (<span className="spancolor">*</span>)}
         {probs.word}
       </label>
-      
       <Field
         type={probs.type}
         name={probs.name}
