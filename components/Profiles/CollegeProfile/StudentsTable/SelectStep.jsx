@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./AddStudent.css";
+import "./EditStudent.css";
 import { useFormikContext } from "formik";
 const SelectStep = (probs) => {
     console.log(probs.name);

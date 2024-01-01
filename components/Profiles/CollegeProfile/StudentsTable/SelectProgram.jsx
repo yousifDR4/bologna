@@ -1,11 +1,11 @@
 import { ErrorMessage, Field, FormikContext, useFormikContext } from "formik";
-import "./AddStudent.css";
+import "./EditStudent.css";
 import { useContext, useEffect } from "react";
 import { get_prog, get_progs } from "../../../../store/getandset";
 import { collection, doc, getDocs } from "firebase/firestore";
 import { db } from "../../../../store/fire";
 let mount = false;
-const SelectProgram = () => {
+const SelectProgram = (probs) => {
   const formik = useFormikContext();
   useEffect(() => {
     try {
@@ -76,6 +76,7 @@ const SelectProgram = () => {
   return (
     <span className="spanflex">
       <label htmlFor="program" className="mylabel" name="program">
+      {true&& (<span className="spancolor">*</span>)}
         Program
       </label>
       <select
@@ -87,6 +88,7 @@ const SelectProgram = () => {
         }}
         value={formik.values.program}
         disabled={formik.values.department === ""}
+        onAbort={formik.validateOnChange}
       >
         <option value="">
           {formik.values.department !== ""

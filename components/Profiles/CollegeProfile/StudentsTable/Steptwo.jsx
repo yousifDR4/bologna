@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Form, useFormikContext } from "formik";
+import { Field, Form, useFormikContext } from "formik";
 import Smallinput from "./Smallinput";
 import axios from "axios";
 import Select from "react-select";
-
+import Button from "../AddStudent/Button";
 const Steptwo = () => {
   const { handleSubmit, values, handleChange, handleBlur,setFieldValue } = useFormikContext();
   const [countries, setCountries] = useState([]);
-
   useEffect(() => {
     console.log(values.countries.length);
     if(values.countries.length>0)
@@ -33,10 +32,8 @@ const Steptwo = () => {
         console.error("Error fetching countries:", error);
       }
     };
-
     fetchData();
   }, []);
-
   return (
     <Form className="parent">
       <span className="flexspan">
@@ -70,16 +67,9 @@ const Steptwo = () => {
         onBlur={() => handleBlur("birthcountry")}
       />
       </span>
-     
-
-
-
-
-      <span className="spanflex buttonflex">
+      <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
-        <button type="submit" className="mybutton" onClick={handleSubmit}>
-          Submit
-        </button>
+     <Button/>
       </span>
     </Form>
   );

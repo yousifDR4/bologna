@@ -16,10 +16,10 @@ let Program={
 
 const PreviewBachelor=(probs)=>{
     const profile=useSelector(state=> state.profile.profile);
-    const {program}=probs;
+    const {program,levels,ECTS}=probs;
     const x=[]
     for (let i = 0; i < +program.type; i++) {
-        x.push(<DisplayLevels key={i} index={i} />);
+        x.push(<DisplayLevels key={i} index={i} type={program.type} />);
     }
     console.log(x,program.levels);
     console.log(program);
@@ -29,11 +29,11 @@ const PreviewBachelor=(probs)=>{
                 <h2> Program Information</h2>
                 <div>
                 <span>
-                <p>{program.ECTS}</p>
+                <p>{ECTS}</p>
                 <p>ECTS</p>
                 </span>
                 <span>
-                 <p>{program.type}</p>
+                 <p>{levels}</p>
                  <p>Levels</p>
                 </span>
                 </div>

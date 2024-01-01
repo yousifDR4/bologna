@@ -21,14 +21,14 @@ import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
 import { current } from "@reduxjs/toolkit";
 import { useCallback } from "react";
-const universities = [];
+
 const UniversityAccounts = () => {
   const setRef = useRef(true);
-  const [university, setUniversity] = useState(universities);
+  const [university, setUniversity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddUniversity, setShowAddUniversity] = useState(false);
   const [initalUniversityValue, setInitialUniversityValue] =
-    useState(universities);
+    useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
@@ -37,7 +37,8 @@ const UniversityAccounts = () => {
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
   const updateRef = useRef(false);
-  const limitNumber =10;
+  const limitNumber =5;
+  console.log(Math.floor(3/2),"flor");
   const q1 = query(
     collection(db, "users"),
     where("accountType", "==", "University"),
@@ -195,8 +196,10 @@ const UniversityAccounts = () => {
           ></input>{" "}
         </div>
         <ul>
-          {university.map((uni,index) => {
-       if(index+1===university.length)
+          {university.map((uni,index,arr) => {
+          
+       if(( index+1)===Math.floor((arr.length)/2)){
+        console.log("worksss");
        return(
         <li key={uni.uid} ref={last} >
           <img src={uni.img} alt="" />
@@ -205,6 +208,7 @@ const UniversityAccounts = () => {
           </div>
         </li>
       )
+       }
       else
           return(
             <li key={uni.uid} >

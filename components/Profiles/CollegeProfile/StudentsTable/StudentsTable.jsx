@@ -59,8 +59,10 @@ const StudentsTable = () => {
         )
       );
       const [d1, d2] = await Promise.all([p1, p2]);
+      console.log(d2.docs[0]);
+    
       const newpbj = d1.docs.map((doc) => ({
-        name: doc.data().username,
+        name: doc.data().username?doc.data().username:doc.data().email,
         id: doc.id,
         departmentName: doc.data().departmentName,
       }));
@@ -82,6 +84,7 @@ const StudentsTable = () => {
   const data = {
     nodes: modules,
   };
+  
   const sort = useSort(
     data,
     {
@@ -89,11 +92,14 @@ const StudentsTable = () => {
     },
     {
       sortFns: {
-        NAME: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
-        MIDTERM: (array) =>
-          array.sort((a, b) => a.midtermExamHours - b.midtermExamHours),
-        ENDTERM: (array) =>
-          array.sort((a, b) => a.endtermExamHours - b.endtermExamHours),
+        NAME:(array)=>{
+          console.log(array);
+          console.log([...array]);
+          const sortedArray = [...array].sort((a, b) => a.departmentName.localeCompare(b.departmentName));
+          console.log(sortedArray);
+          return sortedArray;
+        }
+       
       },
     }
   );
@@ -157,8 +163,8 @@ img{
             <>
               <Header>
                 <HeaderRow>
-                  <HeaderCellSort sortKey="departmentName">department name</HeaderCellSort>
-                   <HeaderCell>username</HeaderCell>
+                  <HeaderCellSort sortKey="NAME">department name</HeaderCellSort>
+                   <HeaderCell>email or username</HeaderCell>
                   <HeaderCell>password</HeaderCell>
                   <HeaderCell>option</HeaderCell>
                 </HeaderRow>
@@ -166,11 +172,11 @@ img{
 
               <Body>
                 {tableList.map((module) => (
-                  <Row key={module.departmentName} item={module}>
+                  <Row  item={module}>
                    <Cell>{module.departmentName}</Cell>
                     <Cell>{module.name}</Cell>
                     <Cell>{module.password}</Cell>
-                    <Cell><div className='relative'><Options id={module.id} code={module.code}/></div></Cell>
+                    <Cell><div className='relative'><Options id={module.id} code={module}/></div></Cell>
                   </Row>
                 ))}
               </Body>

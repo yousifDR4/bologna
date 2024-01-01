@@ -18,7 +18,7 @@ import HOC from "./HOC";
 //     summerInternhsipYear:3,
 //     speciality:true,
 // }
-const BachelorFour = ({
+const BachelorFive = ({
   ECTS,
   levels,
   program,
@@ -26,7 +26,9 @@ const BachelorFour = ({
   clickHandler,
   setShowAddProgram
 }) => {
-
+  console.log(ECTS);
+  console.log(program,"program");
+  console.log(showAddProgram, "showwwwwwwwww");
 
   return (
     <>
@@ -67,4 +69,4 @@ const BachelorFour = ({
       </>   
   );
 };
-export default HOC(BachelorFour);
+export default HOC(BachelorFive);

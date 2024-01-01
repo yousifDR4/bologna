@@ -32,6 +32,7 @@ return formik.values.program==="" &&formik.values.department===""? formik.values
   return (
     <span className="spanflex">
       <label htmlFor="level" className="mylabel">
+      {true&& (<span className="spancolor">*</span>)}
         Level
       </label>
       <Field

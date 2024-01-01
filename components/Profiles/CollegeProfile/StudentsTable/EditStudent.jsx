@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import * as Yup from "yup";
-import "./AddStudent.css";
+import "./EditStudent.css";
 import {
   Formik,
   useFormik,
@@ -21,7 +21,7 @@ import Smallinput from "./Smallinput";
 import Largeinput from "./Largeinput";
 import SelectStep from "./SelectStep";
 import { useSelector } from "react-redux";
-import { auth, createST, creatuser, db } from "../../../../store/fire";
+import { auth, creatuser, db } from "../../../../store/fire";
 import {
   collection,
   doc,
@@ -39,6 +39,7 @@ import Steptwo from "./Steptwo.jsx";
 import { get_progs } from "../../../../store/getandset.js";
 import { getIdToken } from "firebase/auth";
 import { Await, useLocation } from "react-router-dom";
+import Button from "../AddStudent/Button.jsx";
 let initialValues = {
   department: "",
   firstname: "",
@@ -76,6 +77,8 @@ const EditStudent = (props) => {
     program: Yup.string().required("required"),
     department: Yup.string().required("required"),
     level: Yup.string().required("required"),
+    firstname:Yup.string().required("first name is required"),
+    lastname:Yup.string().required("last name is required")
   });
   console.log();
   useEffect(() => {
@@ -150,11 +153,12 @@ const EditStudent = (props) => {
   if (initRef.current) console.log(initRef.current);
   const Stepone = () => (
     <Form className="parent" autoComplete="on">
-      <Smallinput name="firstname" word="first name" type="text" />
-      <Smallinput name="lastname" word="last name" type="text" />
+      <Smallinput name="firstname" word="first name" type="text" required="*"/>
+      <Smallinput name="lastname" word="last name" type="text"  required="*" />
       <Smallinput name="birth" word="birth day" type="date" />
       <span className="spanflex">
         <label htmlFor="sex" className="mylabel">
+        
           sex
         </label>
         <Field as="select" name="sex" className="myselect">
@@ -164,6 +168,7 @@ const EditStudent = (props) => {
       </span>
       <span className="spanflex">
         <label htmlFor="department" name="department" className="mylabel">
+        {true&& (<span className="spancolor">*</span>)}
           Department
         </label>
         <Field as="select" className="myselect" name="department">
@@ -185,23 +190,10 @@ const EditStudent = (props) => {
       <SelectLevel />
       <Largeinput word="number" name="number" type="text" />
       <Largeinput word="mother name" name="mothername" type="text" />
-      <span className="spanflex buttonflex">
+      <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
-        <Field>
-          {(props) => {
-            const { form } = props;
-            console.log(form.isValid);
-            return (
-              <button
-                type="submit"
-                className={"mybutton"}
-                onSubmit={form.handleSubmit}
-              >
-                submit
-              </button>
-            );
-          }}
-        </Field>
+        <Button/>
+
       </span>
     </Form>
   );

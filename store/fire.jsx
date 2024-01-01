@@ -172,11 +172,40 @@ export const listnerq = (accountType, Department_id) => {
   }
 };
 
-export const createST = async (info) => {
+export const createSTUS = async (info) => {
   // console.log(JSON.stringify(info));
   console.log(process.env.REACT_APP_createSTUS);
-  try {
+ 
     const res = await fetch(process.env.REACT_APP_createSTUS, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(info),
+    });
+    const k = await res.json();
+    return k;
+};
+export const createSTEM = async (info) => {
+try{
+    const res = await fetch(process.env.REACT_APP_createSTEM, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(info),
+    });
+    const k = await res.json();
+   console.log(k);
+    return k;
+}
+catch(e){
+  console.log(e);
+}
+};
+export const changeusername = async (info) => {
+try{
+    const res = await fetch(process.env.REACT_APP_changeusername, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -185,9 +214,10 @@ export const createST = async (info) => {
     });
     console.log(res.status);
     const k = await res.json();
-    console.log(k,"");
+   console.log(k);
     return k;
-  } catch (e) {
-   console.log(e);
-  }
+}
+catch(e){
+  console.log(e);
+}
 };

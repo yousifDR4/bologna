@@ -73,11 +73,11 @@ f();
     },
     {
       sortFns: {
-        NAME: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+        NAME: (array) =>  [...array].sort((a, b) => a.name.localeCompare(b.name)),
         MIDTERM: (array) =>
-          array.sort((a, b) => a.midtermExamHours - b.midtermExamHours),
+        [...array].sort((a, b) => a.midtermExamHours - b.midtermExamHours),
         ENDTERM: (array) =>
-          array.sort((a, b) => a.endtermExamHours - b.endtermExamHours),
+        [...array].sort((a, b) => a.endtermExamHours - b.endtermExamHours),
       },
     }
   );

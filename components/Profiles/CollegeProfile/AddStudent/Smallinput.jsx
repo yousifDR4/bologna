@@ -4,6 +4,7 @@ const Smallinput = (probs) => {
   return (
     <span className="spanflex">
       <label htmlFor={probs.name}className="mylabel">
+      {probs.required&& (<span className="spancolor">*</span>)}
         {probs.word}
       </label>
       <Field

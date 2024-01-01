@@ -93,9 +93,10 @@ const Login=()=>{
           if (email !== null) {
               console.log('User email:', email);
           console.log("username:",state.emailaddress);
-           await signInWithEmailAndPassword(auth,email,state.password);
+           const a=await signInWithEmailAndPassword(auth,email,state.password);
            const profile=await getprofile();
           console.log(profile);
+          console.log(a.user.email,"email");
           dispatchRedux(onLogin(profile));
           setloginstate(true);
           }

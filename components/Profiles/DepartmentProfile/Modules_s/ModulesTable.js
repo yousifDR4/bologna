@@ -46,11 +46,11 @@ const sort = useSort(data,{
 }, {
   sortFns: {
     NAME: (array) =>
-      array.sort((a, b) => a.name.localeCompare(b.name)),
+    [...array].sort((a, b) => a.name.localeCompare(b.name)),
     MIDTERM: (array) =>
-      array.sort((a, b) => +a.midTermHours - +b.midTermHours),
+    [...array].sort((a, b) => +a.midTermHours - +b.midTermHours),
     ENDTERM: (array) =>
-      array.sort((a, b) => +a.endTermHours - +b.endTermHours),
+    [...array].sort((a, b) => +a.endTermHours - +b.endTermHours),
   },});
   const theme = useTheme([getTheme(
    

@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, FormikContext, useFormikContext } from "formik";
-import "./AddStudent.css";
+import "./EditStudent.css";
 import { useContext, useEffect } from "react";
 import { get_prog, get_progs } from "../../../../store/getandset";
 import { collection, doc, getDocs } from "firebase/firestore";
@@ -33,6 +33,7 @@ return formik.values.program==="" &&formik.values.department===""? formik.values
   return (
     <span className="spanflex">
       <label htmlFor="level" className="mylabel">
+      {true&& (<span className="spancolor">*</span>)}
         Level
       </label>
       <Field
