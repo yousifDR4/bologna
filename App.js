@@ -36,6 +36,7 @@ import EditStudent from "./components/Profiles/CollegeProfile/StudentsTable/Edit
 import Changeusername from "./components/Profiles/CollegeProfile/StudentsTable/Changeusername.jsx";
 import Schedule from "./components/Profiles/DepartmentProfile/Schedule/Schedule.jsx";
 import { QueryClientProvider, QueryClient } from "react-query";
+import {ReactQueryDevtools } from "react-query/devtools";
 
 let firstInitilize = true;
 function App() {
@@ -154,9 +155,8 @@ function App() {
   ]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}></RouterProvider>
-    </QueryClientProvider>
+      <RouterProvider router={router}>
+      </RouterProvider>
   );
 }
 

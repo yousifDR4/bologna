@@ -14,14 +14,16 @@ const HOC = (Orgianlcomponet) => {
       data: program,
       isLoading,
       error,
-    } = useQuery(levels, promise, {
+    isFetching,  
+    } = useQuery(`ECTS:${ECTS}levels:${levels} department:${Department_id}`, promise, {
       enabled: !!Department_id,
-     
+      refetchOnWindowFocus:false,
+      staleTime:60*1000
     });
    console.log("level",levels);
     const [showAddProgram, setShowAddProgram] = useState(false);
     const clickHandler = () => setShowAddProgram(true);
-console.log(isLoading,"isloading");
+  console.log(isFetching,"isFetching",isLoading,"isLoading");
     if ((isLoading || !Department_id)) {
       console.log(Department_id);
       return (
