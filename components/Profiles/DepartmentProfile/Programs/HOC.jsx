@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import classes from "./BachelorFour.module.css";
 import { get_prog_promise } from "../../../../store/getandset";
 import { useSelector } from "react-redux";
@@ -9,22 +9,21 @@ const HOC = (Orgianlcomponet) => {
     const { ECTS, levels } = probs;
     const profile = useSelector((state) => state.profile.profile);
     const Department_id = profile.Department_id;
-    const promise=()=> get_prog_promise(Department_id, levels);
+    const promise = () => get_prog_promise(Department_id, levels);
     const {
       data: program,
       isLoading,
       error,
-    } = useQuery(
-      levels,
-    promise,
-      {
-        enabled: !!Department_id, 
-        select:(data)=>({...data.docs[0].data() ,id:data.docs[0].id})
-      }
-    );
+    } = useQuery(levels, promise, {
+      enabled: !!Department_id,
+     
+    });
+   console.log("level",levels);
     const [showAddProgram, setShowAddProgram] = useState(false);
     const clickHandler = () => setShowAddProgram(true);
-    if (isLoading || !Department_id) {
+console.log(isLoading,"isloading");
+    if ((isLoading || !Department_id)) {
+      console.log(Department_id);
       return (
         <div className={classes.loading}>
           <Loader />
@@ -35,9 +34,7 @@ const HOC = (Orgianlcomponet) => {
         <Orgianlcomponet
           ECTS={ECTS}
           levels={levels}
-          program={
-            program.empty ? { activated: false } : program
-          }
+          program={program.empty? { activated: false } : { ...program.docs[0].data(), id: program.docs[0].id }}
           showAddProgram={showAddProgram}
           clickHandler={clickHandler}
           setShowAddProgram={setShowAddProgram}

@@ -35,7 +35,6 @@ let initialValue = {
   week14T: "",
   week15T: "",
 };
-
 const AddProgramModule = () => {
   const [form, setForm] = useState(initialValue);
   const [modules, setModules] = useState([]);
@@ -106,6 +105,7 @@ const AddProgramModule = () => {
         ...filteredObject,
         type: +filteredObject.program,
         level: +filteredObject.level,
+        ECTS:+filteredObject.ECTS
       }
       console.log(k);
     const id = await addDoc(collection(db, "activemodule"), {
@@ -113,6 +113,7 @@ const AddProgramModule = () => {
       ...filteredObject,
       type: +filteredObject.program,
       level: +filteredObject.level,
+      ECTS:+filteredObject.ECTS
     });
     const reportinfo = {
       page: location.pathname,

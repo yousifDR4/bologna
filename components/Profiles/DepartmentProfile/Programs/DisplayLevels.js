@@ -36,12 +36,7 @@ const DisplayLevels=(probs)=>{
     const {data,error,isLoading}=useQuery(`type:${type}level:${index}`,promise,{
         enabled:!!Department_id
     });
-    // if (!isLoading) {
-    //     console.log("index",index+1);
-    //     console.log(data);
-    // }    
-    console.log(index,type);
-
+ 
     return(
         <div >
             <p>{numToString(+index+1) + " level"}</p>
