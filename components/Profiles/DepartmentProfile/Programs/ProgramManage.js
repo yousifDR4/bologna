@@ -10,12 +10,14 @@ import BachelorFive from "./BachelorFive";
 const MemorizeBachelorFour =memo(BachelorFour);
 const MemorizeBachelorFive=memo(BachelorFive );
 const ProgramManage = () => {
-  const memorizeBachelorFour=useMemo(()=> <MemorizeBachelorFour ECTS="240" levels="4" />,[])
-  const memorizeBachelorFive=useMemo(()=> <MemorizeBachelorFive ECTS="320" levels="5" />,[])
+  const [state,setstate]=useState(true);
+  const [program, setProgram] = useState(4);
+  const memorizeBachelorFour=useMemo(()=> <MemorizeBachelorFour ECTS="240" levels="4" change={state} />,[])
+  const memorizeBachelorFive=useMemo(()=> <MemorizeBachelorFive ECTS="320" levels="5" />,[state])
   const [rightContainer, setRightContainer] = useState(
     memorizeBachelorFour
   );
-  const [program, setProgram] = useState(4);
+ 
   const [header, setHeader] = useState({
     title: "Bachelor's 4 Years",
     desc: "Manage Bachelor's 4 Years Program..",
@@ -23,6 +25,9 @@ const ProgramManage = () => {
   const clickHandler = (probs) => {
     switch (probs) {
       case "bach4":
+        console.log("4");
+        setstate((prev)=>!prev);
+        console.log(state);
         setRightContainer(() =>memorizeBachelorFour);
         setProgram(4);
         setHeader({
@@ -49,7 +54,7 @@ const ProgramManage = () => {
           </div>
           <ul>
             <li
-              onClick={() => clickHandler("bach4")}
+              onClick={() =>clickHandler("bach4")}
               className={`${
                 header.title == "Bachelor's 4 Years" ? classes.activeLink : ""
               }`}
