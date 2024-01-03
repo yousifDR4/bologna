@@ -12,12 +12,15 @@ const MemorizeBachelorFive=memo(BachelorFive );
 const ProgramManage = () => {
   const [state,setstate]=useState(true);
   const [program, setProgram] = useState(4);
-  const memorizeBachelorFour=useMemo(()=> <MemorizeBachelorFour ECTS="240" levels="4" change={state} />,[])
-  const memorizeBachelorFive=useMemo(()=> <MemorizeBachelorFive ECTS="320" levels="5" />,[state])
+//const memorizeBachelorFour=useMemo(()=> <MemorizeBachelorFour ECTS="240" levels="4" 
+// state={state} />,[state]) reender
+ // const memorizeBachelorFive=useMemo(()=> <MemorizeBachelorFive ECTS="320" levels="5"
+ // state ={state}/>,[]) doesnt rerender
+  const memorizeBachelorFour=useMemo(()=> <MemorizeBachelorFour ECTS="240" levels="4"/>,[])
+  const memorizeBachelorFive=useMemo(()=> <MemorizeBachelorFive ECTS="320" levels="5"/>,[])
   const [rightContainer, setRightContainer] = useState(
     memorizeBachelorFour
   );
- 
   const [header, setHeader] = useState({
     title: "Bachelor's 4 Years",
     desc: "Manage Bachelor's 4 Years Program..",
@@ -26,8 +29,6 @@ const ProgramManage = () => {
     switch (probs) {
       case "bach4":
         console.log("4");
-        setstate((prev)=>!prev);
-        console.log(state);
         setRightContainer(() =>memorizeBachelorFour);
         setProgram(4);
         setHeader({

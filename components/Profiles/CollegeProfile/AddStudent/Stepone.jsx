@@ -1,4 +1,3 @@
-
 import Smallinput from "./Smallinput";
 import Largeinput from "./Largeinput";
 import { ErrorMessage, Field, Form } from "formik";
@@ -6,7 +5,6 @@ import Button from "./Button";
 import SelectLevel from "./SelectLevel";
 import SelectProgram from "./SelectProgram";
 const Stepone = ({departments}) => (
-    
     <Form className="parent" autoComplete="on">
       <Smallinput name="firstname" word="first name" type="text" required="*"/>
       <Smallinput name="lastname" word="last name" type="text" required="*"/>

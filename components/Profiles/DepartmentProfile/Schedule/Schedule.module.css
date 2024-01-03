@@ -1,66 +1,80 @@
+.addcontainer {
+  padding: 4rem;
+  background: #90f6d7;
+  border: solid 10px #53a8b6;
+  margin-bottom: 2rem;
+  width: 250px;
+  box-shadow: 0 0 10px rgba(0.1, 0, 0, 0.1)
 
-.cont{
-    margin-top: 0.5rem;
+}
+.pluscontainer {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  height: 100px;
+  justify-content: center;
+}
+.vertical {
+  height: 50px;
+  width: 5px;
+  background-color: #35bcbf;
+  margin-top: 25px;
+}
+.left {
+  height: 5px;
+  width: 30px;
+  background-color: #35bcbf;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.right {
+  height: 5px;
+  width: 30px;
+  background-color: #35bcbf;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.addcontainer:hover .right,
+.addcontainer:hover .vertical,
+.addcontainer:hover .left {
+  transform: scale(1.3);
+}
+.grid{
     display: grid;
-    grid-template-columns: repeat( auto-fill, minmax(200px, 1fr) );
-    width: 100%;
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
-    border-radius: 20px;
- background-color: #EFFAFD;
+    grid-template-columns: repeat(6,1fr);
+    gap: 3px;
+ 
 }
-
-.day{
-
-    height: 100vh;
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
-
-    margin: 0px;
-    width: 200px;
+.over{
+    overflow-x: auto; /* Allow horizontal scrolling for the entire page */
+    direction: rtl; 
 }
-.daytitle{
+.title{
+    padding-left: 5rem;
+    direction: rtl; 
     text-align: center;
-    display: grid;
-    font-family: Graphik;
-    margin-bottom: 1rem;
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
-    height: 3rem;
-    background-color: #4A8BDF;
-    color: white;
-    padding-top: 0.5rem;
-width: 100%;
+    width: 100%;
+}
+.title >h3{
+ margin: 0px;
+ width: 100px;
+ color: #35bcbf;
+}
+.form{
+    direction: ltr; 
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
 
-    
 }
-.card{
-  
-    /* background-color: #f0d78c; */
-    height: 8rem;
-    margin-top: 1rem;
-    width: 100%; 
-border-radius: 10px;
-    width: 200px;
+.form{
+ margin-top: 30%;
+ width: 50%;
+ background-color: white;
 
-    /* Add box shadow */
-    /* box-shadow: 0 4px 8px rgba(240, 215, 140, 0.5); */
 }
-.cardcont{
-    /* background-color: aliceblue; */
-    height: 80%;
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    background-color: white;
-}
-.cardtitle{
-    background-color: #f0d78c;
-    height: 20%;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-}
-.card:hover {
-    transform: scale(1.1); /* Slightly scale up on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Change box-shadow on hover */
-    border: 2px solid #3498db;
-}
+

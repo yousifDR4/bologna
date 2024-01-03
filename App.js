@@ -150,6 +150,11 @@ function App() {
           path: "/Changeusername",
           element: <Changeusername />,
         },
+        {
+          path:"/Schedule",
+        
+          element:<Schedule/>
+        }
       ],
     },
   ]);

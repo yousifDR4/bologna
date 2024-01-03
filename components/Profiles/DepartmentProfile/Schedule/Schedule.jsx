@@ -1,14 +1,25 @@
-import React from 'react'
-import classes from"./Schedule.module.css"
-import Days from './Days'
-import Card from './Card';
-const Schedule = () => {
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', , 'Saturday'];
-  return (
-    <div className={`${classes.cont}`}>
-    {daysOfWeek.map((val,index)=><Days name={val}/>)}  
+import React from "react";
+import classes from "./Schedule.module.css";
+import Days from "./Days";
 
+const Schedule = () => {
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    ,
+    "Saturday",
+  ];
+  return (
+    <div className={classes.over}>
+      <div className={classes.grid}>
+        {daysOfWeek.map((val, index) => (
+          <Days name={val} />
+        ))}
+      </div>
     </div>
-  )
-}
-export default Schedule
+  );
+};
+export default Schedule;
