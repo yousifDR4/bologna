@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
 import classses from"./Schedule.module.css"
 import AddDayForm from './AddDayForm';
+import { useDispatch, useSelector } from 'react-redux';
+import Scheduleslice from '../../../../store/Schedule-slice';
 const AddDay = ({name}) => {
-  const [show,setshow]=useState(false);
-  const addhandler=(()=>{
-    setshow(true);
-  })
+ console.log(name);
+ const dispathchredux=useDispatch();
+ const clickhandle=()=>{
+  dispathchredux(Scheduleslice.actions.setOneDay({name:name}))
+ }
   return (
     <>
     <div>
-      <AddDayForm show={show} setshow={setshow} />
+      <AddDayForm name={name} />
     <div  className={classses.addcontainer }>
-        <div className={classses.pluscontainer} onClick={addhandler}>
+        <div className={classses.pluscontainer} onClick={clickhandle}>
         <div className={classses.right}></div>
         <div className={classses.vertical}></div>
         <div className={classses.left}></div>

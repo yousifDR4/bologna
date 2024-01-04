@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { memo, useMemo } from 'react'
 import classes from"./Schedule.module.css"
 import Card from './Card'
 import AddDay from './AddDay'
-const Days = ({name}) => {
+const MemorizeAddDay=memo(AddDay);
+const Days = ({name ,show,setshow,addhandler}) => {
+  console.log(show," ",name);
+  const memorizeAddDay=useMemo(()=>( <MemorizeAddDay name={name} show={show} setshow={setshow} />),[show])
   return (
-   <AddDay name={name}/>
-  
+   memorizeAddDay
   )
 }
 

@@ -139,7 +139,7 @@ const AddClass = (probs) => {
         <div className={classes.fields}>
           <span>
         <label htmlFor="name">
-          Classroom Name<span className={classes.star}>*</span>
+         Classroom Name<span className={classes.star}>*</span> 
         </label>
         <input
           type="text"

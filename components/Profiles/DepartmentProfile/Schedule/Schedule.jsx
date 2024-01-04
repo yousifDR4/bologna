@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "./Schedule.module.css";
 import Days from "./Days";
 
@@ -12,11 +12,12 @@ const Schedule = () => {
     ,
     "Saturday",
   ];
+
   return (
     <div className={classes.over}>
       <div className={classes.grid}>
         {daysOfWeek.map((val, index) => (
-          <Days name={val} />
+          <Days name={val}/>
         ))}
       </div>
     </div>

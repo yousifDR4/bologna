@@ -16,19 +16,19 @@
 }
 .vertical {
   height: 50px;
-  width: 5px;
+  width: 10px;
   background-color: #35bcbf;
   margin-top: 25px;
 }
 .left {
-  height: 5px;
+  height: 10px;
   width: 30px;
   background-color: #35bcbf;
   margin-top: auto;
   margin-bottom: auto;
 }
 .right {
-  height: 5px;
+  height: 10px;
   width: 30px;
   background-color: #35bcbf;
   margin-top: auto;
@@ -43,7 +43,7 @@
 .grid{
     display: grid;
     grid-template-columns: repeat(6,1fr);
-    gap: 3px;
+
  
 }
 .over{
@@ -61,20 +61,47 @@
  width: 100px;
  color: #35bcbf;
 }
-.form{
-    direction: ltr; 
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
+
+.formcontinaer{
+
 
 }
 .form{
- margin-top: 30%;
- width: 50%;
- background-color: white;
-
+  direction: ltr;
+  display: block;
+  position: fixed;
+  z-index: 15;
+  width: 100vw;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%,-50%);
+  padding: 0 3rem 0 3rem;
+  background-color: white;
+  box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
+width: 100%;
+max-width: 70rem;
+ margin: 0 1.5rem;
+ height: 20rem;
 }
+.flex{
+display: grid;
+grid-template-columns: repeat( auto-fit, minmax(200px, 1fr) );
+gap: 1rem;
+}
+.h3{
+width: 100%;
+}
+.ReactSelect{
+  margin-top: 0.9rem;
+}
+.form > button:first-child{
+  background-color: var(--styling1);
+  border: none;
+  color: #fff;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 105%;
+}
+
 

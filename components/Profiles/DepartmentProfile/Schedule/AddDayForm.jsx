@@ -1,8 +1,12 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import Smallinput from "../../CollegeProfile/AddStudent/Smallinput";
+import Button from "../../CollegeProfile/AddStudent/Button";
 import Select from "react-select";
-import classes from"./Schedule.module.css"
+import classes from "./Schedule.module.css";
+import ReactSelect from "../../../UI/Form/ReactSelect";
+import { useDispatch, useSelector } from "react-redux";
+import Scheduleslice from "../../../../store/Schedule-slice";
 const professors = [
   { value: "ali", label: "ali" },
   { value: "ahmed", label: "ahmed" },
@@ -11,42 +15,55 @@ const initialValues = {
   time: "",
   selectedprofessor: "",
 };
-const AddDayForm = ({ show }) => {
-  if (show)
+const AddDayForm = ({ name }) => {
+  const show = useSelector((state) => state.days[name].show);
+  const dispathchredux = useDispatch();
+  const clickhandle = () => {
+    console.log(show);
+    dispathchredux(Scheduleslice.actions.rest({ name: name }));
+  };
+  console.log(show);
+  console.log(name);
+  if (show === true)
     return (
-      <Formik initialValues={initialValues} enableReinitialize={true}>
-        <Form className={classes.form}>
-          <Smallinput name="time" />
-          <label htmlFor={"selectedprofessor"}>select country</label>
-          <Field>
-            {(probs) => {
-              const { form } = probs;
-              console.log(form);
-              return (
-                <Select
-                  placeholder={"select professor"}
+      <div className={classes.form}>
+        <button onClick={clickhandle}>X</button>
+        <h3 className={classes.h3}>Add a new module to {name}</h3>
+        <Formik initialValues={initialValues} enableReinitialize={true}>
+          <Form>
+            <div className={classes.flex}>
+              <Smallinput
+                name="starttime"
+                word="chose end time"
+                required={true}
+                className={classes.h3}
+              />
+              <Smallinput
+                name="endtime"
+                word="chose end time"
+                required={true}
+              />
+              <div className={classes.ReactSelect}>
+                <ReactSelect
                   options={professors}
-                  name="selectedprofessor"
-                  value={{
-                    value: form.values.selectedprofessor,
-                    label: form.values.selectedprofessor,
-                  }}
-                  onChange={(selectedOption) => {
-                    console.log(selectedOption.value);
-                    form.setFieldValue(
-                      "selectedprofessor",
-                      selectedOption.value
-                    );
-                  }}
-                  onBlur={form.handleBlur}
+                  name={"selectedprofessor"}
+                  word={"select professor"}
                 />
-              );
-            }}
-          </Field>
-        </Form>
-      </Formik>
+                </div >
+                <div className={classes.ReactSelect}>
+                  <ReactSelect
+                    options={professors}
+                    name={"selectedclassroom"}
+                    word={"select classroom"}
+                  />
+                </div>
+             
+            </div>
+            <Button />
+          </Form>
+        </Formik>
+      </div>
     );
   else return <></>;
 };
-
 export default AddDayForm;
