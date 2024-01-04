@@ -15,12 +15,11 @@ const initialValues = {
   time: "",
   selectedprofessor: "",
 };
-const AddDayForm = ({ name }) => {
-  const show = useSelector((state) => state.days[name].show);
-  const dispathchredux = useDispatch();
+const AddDayForm = ({ name,show,setshow }) => {
+
   const clickhandle = () => {
     console.log(show);
-    dispathchredux(Scheduleslice.actions.rest({ name: name }));
+   setshow(false);
   };
   console.log(show);
   console.log(name);

@@ -1,18 +1,20 @@
-import React, { useState } from 'react'
+import React, { memo, useMemo, useState } from 'react'
 import classses from"./Schedule.module.css"
 import AddDayForm from './AddDayForm';
 import { useDispatch, useSelector } from 'react-redux';
 import Scheduleslice from '../../../../store/Schedule-slice';
+const MemorizeAddDay=memo(AddDayForm);
 const AddDay = ({name}) => {
- console.log(name);
- const dispathchredux=useDispatch();
+ const [show,setshow]=useState(false)
  const clickhandle=()=>{
-  dispathchredux(Scheduleslice.actions.setOneDay({name:name}))
+  setshow(true);
  }
+ const memorizeAddDay=useMemo(()=><MemorizeAddDay name={name} show={show} setshow={setshow}/>,[show])
+
   return (
     <>
     <div>
-      <AddDayForm name={name} />
+    {memorizeAddDay}
     <div  className={classses.addcontainer }>
         <div className={classses.pluscontainer} onClick={clickhandle}>
         <div className={classses.right}></div>
