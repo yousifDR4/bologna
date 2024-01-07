@@ -3,7 +3,7 @@ import React from 'react'
 import Select from 'react-select';
 const ReactSelect = ({word,name,options}) => {
   return (
-    <div>
+    <>
     <label htmlFor={name}>{word}</label>
     <Field>
       {(probs) => {
@@ -29,7 +29,7 @@ const ReactSelect = ({word,name,options}) => {
         );
       }}
     </Field>
-    </div>
+  </>
   )
 }
 

@@ -249,3 +249,38 @@ export const get_modules_count=async(type,level,Deprartment_id)=>{
      
     });
 }
+export const getSchedule = (Department_id) => {
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday", // You missed Friday in your array
+    "Saturday",
+  ];
+
+  // Create a query for each day of the week
+  const queries = daysOfWeek.map((day) => {
+    return query(
+      collection(db, "Schedule"), 
+      where("Department_id", "==", Department_id),
+      where("selectedDay", "==", day),orderBy("info.startTime")
+    );
+  });
+  return Promise.all(queries.map((q) => getDocs(q)))
+    .then((snapshots) => {
+      // Process document snapshots for each day
+      const scheduleByDay = {};
+      snapshots.forEach((snapshot, index) => {
+        const day = daysOfWeek[index];
+        scheduleByDay[day] = snapshot.docs.map((doc) => ({...doc.data().info,id:doc.id}));
+      });
+      console.log(scheduleByDay);
+      return scheduleByDay;
+    })
+    .catch((error) => {
+      console.error("Error fetching schedule: ", error);
+      throw error; 
+    });
+};

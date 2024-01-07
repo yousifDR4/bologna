@@ -92,7 +92,7 @@ const AddProgramModule = () => {
   const Department_id = profile.Department_id;
   const submithandler = async () => {
     const filteredObject = Object.entries(form).reduce((acc, [key, value]) => {
-      if (value !== "") {
+      if (value !== "" &&key!=="programs") {
         acc[key] = value;
       }
       return acc;

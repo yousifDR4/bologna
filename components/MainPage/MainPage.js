@@ -6,8 +6,10 @@ const MainPage=()=>{
         <div className={classes.mainPage}>
             <h1>Smart. Simple. Significant.</h1>
             <div>
-            <p>Academic Path System: Guiding Your University Journey
-                plan your courses and explore it detailed information</p></div>
+            <h3>Academic Path System: Guiding Your University Journey<br/>
+            
+               plan your courses and explore it detailed information</h3>
+               </div>
 
         </div>
     );

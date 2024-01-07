@@ -3,11 +3,13 @@ import classes from"./Schedule.module.css"
 import Card from './Card'
 import AddDay from './AddDay'
 const MemorizeAddDay=memo(AddDay);
-const Days = ({name ,show,setshow,addhandler}) => {
-  console.log(show," ",name);
-  const memorizeAddDay=useMemo(()=>( <MemorizeAddDay name={name} show={show} setshow={setshow} />),[show])
+const Days = ({name}) => {
+  
+  const memorizeAddDay=useMemo(()=>( <MemorizeAddDay  name={name} />),[])
   return (
-   memorizeAddDay
+    <div className={classes.lectures}>
+   {memorizeAddDay}
+   </div>
   )
 }
 
