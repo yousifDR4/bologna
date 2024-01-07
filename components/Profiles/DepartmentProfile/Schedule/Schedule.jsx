@@ -210,9 +210,9 @@ const Schedule = () => {
                     )}
                     <div
                       className={classes.AddModuleButton}
-                      onClick={() => handleAddModuleClick(day)}
+                    
                     >
-                      <PlusIcon />
+                      <PlusIcon   onClick={() => handleAddModuleClick(day)}/>
                     </div>
                   </div>
                 )}
