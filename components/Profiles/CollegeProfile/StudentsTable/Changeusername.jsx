@@ -1,6 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import Largeinput from "./Largeinput";
+import Largeinput from "./../AddStudent/Largeinput";
 import classes from "./ChangeUsername.module.css";
 import { useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";

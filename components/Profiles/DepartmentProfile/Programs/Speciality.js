@@ -57,7 +57,6 @@ const Speciality = (probs) => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [Department_id,update]);
   const updateSpeciality = () => {

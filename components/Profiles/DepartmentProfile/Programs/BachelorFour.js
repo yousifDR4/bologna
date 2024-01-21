@@ -2,22 +2,7 @@ import { useEffect, useState } from "react";
 import classes from "./BachelorFour.module.css";
 import AddProgram from "./AddProgram";
 import PreviewBachelor from "./PreviewBachelor";
-import { get_prog } from "../../../../store/getandset";
-import { auth } from "../../../../store/fire";
-import { useSelector } from "react-redux";
-import Loader from "../../../UI/Loader/Loader";
 import HOC from "./HOC";
-// let Program1={
-//     activated:true,
-//     ECTS:240,
-//     levels:4,
-//     name:"ICE Bachelor's degree",
-//     code:"BSc-ICE",
-//     eveningStudy:true,
-//     summerInternhsip:true,
-//     summerInternhsipYear:3,
-//     speciality:true,
-// }
 const BachelorFour = ({
   ECTS,
   levels,
@@ -26,8 +11,6 @@ const BachelorFour = ({
   clickHandler,
   setShowAddProgram
 }) => {
-
-
   return (
     <>
        {program?.activated ===true ?(<PreviewBachelor program={program} ECTS={ECTS} levels={levels} />):(<>

@@ -1,19 +1,19 @@
 import { ErrorMessage, Field, FormikContext } from "formik";
-import "./EditStudent.css";
+import classes from"./Schedule.module.css"
 const Smallinput = (probs) => {  
   return (
-    <span className="spanflex">
-      <label htmlFor={probs.name}className="mylabel">
+    <div className={`${classes.Smallinputcont}`}>
+      <label htmlFor={probs.name}>
       {probs.required&& (<span className="spancolor">*</span>)}
         {probs.word}
       </label>
       <Field
         type={probs.type}
         name={probs.name}
-        className="myform"
+        className={`${classes.myform} `}
         />
       <ErrorMessage name={probs.name} component="div"/>
-    </span>
+ </div>
   );
 };
 export default Smallinput;

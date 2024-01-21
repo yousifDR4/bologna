@@ -21,7 +21,6 @@ const PreviewBachelor=(probs)=>{
     for (let i = 0; i < +program.type; i++) {
         x.push(<DisplayLevels key={i} index={i} type={program.type} />);
     }
-    console.log(x,program.levels);
     console.log(program);
     return(
         <div className={classes.container}>

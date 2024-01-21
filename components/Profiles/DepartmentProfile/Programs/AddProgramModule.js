@@ -35,7 +35,6 @@ let initialValue = {
   week14T: "",
   week15T: "",
 };
-
 const AddProgramModule = () => {
   const [form, setForm] = useState(initialValue);
   const [modules, setModules] = useState([]);
@@ -93,7 +92,7 @@ const AddProgramModule = () => {
   const Department_id = profile.Department_id;
   const submithandler = async () => {
     const filteredObject = Object.entries(form).reduce((acc, [key, value]) => {
-      if (value !== "") {
+      if (value !== "" &&key!=="programs") {
         acc[key] = value;
       }
       return acc;
@@ -106,6 +105,7 @@ const AddProgramModule = () => {
         ...filteredObject,
         type: +filteredObject.program,
         level: +filteredObject.level,
+        ECTS:+filteredObject.ECTS
       }
       console.log(k);
     const id = await addDoc(collection(db, "activemodule"), {
@@ -113,6 +113,7 @@ const AddProgramModule = () => {
       ...filteredObject,
       type: +filteredObject.program,
       level: +filteredObject.level,
+      ECTS:+filteredObject.ECTS
     });
     const reportinfo = {
       page: location.pathname,

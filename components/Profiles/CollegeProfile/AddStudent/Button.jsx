@@ -1,6 +1,6 @@
 import { Field } from "formik";
 import classes from "./style.module.css"
-const Button=()=>(
+const Button=({word="isubmtting"})=>(
     <Field>
           {(props) => {
             const { form } = props;
@@ -13,7 +13,7 @@ const Button=()=>(
                 onSubmit={form.handleSubmit}
                 disabled={!form.isValid || form.isSubmitting}
               >
-                {form.isSubmitting?"...uploading":"submit"}
+                {form.isSubmitting?"...uploading":word}
               </button>
             );
           }}
