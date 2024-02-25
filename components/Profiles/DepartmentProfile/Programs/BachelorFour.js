@@ -1,97 +1,53 @@
 import { useEffect, useState } from "react";
-import classes from "./BachelorFour.module.css"
+import classes from "./BachelorFour.module.css";
 import AddProgram from "./AddProgram";
 import PreviewBachelor from "./PreviewBachelor";
-import { get_prog } from "../../../../store/getandset";
-import { auth } from "../../../../store/fire";
-import { useSelector } from "react-redux";
-import Loader from "../../../UI/Loader/Loader";
-// let Program1={
-//     activated:true,
-//     ECTS:240,
-//     levels:4,
-//     name:"ICE Bachelor's degree",
-//     code:"BSc-ICE",
-//     eveningStudy:true,
-//     summerInternhsip:true,
-//     summerInternhsipYear:3,
-//     speciality:true,
-// }
-const BachelorFour=(probs)=>{
-    let {ECTS,levels}=probs;
-    console.log(ECTS,levels);
-    const profile=useSelector(state=> state.profile.profile);
-   const Department_id=profile.Department_id;
-    const [program,setProgram]=useState({});
-    const [showAddProgram,setShowAddProgram]=useState(false);
-    const [error,setError]=useState(false);
-    const [loading,setLoading]=useState(true);
-
-    useEffect(()=>{
-      
-        if(!auth.currentUser) return;
-        if(!Department_id) return;
-        //load Program (if exist (Activated))]
-        const f=async()=>{
-            try{
-                setLoading(true);
-               
-        const d=await get_prog(levels,Department_id);
-        console.log(d);
-        const obj=d[0];
-        console.log(obj,"kkkkkkkkkkkk");
-        if(obj && +obj.type=== +levels){
-            setProgram(obj);
-            console.log(obj.type ,levels);
-        }
-        else
-        setProgram({activated:false});
-            }
-          catch(e){
-            setError(true);
-            setProgram({activated:false});
-          }
-          finally{
-            setLoading(false);
-            console.log(program);
-          }
-            
-        }
-        f();
-        // ;
-    },[profile])
-    if(loading){
-        return<div className={classes.loading}><Loader/></div>
-    }
-    return(
-        <>
-        
-        {!program.activated &&
-        <>
-        {showAddProgram && <div className={classes.add}><AddProgram showAddProgram={setShowAddProgram} ECTS={ECTS}/></div>}
-        {showAddProgram && <div className={classes.backDrop} onClick={()=>setShowAddProgram(false)}></div>}
-
-        <div className={classes.container}>
-            <div className={classes.info}>
-                <h2> Program Information</h2>
-                <div>
-                <span>
-                <p>{ECTS}</p>
-                <p>ECTS</p>
-                </span>
-                <span>
-                 <p>{levels}</p>
-                 <p>Levels</p>
-                </span>
-                </div>
+import HOC from "./HOC";
+const BachelorFour = ({
+  ECTS,
+  levels,
+  program,
+  showAddProgram,
+  clickHandler,
+  setShowAddProgram
+}) => {
+  return (
+    <>
+       {program?.activated ===true ?(<PreviewBachelor program={program} ECTS={ECTS} levels={levels} />):(<>
+        {showAddProgram && (
+            <div className={classes.add}>
+              <AddProgram showAddProgram={setShowAddProgram} ECTS={ECTS} />
             </div>
-            <div className={classes.message}> <h2>This Program is not activated yet! Press on activate program button below!</h2></div>
-            <button onClick={()=>{setShowAddProgram(true);}}>Activate Program</button>
-        </div></>}
-            {program.activated  &&
-                <PreviewBachelor program={program}/>
-            }
-        </>
-    )
-}
-export default BachelorFour;
+          )}
+          {showAddProgram && (
+            <div className={classes.backDrop} onClick={clickHandler}></div>
+          )}
+          
+          <div className={classes.container}>
+            <div className={classes.info}>
+              <h2> Program Information</h2>
+              <div>
+                <span>
+                  <p>{ECTS}</p>
+                  <p>ECTS</p>
+                </span>
+                <span>
+                  <p>{levels}</p>
+                  <p>Levels</p>
+                </span>
+              </div>
+            </div>
+            <div className={classes.message}>
+              {" "}
+              <h2>
+                This Prbhbogram is not activated yet! Press on activate program
+                button below!
+              </h2>
+            </div>
+            <button onClick={clickHandler}>Activate Program</button>
+          </div>
+       </>)}   
+      </>   
+  );
+};
+export default HOC(BachelorFour);

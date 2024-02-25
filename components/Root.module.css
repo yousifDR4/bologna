@@ -17,7 +17,7 @@
 .error{
     display:block;
     position: fixed;
-    z-index: 15;
+    z-index: 21;
     width: 100%;
     left: 50%;
     top: 45%;

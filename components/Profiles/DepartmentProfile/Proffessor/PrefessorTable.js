@@ -73,11 +73,11 @@ f();
     },
     {
       sortFns: {
-        NAME: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+        NAME: (array) =>  [...array].sort((a, b) => a.name.localeCompare(b.name)),
         MIDTERM: (array) =>
-          array.sort((a, b) => a.midtermExamHours - b.midtermExamHours),
+        [...array].sort((a, b) => a.midtermExamHours - b.midtermExamHours),
         ENDTERM: (array) =>
-          array.sort((a, b) => a.endtermExamHours - b.endtermExamHours),
+        [...array].sort((a, b) => a.endtermExamHours - b.endtermExamHours),
       },
     }
   );
@@ -137,14 +137,12 @@ img{
 
       <div className={classes.table}>
         <h3>View Professors</h3>
-
-
         <Table data={data} theme={theme} sort={sort}>
           {(tableList) => (
             <>
               <Header>
                 <HeaderRow>
-                  <HeaderCellSort sortKey="NAME">Name</HeaderCellSort>
+                  <HeaderCellSort sortKey="NAME">username</HeaderCellSort>
                   <HeaderCell>password</HeaderCell>
                   
                 </HeaderRow>

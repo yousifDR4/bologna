@@ -41,11 +41,12 @@ import {
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
 import { ArticleOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined } from "@mui/icons-material";
+import { errorActions } from "../../store/error-slice";
 let reF = true;
 let x = true;
 let count = 0;
 const Navbar = () => {
-  const [notifications, setNotifications] = useState(0);
+  const [notifications, setNotifications] = useState(count);
   const [loading, setLoading] = useState(true);
   const [activatedList, setActivatedList] = useState([]);
   const dispatchRedux = useDispatch();
@@ -77,6 +78,7 @@ const Navbar = () => {
   onAuthStateChanged(
     auth,
     async (user) => {
+      try{
       console.log(location.pathname);
       if (user && reF) {
         if (
@@ -101,6 +103,16 @@ const Navbar = () => {
         setLoading(false);
         reF = false;
       }
+    }
+    catch(e){
+      
+      dispatchRedux(
+        errorActions.setError({
+          title: "Connection Faild",
+          message: "plese try agin!",
+        })
+      );
+    }
     },
     []
   );
@@ -115,6 +127,9 @@ const Navbar = () => {
         return prev.filter((l) => l !== s);
       });
   };
+  const clearNotif=()=>{
+    setNotifications(0);
+  }
   useEffect(() => {
     if (!profile.name) return;
     if (!accountType) return;
@@ -122,8 +137,6 @@ const Navbar = () => {
     // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
     const q = listnerq(accountType, profile.Department_id);
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      
-      setNotifications(0);
       let x = [];
       snapshot.docs.forEach((d) => {
         console.log(d.data());
@@ -131,9 +144,10 @@ const Navbar = () => {
           x.push({ ...d.data(), id: d.id });
         }
       });
-      const k = [1, 2];
-
       dispatchRedux(notifyActions.setNotify(x));
+      if (snapshot.docs.length === 0) {
+        dispatchRedux(notifyActions.setNotify("empty"));
+      }
       snapshot.docChanges().forEach((change) => {
         if (
           change.type === "added" &&
@@ -141,28 +155,31 @@ const Navbar = () => {
           change.doc.data().uid !== auth.currentUser.uid
         ) {
           console.log(change.doc.data().seen);
-        count++;
-          setNotifications(count);
-          console.log("notfacation", count);
+          console.log(notifications);
+          setNotifications((prev) => {
+            return prev + 1;
+          });
+          console.log("notfacation", notifications);
+          console.log("lol");
+          count =notifications;
         }
       });
+
+
     });
     return () => unsubscribe;
   }, [Department_id]);
-  useEffect(() => {
-    const f = async () => {
-      let x = await check("ICE");
-      console.log(x);
-      console.log(55);
-    };
-    f();
-  }, []);
+  useEffect(()=>{
+    count =notifications;
+    console.log("useeff",count);
+    },[notifications])
   return (
     <>
       <div className={backdrop} onClick={showAsideListHandler} />
       <nav className={classes.nav}>
         <ul className={classes.navList}>
           <div>
+          
             <li>
               <Link to="/">APS</Link>
             </li>
@@ -182,6 +199,7 @@ const Navbar = () => {
                 <Link to="/UniversityProfile">University Profile</Link>
               </li>
             )}
+
             {isCollegeAccount && (
               <li>
                 <Link to="/CollegeProfile">College Profile</Link>
@@ -208,7 +226,64 @@ const Navbar = () => {
           </div>
         </ul>
         <div className={`${active} ${classes.asideList}`}>
+          <ul>
+         
+            <li>
+              <Link to="/" onClick={showAsideListHandler}>
+                APS
+              </Link>
+            </li>
+            {!isLoggedIn && (
+              <li>
+                <Link to="/Login" onClick={showAsideListHandler}>
+                  <img src={login} alt="" className={classes.login} />
+                  Login
+                </Link>{" "}
+                <div className={classes.innerLine} />
+              </li>
+            )}
+            <li>
+              <Link to="/" onClick={showAsideListHandler}>
+                <img src={question} alt="" />
+                what's APS
+              </Link>
+              <div className={classes.innerLine} />
+            </li>
+            <li>
+              <Link to="/" onClick={showAsideListHandler}>
+                <img src={idea} alt="" />
+                How it works
+              </Link>
+              <div className={classes.innerLine} />
+            </li>
+            <li>
+              <Link to="/Universities" onClick={showAsideListHandler}>
+                <img src={university} alt="" />
+                Colleges using it
+              </Link>
+              <div className={classes.innerLine} />
+            </li>
+            {isCollegeAccount && (
+              <li>
+                <Link to="/CollegeProfile">
+                  <img src={profilePicture} alt="" />
+                  College Profile
+                </Link>
+              </li>
+            )}
+             {accountType==="College" && (
+              <li>
+                <Link to="/AddStudent">Add Studnt</Link>
+              </li>
+            )}
+              {accountType==="College" && (
+              <li>
+                <Link to="/StudentsTable">Students Table</Link>
+              </li>
+            )}
 
+
+       </ul>
         <ul >
                 <li><Link to="/"  onClick={showAsideListHandler}>APS</Link></li>
                {!isLoggedIn && <li><Link to="/Login" onClick={showAsideListHandler}><img src={login} alt="" className={classes.login}/>Login</Link> <div className={classes.innerLine}/></li>}
@@ -266,4 +341,3 @@ const Navbar = () => {
 );
 }
 export default Navbar;
-

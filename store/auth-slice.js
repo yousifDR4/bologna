@@ -42,6 +42,7 @@ export const onLogin = (profile) => {
       location,
       Colleges_id,
       username,
+      University_id
     } = profile;
     return async (dispatch) => {
       dispatch(authSlice.actions.logIn({ accountType, uid }));
@@ -59,6 +60,7 @@ export const onLogin = (profile) => {
           bannerPicture: bannerPicture ? bannerPicture : "",
           location: location ? location : "",
           Colleges_id: Colleges_id ? Colleges_id : [],
+          University_id:University_id?University_id:uid,
         })
       );
     };
@@ -80,6 +82,7 @@ export const onLogin = (profile) => {
       Department_id,
       username,
       University_id,
+      College_id,
     } = profile;
     return async (dispatch) => {
       dispatch(authSlice.actions.logIn({ accountType, uid }));
@@ -97,7 +100,9 @@ export const onLogin = (profile) => {
           bannerPicture: bannerPicture ? bannerPicture : "",
           location: location ? location : "",
           Department_id: Department_id ? Department_id : [],
-          University_id:University_id?University_id:[]
+          University_id:University_id?University_id:[],
+          College_id:College_id?College_id:uid,
+      
         })
       );
     };

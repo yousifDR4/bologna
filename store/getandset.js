@@ -5,12 +5,16 @@ import {
   arrayUnion,
   collection,
   collectionGroup,
+  count,
   deleteDoc,
   doc,
+  getAggregateFromServer,
+  getDoc,
   getDocs,
   orderBy,
   query,
   setDoc,
+  sum,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -124,8 +128,10 @@ export const get_progs = async (Deprartment_id) => {
   );
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
- console.log(data);
-  return data;
+  
+    return data;
+ 
+
 };
 export const get_sp = async (Department_id, levels) => {
   const q = query(
@@ -191,3 +197,90 @@ else{
 }
 }
 
+export const get_progs_as_college = async (Deprartment_id) => {
+  const q = query(
+    collection(db, "programs"),
+    where("Deprartment_id", "in", Deprartment_id)
+  );
+  const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+
+  return data;
+};
+export const usernameprofile=async(id)=>{
+const p1=getDoc(doc(db,"users",id))
+  const p2=getDoc(doc(db,"passwords",id))
+  const [doc1,doc2]=await Promise.all([p1,p2]);
+  console.log(doc1.data(),doc2.data());
+const password=doc1.data().username;
+const username=doc2.data().password;
+const info={password:password,username:username}
+console.log(info);
+return info;
+}
+export const get_prog_promise=(Deprartment_id,levels)=>{
+  const q = query(
+    collection(db, "programs"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("type", "==", +levels)
+    )
+  );
+  return getDocs(q);
+}
+export const get_progs_promise=(Deprartment_id)=>{
+  const q = query(
+    collection(db, "programs"),
+      where("Deprartment_id", "==", Deprartment_id)
+    );
+  return getDocs(q);
+}
+export const get_modules_count=async(type,level,Deprartment_id)=>{
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+      where("level","==",level),
+      where("type","==",type),
+    where("Deprartment_id","==",Deprartment_id)
+    ),  );
+  return getAggregateFromServer(q,{
+      toatl_ECTS:sum("ECTS"),
+      count:count()
+     
+    });
+}
+export const getSchedule = (Department_id) => {
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday", // You missed Friday in your array
+    "Saturday",
+  ];
+
+  // Create a query for each day of the week
+  const queries = daysOfWeek.map((day) => {
+    return query(
+      collection(db, "Schedule"), 
+      where("Department_id", "==", Department_id),
+      where("selectedDay", "==", day),orderBy("info.startTime")
+    );
+  });
+  return Promise.all(queries.map((q) => getDocs(q)))
+    .then((snapshots) => {
+      // Process document snapshots for each day
+      const scheduleByDay = {};
+      snapshots.forEach((snapshot, index) => {
+        const day = daysOfWeek[index];
+        scheduleByDay[day] = snapshot.docs.map((doc) => ({...doc.data().info,id:doc.id}));
+      });
+      console.log(scheduleByDay);
+      return scheduleByDay;
+    })
+    .catch((error) => {
+      console.error("Error fetching schedule: ", error);
+      throw error; 
+    });
+};

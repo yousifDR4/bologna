@@ -88,16 +88,30 @@ const Login=()=>{
           
             console.log(11);
             console.log(state.emailaddress);
+            try{
         const {email} = await signinWithUsername(state.emailaddress);
           if (email !== null) {
               console.log('User email:', email);
           console.log("username:",state.emailaddress);
-           await signInWithEmailAndPassword(auth,email,state.password);
+           const a=await signInWithEmailAndPassword(auth,email,state.password);
            const profile=await getprofile();
           console.log(profile);
+          console.log(a.user.email,"email");
           dispatchRedux(onLogin(profile));
           setloginstate(true);
           }
+
+          else{
+            const error=new Error;
+            throw(error)
+          }
+        }
+        catch(e){
+            setLoading(false);
+            dispatchRedux(errorActions.setError({title:"Login Failed",message:"Sorry, unable to login. Please know only registered accounts can login."}));
+
+        }
+          
                
         }
           
@@ -140,7 +154,7 @@ else{
         <div className={classes.container}>
         <form action="" className=" form">
           <h3>Login</h3>
-          <label className="text">
+          <label name="mailaddress" className="text">
             Username or Email<span className={classes.star}>*</span>
           </label>
           <input

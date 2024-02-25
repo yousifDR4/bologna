@@ -422,4 +422,9 @@ min-height: 4rem;
     }
    
 }
+@media (max-height:800px ) and (max-width:550px) {
+    .mainInfo{
+        height: 40vh !important;
+    }
+}
 

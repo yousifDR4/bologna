@@ -33,7 +33,6 @@ const Speciality = (probs) => {
   useEffect(() => {
     if(!Department_id)
     return;
-
     const fetchData = async () => {
       setLoading(true);
        try {
@@ -58,7 +57,6 @@ const Speciality = (probs) => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [Department_id,update]);
   const updateSpeciality = () => {

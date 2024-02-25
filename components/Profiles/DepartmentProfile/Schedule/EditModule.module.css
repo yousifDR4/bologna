@@ -1,0 +1,73 @@
+.EditModalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .EditModal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: auto;
+    max-width: 500px; /* Adjust width as necessary */
+    z-index: 1001;
+  }
+  
+  .EditModuleForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .EditModuleFormField {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .EditModuleFormActions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  .EditModuleFormButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #3498db; /* Primary color for buttons */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .EditModuleFormButton:hover {
+    background-color: #2980b9;
+  }
+  
+  .EditModuleFormCancel {
+    background-color: #95a5a6; /* Cancel button color */
+  }
+  
+  .EditModuleFormCancel:hover {
+    background-color: #7f8c8d;
+  }
+  
+  .EditModuleFormCloseButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  

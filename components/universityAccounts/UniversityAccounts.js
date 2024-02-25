@@ -11,19 +11,24 @@ import {
   query,
   doc,
   onSnapshot,
+  orderBy,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
-const universities = [];
+import { current } from "@reduxjs/toolkit";
+import { useCallback } from "react";
+
 const UniversityAccounts = () => {
   const setRef = useRef(true);
-  const [university, setUniversity] = useState(universities);
+  const [university, setUniversity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddUniversity, setShowAddUniversity] = useState(false);
   const [initalUniversityValue, setInitialUniversityValue] =
-    useState(universities);
+    useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [debouncedSearchValue, setDebouncedSearchValue] = useState(searchValue);
   const accountType = useSelector((state) => state.auth.accountType);
@@ -31,11 +36,28 @@ const UniversityAccounts = () => {
   const Department_id=profile.Department_id;
   const [nextdoc, setnextdoc] = useState(null);
   const fetchRef = useRef(true);
-  const limitNumber = 2;
+  const updateRef = useRef(false);
+  const limitNumber =5;
+  console.log(Math.floor(3/2),"flor");
+  const q1 = query(
+    collection(db, "users"),
+    where("accountType", "==", "University"),
+    orderBy("name"),
+    limit(limitNumber)
+  );
+  const q2 = query(
+    collection(db, "users"),
+    where("accountType", "==", "University"),
+    orderBy("name"),
+    limit(limitNumber),
+    startAfter(nextdoc)
+  );
+  
   const { data, load: myload } = usePaginationFetch(
     nextdoc,
     fetchRef.current,
-    limitNumber
+    limitNumber,
+    updateRef,q1,q2
   );
   useEffect(() => {
     const f = async () => {
@@ -54,18 +76,14 @@ const UniversityAccounts = () => {
             return [...prev, ...s];
           });
           setInitialUniversityValue((prev) => {
-            return [...prev, ...s];
+            return [...prev,...s];
           });
-
-          console.log(searchValue);
-          if (searchValue !== "") performSearch(searchValue);
           fetchRef.current = false;
           console.log("length", data.length);
-          if (data.length === limitNumber) setnextdoc(data[limitNumber - 1]);
+        
         } else {
           console.log(444);
-          setUniversity(initalUniversityValue);
-          if (searchValue !== "") performSearch(searchValue);
+          
         }
       } catch (e) {
         console.log(e);
@@ -73,36 +91,14 @@ const UniversityAccounts = () => {
     };
     f();
   }, [data]);
-  
-  useEffect(() => {
-    if(!Department_id)
-    return;
-    if(Department_id.length===0)
-    return;
-    const DepartmentRef=doc(db,"notififcation",Department_id);
-    const q=query(collection(DepartmentRef, "Department"))
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      let count = 0;
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added"&&
-        change.doc.data().seen.filter((id)=>id===Department_id)[0]!==Department_id
-        ) {
-          count++;
-          console.log("notfacation",count);
-        }
-      });
-    });
-    return () => unsubscribe;
-  }, [Department_id]);
-
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearchValue(searchValue), 1000);
     return () => clearTimeout(timer);
   }, [searchValue]);
-
   useEffect(() => {
+      
     performSearch(debouncedSearchValue);
-  }, [debouncedSearchValue]);
+  }, [debouncedSearchValue,initalUniversityValue]);
   const performSearch = (value) => {
     console.log(11);
     if (value) {
@@ -114,7 +110,7 @@ const UniversityAccounts = () => {
           )
         );
       } else {
-        console.log(university);
+        setUniversity(initalUniversityValue);
       }
     } else {
       setUniversity(initalUniversityValue);
@@ -123,12 +119,44 @@ const UniversityAccounts = () => {
   const searchChangeHandler = (e) => {
     setSearchValue(e.target.value);
   };
+  const observer=useRef()
   const updateUniversity = () => {
+    console.log(nextdoc);
+    observer.current.disconnect();
+    console.log("work");
     setnextdoc(null);
+   updateRef.current=!updateRef.current;
     fetchRef.current = true;
     setUniversity([]);
     setInitialUniversityValue([]);
+
   };
+  const last = useCallback( (element)=>{
+    if (myload) {
+      return;
+    }
+    console.log(element);
+   
+    if(observer.current)
+    observer.current.disconnect();
+    observer.current=new IntersectionObserver(entry=>{
+      if (entry[0].isIntersecting) {
+        console.log("visable");
+          if (data.length === limitNumber) setnextdoc(data[limitNumber - 1]);
+         console.log(data.length);
+      }
+      else{
+        console.log("not visable");
+        if (searchValue!=="") {
+          if (data.length === limitNumber) setnextdoc(data[limitNumber - 1]);
+          
+        }
+      }
+    })
+   if(element)
+    observer.current.observe(element);
+    console.log(element);
+  },[myload,nextdoc])
   return (
     <main className={classes.main}>
       {accountType === "Admin" && (
@@ -168,14 +196,29 @@ const UniversityAccounts = () => {
           ></input>{" "}
         </div>
         <ul>
-          {university.map((university) => (
-            <li key={university.uid}>
-              <img src={university.img} alt="" />
+          {university.map((uni,index,arr) => {
+          
+       if(( index+1)===Math.floor((arr.length)/2)){
+        console.log("worksss");
+       return(
+        <li key={uni.uid} ref={last} >
+          <img src={uni.img} alt="" />
+          <div>
+            <p>{uni.name}</p> <span></span> <br />
+          </div>
+        </li>
+      )
+       }
+      else
+          return(
+            <li key={uni.uid} >
+              <img src={uni.img} alt="" />
               <div>
-                <p>{university.name}</p> <span></span> <br />
+                <p>{uni.name}</p> <span></span> <br />
               </div>
             </li>
-          ))}
+          )
+           } )}
           {myload && <PlaceHolderLoader />}
         </ul>
       </div>
