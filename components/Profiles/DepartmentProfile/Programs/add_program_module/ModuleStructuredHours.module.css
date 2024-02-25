@@ -1,0 +1,113 @@
+.mainContainer{
+    padding: 0.5rem;
+}
+.addButton{
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+}
+.listContainer{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    list-style: none;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+.listContainer li{
+    background-color: #F1F1F3;
+    justify-self: center;
+    text-align: center;
+    padding: 0.9rem 1.5rem;
+    border-radius: 8px;
+}
+.listContainer li h3{
+    color: #ADACB1;
+    margin-bottom: 0.8rem;
+}
+.listContainer li form{
+    background-color: #F1F1F3;
+}
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: fit-content;
+}
+.cardTitle{
+    text-align: left;
+    width: 100%;
+    margin-bottom: 0.4rem;
+}
+.container form label{
+     font-family: GraphikLight;
+    display: inline-block;
+    color: #6B6C6D;
+  
+}
+
+.container form > .fields{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    column-gap: 2rem;
+    text-align: left;
+}
+.container form input,.container form select{
+border: 1px solid #6B6C6D;
+border-radius: 7px;
+padding-left: 0.5rem;
+height: 2.5rem;
+width: 100%;
+overflow: hidden;
+font-size: 110%;
+font-family: GraphikThin;
+color:#6B6C6D;
+}
+.container form select{
+    padding-left: 0;
+}
+
+.container form select{
+    font-size: 100%;
+}
+.container form textarea{
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-family: GraphikThin;
+color:#6B6C6D;
+overflow: auto;
+height: 6rem !important;
+width: 100% !important;
+    padding: 0.3rem 0.5rem;
+    border-radius: 9px;
+}
+.container input::placeholder{
+    color:#6B6C6D;
+    font-family: GraphikThin;
+    font-size: medium;
+}
+.container input.error{
+    border-color: #cc0000;
+}
+.container input:focus.error{
+    border-color: #cc0000;
+}
+.container form  .errorText{
+    color:#cc0000;
+    font-size: small;
+    font-family: GraphikLight;
+    margin-top: 2px;
+    margin-bottom: 0;
+    }
+@media (max-width:1050px) {
+    .listContainer{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media (max-width:750px) {
+    .listContainer{
+        grid-template-columns: 1fr;
+    }
+}

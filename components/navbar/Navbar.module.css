@@ -1,13 +1,108 @@
 
 
 .nav{
-  width: 100%;
-  position: sticky;
-  font-family: sans-serif;
-  padding:1rem 2rem 1rem 2rem;
-  /* border-bottom: 0.01rem solid #060640; */
-  z-index: 15;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 3px 0px;
+
+width: 100%;
+position: sticky;
+font-family: sans-serif;
+padding:1rem 2rem 1rem 2rem;
+/* border-bottom: 0.01rem solid #060640; */
+z-index: 15;
+box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 3px 0px;
+}
+
+.nav .navList{
+    display: flex;
+    justify-content: space-between;
+    list-style: none;  
+    margin: 0 auto;
+    padding: 0;
+   
+}
+.nav ul div{
+    display: flex;
+    align-items: center;
+}
+.nav ul div li{
+margin: 0rem 1rem 0 1rem;
+}
+.nav ul div:first-of-type a{
+    font-size: 27px;
+    font-weight: bold;
+}
+.nav ul a{
+    text-decoration: none;
+    font-size: 18px;
+    color: inherit;
+    
+}
+.nav .navList a:hover{
+  color:#4A8BDF;
+}
+.nav ul .line{
+    width: 1px;
+    background-color: #060640;
+    height:100%;
+    margin-right: 0;
+}
+.nav ul button{
+    border: none;
+    background-color: #fff;
+}
+.nav button img{
+    width: 2rem;
+    height: 2rem;
+    vertical-align:bottom;
+}
+.nav .asideList {
+    position: fixed;
+    right: 0;
+    top: 0px;
+    background-color: #333;
+    width: 0px;
+    height:100vh;
+    max-height: fit-content;
+    overflow: auto;
+    transition: all 0.3s ease-out;
+    overflow: hidden;
+    display: flex;
+    padding: 0px 0 0 0px;
+    margin: 0;
+    z-index: 30;
+    background-color: #EFFAFD;
+
+  }
+  .asideList ul{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    list-style: none;
+    height: fit-content;
+    max-height: 100vh; /* Set the maximum height here */
+    overflow: auto;
+    overflow-x: hidden;
+    gap: 0.8rem;
+    padding: 1.5rem 0.46rem 3rem 0.46rem;
+    width: 100%;
+    margin: 0;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 2px 0px;
+  }
+  .nav .asideList ul li,.container li {
+    width: 100%;
+    margin: 0;
+    transition: all ease-in-out 0.1s;
+  }
+  .asideList a{
+    white-space: nowrap
+  }
+  .asideList.active {
+    width: 17vw;
+    z-index: 100;
+    transition: all 0.3s ease-in;
+    position: fixed;
+
   }
   
   .nav .navList{

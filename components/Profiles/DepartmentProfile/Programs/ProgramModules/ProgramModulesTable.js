@@ -119,7 +119,7 @@ function onSortChange(action, state) {
 
         <Body>
             {tableList.map((module) => (
-              <Row key={module.code + module.name} item={module}>
+              <Row key={module.code + module.name +module.endTermHours + module.id} item={module}>
                 <Cell>{module.code}</Cell>
                 <Cell>
                   {module.name}

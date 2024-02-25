@@ -24,6 +24,7 @@ import ModulesTable from "./components/Profiles/DepartmentProfile/Modules_s/Modu
 import EditModule from "./components/Profiles/DepartmentProfile/Modules_s/EditModule.js";
 import AddProffessor from "./components/Profiles/DepartmentProfile/Proffessor/AddProffessor.js";
 
+
 import ProgramManage from "./components/Profiles/DepartmentProfile/Programs/ProgramManage.js";
 import ProfessorTable from "./components/Profiles/DepartmentProfile/Proffessor/PrefessorTable.js";
 import ClassroomsTable from "./components/Profiles/DepartmentProfile/Classrooms/ClassroomsTable.js";
@@ -37,7 +38,8 @@ import EditStudent from "./components/Profiles/CollegeProfile/StudentsTable/Edit
 import { QueryClientProvider, QueryClient } from "react-query";
 import {ReactQueryDevtools } from "react-query/devtools";
 
-let firstInitilize = true;
+
+let firstInitilize=true;
 function App() {
   const queryClient = new QueryClient();
  
@@ -148,9 +150,35 @@ function App() {
         {
          
         },
-       
-      ],
-    },
+        {
+          path:"/Schedule",
+        
+          element:<Schedule/>
+        },
+        {
+          path:"/ExamCommite",
+          element:<ExamComitte/>
+        },
+        {
+          path:"/Schedule",
+          element:<Schedule/>
+        },
+        {
+          path:"/Exams",
+          element:<Exams/>
+        },
+        {
+          path:"/Grades",
+          element:<Grades/>
+        },
+        {
+          path:"/Home",
+          element:<Home/>
+        },
+
+    ]
+   }
+
   ]);
 
   return (

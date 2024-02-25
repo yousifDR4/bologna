@@ -28,7 +28,7 @@ import bell from "../../Images/bell.png";
 import manage from "../../Images/manage.png";
 import program from "../../Images/program.png";
 import classroom from "../../Images/classroom.png";
-
+import GroupIcon from '@mui/icons-material/Group';
 import {
   collection,
   doc,
@@ -40,6 +40,7 @@ import {
 } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
+import { ArticleOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined } from "@mui/icons-material";
 import { errorActions } from "../../store/error-slice";
 let reF = true;
 let x = true;
@@ -85,12 +86,18 @@ const Navbar = () => {
           uid === null &&
           location.pathname !== "/Login"
         ) {
+          try{
           console.log("inside", location.pathname);
           console.log("onauthstatechange");
           const k = await getprofile();
           dispatchRedux(onLogin(k));
           reF = false;
           setLoading(false);
+          }
+          catch(e){
+            console.log(e);
+          }
+                   
         }
       } else if (reF) {
         setLoading(false);
@@ -276,143 +283,61 @@ const Navbar = () => {
             )}
 
 
-            {isDepartmentAccount && (
-              <li>
-                <Link to="/DepartmentProfile">
-                  <img src={profilePicture} alt="" />
-                  Department Profile
-                </Link>
-              </li>
-            )}
-            {isUniversityAccount && (
-              <li>
-                <Link to="/UniversityProfile">
-                  <img src={profilePicture} alt="" />
-                  University Profile
-                </Link>
-              </li>
-            )}
-            {isDepartmentAccount && (
-              <li>
-                <Link to="/Classrooms">
-                  <img src={classroom} alt="" />
-                  Classrooms Table
-                </Link>
-              </li>
-            )}
-            {isDepartmentAccount && (
-              <div className={classes.container}>
-                <li
-                  onClick={() => collapseHandler("pr")}
-                  className={
-                    activatedList.includes("pr") ? classes.activeList : ""
-                  }
-                >
-                  <img src={program} alt="" /> Program <img src={collapse} />
-                </li>
-                {activatedList.includes("pr") && (
-                  <>
-                    <li>
-                      <Link to="/ProgramModules">
-                        <img src={moduleIcon} alt="" /> Program Modules
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/AddProgramModule">
-                        <img src={addModule} alt="" /> Add Module
-                      </Link>{" "}
-                    </li>
-                    {isDepartmentAccount && (
-                      <li>
-                        <Link to="/ProgramManage">
-                          <img src={manage} alt="" />
-                          Manage Program
-                        </Link>
-                      </li>
-                    )}
-                  </>
-                )}{" "}
-              </div>
-            )}
-            {isDepartmentAccount && (
-              <div className={classes.container}>
-                <li
-                  onClick={() => collapseHandler("m")}
-                  className={
-                    activatedList.includes("m") ? classes.activeList : ""
-                  }
-                >
-                  <img src={moduleIcon} alt="" /> Modules <img src={collapse} />
-                </li>
-                {activatedList.includes("m") && (
-                  <>
-                    <li>
-                      <Link to="/AddModule">
-                        <img src={addModule} alt="" /> Add Module
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/ModuleTable">
-                        <img src={table} alt="" /> Modules Table
-                      </Link>
-                    </li>
-                  </>
-                )}{" "}
-              </div>
-            )}
-            {isDepartmentAccount && (
-              <div className={classes.container}>
-                <li
-                  onClick={() => collapseHandler("p")}
-                  className={
-                    activatedList.includes("p") ? classes.activeList : ""
-                  }
-                >
-                  <img src={professor} alt="" /> Professors{" "}
-                  <img src={collapse} />
-                </li>
-                {activatedList.includes("p") && (
-                  <>
-                    <li>
-                      <Link to="/AddProfessor">
-                        <img src={addUser} alt="" /> Add Proffessor
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/ProfessorList">
-                        <img src={table} alt="" /> Professors Table
-                      </Link>
-                    </li>
-                  </>
-                )}
-              </div>
-            )}
-            {isLoggedIn && (
-              <li  onClick={clearNotif}>
-              
-                <Link to="/Notifications">
-                  <img src={bell} alt="" />
-                  Notifications
-                  {
-                   <span className={classes.notifications}>
-                     {notifications > 0 ? notifications : ""}
-                    </span>
-                  }
-  
-                
-                </Link>
-              
-              </li>
-            )}
-            {isLoggedIn && (
-              <li>
-                <button onClick={logoutHandler}>Logout</button>
-              </li>
-            )}
-          </ul>
-        </div>
-      </nav>
-    </>
-  );
-};
+       </ul>
+        <ul >
+                <li><Link to="/"  onClick={showAsideListHandler}>APS</Link></li>
+               {!isLoggedIn && <li><Link to="/Login" onClick={showAsideListHandler}><img src={login} alt="" className={classes.login}/>Login</Link> <div className={classes.innerLine}/></li>}
+                <li><Link to="/" onClick={showAsideListHandler}><img src={question} alt=""/>what's APS</Link><div className={classes.innerLine}/></li>
+                <li><Link to="/" onClick={showAsideListHandler}><img src={idea} alt=""/>How it works</Link><div className={classes.innerLine}/></li>
+                <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/>Colleges using it</Link><div className={classes.innerLine}/></li>
+                {isCollegeAccount && <li><Link to="/CollegeProfile"><img src={profilePicture} alt=""/>College Profile</Link></li>}
+                {isDepartmentAccount && <li><Link to="/DepartmentProfile"><img src={profilePicture} alt=""/>Department Profile</Link></li>}
+                {isDepartmentAccount && <li><Link to="/Home"><img src={profilePicture} alt=""/>Home</Link></li>}
+               {isUniversityAccount && <li><Link to="/UniversityProfile"><img src={profilePicture} alt=""/>University Profile</Link></li>}
+               {isDepartmentAccount && <li><Link to="/Classrooms"><img src={classroom} alt=""/>Classrooms Table</Link></li>}
+               {isDepartmentAccount && <li><Link to="/Schedule"><img src={classroom} alt=""/>Schedule</Link></li>}
+               { isDepartmentAccount && <div className={classes.container}>
+              <li onClick={()=>collapseHandler('pr')} className={activatedList.includes('pr')? classes.activeList :""}><img src={program} alt=""/> Program  <img src={collapse}/></li>
+              { activatedList.includes('pr') &&
+              <>
+               <li><Link to="/ProgramModules"><img src={moduleIcon} alt=""/> Program Modules</Link></li>
+            <li><Link to="/AddProgramModule"><img src={addModule} alt=""/> Add Module</Link> </li> 
+            {isDepartmentAccount && <li><Link to="/ProgramManage"><img src={manage} alt=""/> Manage Program</Link></li>}
+
+            </>
+            }  </div> 
+            }
+              { isDepartmentAccount && <div className={classes.container}>
+              <li onClick={()=>collapseHandler('m')} className={activatedList.includes('m')? classes.activeList :""}><img src={moduleIcon} alt=""/> Modules  <img src={collapse}/></li>
+              { activatedList.includes('m') &&
+              <>
+               <li><Link to="/AddModule"><img src={addModule} alt=""/> Add Module</Link></li>
+            <li><Link to="/ModuleTable"><img src={table} alt=""/> Modules Table</Link></li> 
+            </>
+            }  </div> 
+            }
+            { isDepartmentAccount &&  <div className={classes.container}>
+               <li onClick={()=>collapseHandler('p')} className={activatedList.includes('p')? classes.activeList :""}><img src={professor} alt=""/> Professors <img src={collapse}/></li>
+               { activatedList.includes('p') &&
+               <>
+               <li><Link to="/AddProfessor"><img src={addUser} alt=""/> Add Proffessor</Link></li>
+               <li><Link to="/ProfessorList"><img src={table} alt=""/> Professors Table</Link></li>
+               </>}
+               </div>}
+               { isDepartmentAccount &&  <div className={classes.container}>
+               <li onClick={()=>collapseHandler('e')} className={activatedList.includes('e')? classes.activeList :""}><FeaturedPlayListOutlined sx={{verticalAlign:"middle",padding:"0 !important",margin:"0 !important"}}/> Exams <img src={collapse}/></li>
+               { activatedList.includes('e') &&
+               <>
+             <li><Link to="/ExamCommite"><GroupOutlined sx={{verticalAlign:"middle",padding:"0 !important",margin:"0 !important"}}/> Exam Commite</Link></li>
+             <li><Link to="/Exams"><ArticleOutlined sx={{verticalAlign:"middle",padding:"0 !important",margin:"0 !important"}}/> Exams</Link></li>
+             <li><Link to="/Grades"><GradingOutlined sx={{verticalAlign:"middle",padding:"0 !important",margin:"0 !important"}}/> Grades</Link></li>
+               </>}
+               </div>}
+               {isLoggedIn  && <li><Link to="/Notifications" ><img src={bell} alt=""/>Notifications{<span className={classes.notifications}>{notifications >0 ? notifications:"" }</span>}</Link></li>}
+                { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
+        </ul></div>
+    </nav>
+</>
+);
+}
 export default Navbar;
