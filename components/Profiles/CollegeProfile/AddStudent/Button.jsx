@@ -1,11 +1,9 @@
 import { Field } from "formik";
 import classes from "./style.module.css"
-const Button=({word="isubmtting"})=>(
+const Button=({word="submit"})=>(
     <Field>
           {(props) => {
             const { form } = props;
-            console.log(form);
-            console.log(form.isSubmitting );
             return (
               <button
                 type="submit"

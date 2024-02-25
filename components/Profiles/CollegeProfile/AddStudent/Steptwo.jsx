@@ -4,6 +4,7 @@ import Smallinput from "./Smallinput";
 import axios from "axios";
 import Select from "react-select";
 import Button from "./Button";
+import Largeinput from "./Largeinput";
 
 
 const Steptwo = () => {
@@ -72,8 +73,28 @@ const Steptwo = () => {
         onBlur={() => handleBlur("birthcountry")}
       />
       </span>
+      <Smallinput name="acceptancetype" word="acceptance type" type="text" />
+      <Smallinput name="fatherwork" word="father work" type="text" />
+      <Largeinput name="note" word="note" type="text" />
+      <span className="flexspan">
+      <label htmlFor={"bloodgroup"} className="mylabel">blood group</label>
+      <Select
+      placeholder={"select country"}
+        className="myselect spanreact"
+        options={[{label:"A",value:"A"},{label:"B",value:"B"},{label:"c",value:"c"}]}
+        name="selectedCountry"
+        value={{value:values.bloodgroup,label:values.bloodgroup}}
+        onChange={(selectedOption) =>
+          handleChange("bloodgroup")(selectedOption.value)
+        }
+        onBlur={() => handleBlur("bloodgroup")}
+      />
+      </span>
+
+
       <span className="buttonflex">
         <label htmlFor="button" className="mylabel"></label>
+
     <Button/>
       </span>
     </Form>

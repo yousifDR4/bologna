@@ -33,8 +33,7 @@ import AddProgramModule from "./components/Profiles/DepartmentProfile/Programs/A
 import AddStudent from "./components/Profiles/CollegeProfile/AddStudent/AddStudent.jsx";
 import StudentsTable from "./components/Profiles/CollegeProfile/StudentsTable/StudentsTable.jsx";
 import EditStudent from "./components/Profiles/CollegeProfile/StudentsTable/EditStudent.jsx";
-import Changeusername from "./components/Profiles/CollegeProfile/StudentsTable/Changeusername.jsx";
-import Schedule from "./components/Profiles/DepartmentProfile/Schedule/Schedule.jsx";
+
 import { QueryClientProvider, QueryClient } from "react-query";
 import {ReactQueryDevtools } from "react-query/devtools";
 
@@ -147,14 +146,9 @@ function App() {
           element: <EditStudent />,
         },
         {
-          path: "/Changeusername",
-          element: <Changeusername />,
+         
         },
-        {
-          path:"/Schedule",
-        
-          element:<Schedule/>
-        }
+       
       ],
     },
   ]);
