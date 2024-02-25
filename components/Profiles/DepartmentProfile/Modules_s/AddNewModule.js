@@ -121,7 +121,7 @@ const location=useLocation();
     dispatch(action);
   }
   function onselect(input,obj){
-    let value= state.prerequisite;
+    let value= state[input];
     console.log(value);
     console.log(obj);
     obj.map((obj)=>{

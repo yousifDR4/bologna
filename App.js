@@ -22,8 +22,12 @@ import ProfessorTable from './components/Profiles/DepartmentProfile/Proffessor/P
 import ClassroomsTable from './components/Profiles/DepartmentProfile/Classrooms/ClassroomsTable.js';
 import Notifications from './components/Notifications/Notifications.js';
 import ProgramModulesTable from './components/Profiles/DepartmentProfile/Programs/ProgramModules/ProgramModulesTable.js';
-import AddProgramModule from './components/Profiles/DepartmentProfile/Programs/AddProgramModule.js';
-
+import AddProgramModule from './components/Profiles/DepartmentProfile/Programs/add_program_module/AddProgramModule.js';
+import ExamComitte from './components/Profiles/DepartmentProfile/Exam/ExamComitte.js';
+import Schedule from './components/Profiles/DepartmentProfile/schedule/Schedule.js';
+import Exams from './components/Profiles/DepartmentProfile/Exam/Exams.js';
+import Grades from './components/Profiles/DepartmentProfile/Exam/Grades.js';
+import Home from './components/Profiles/StudentProfile/Home/Home.js';
 let firstInitilize=true;
 function App() {
   const profile=useSelector(state=>state.profile.profile);
@@ -117,7 +121,27 @@ function App() {
         {
           path: "/AddProgramModule",
           element:<AddProgramModule/>
-        }
+        },
+        {
+          path:"/ExamCommite",
+          element:<ExamComitte/>
+        },
+        {
+          path:"/Schedule",
+          element:<Schedule/>
+        },
+        {
+          path:"/Exams",
+          element:<Exams/>
+        },
+        {
+          path:"/Grades",
+          element:<Grades/>
+        },
+        {
+          path:"/Home",
+          element:<Home/>
+        },
 
     ]
    }

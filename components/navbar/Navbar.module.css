@@ -54,12 +54,14 @@ margin: 0rem 1rem 0 1rem;
     vertical-align:bottom;
 }
 .nav .asideList {
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 0px;
     background-color: #333;
     width: 0px;
     height:100vh;
+    max-height: fit-content;
+    overflow: auto;
     transition: all 0.3s ease-out;
     overflow: hidden;
     display: flex;
@@ -74,18 +76,21 @@ margin: 0rem 1rem 0 1rem;
     justify-content: flex-start;
     align-items: flex-start;
     list-style: none;
+    height: fit-content;
+    max-height: 100vh; /* Set the maximum height here */
+    overflow: auto;
+    overflow-x: hidden;
     gap: 0.8rem;
     padding: 1.5rem 0.46rem 3rem 0.46rem;
     width: 100%;
     margin: 0;
     background-color: #fff;
-    height: fit-content;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 2px 0px;
   }
   .nav .asideList ul li,.container li {
     width: 100%;
     margin: 0;
-
+    transition: all ease-in-out 0.1s;
   }
   .asideList a{
     white-space: nowrap
