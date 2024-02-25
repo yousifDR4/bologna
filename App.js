@@ -24,12 +24,20 @@ import ModulesTable from "./components/Profiles/DepartmentProfile/Modules_s/Modu
 import EditModule from "./components/Profiles/DepartmentProfile/Modules_s/EditModule.js";
 import AddProffessor from "./components/Profiles/DepartmentProfile/Proffessor/AddProffessor.js";
 
-import ProgramManage from './components/Profiles/DepartmentProfile/Programs/ProgramManage.js';
-import ProfessorTable from './components/Profiles/DepartmentProfile/Proffessor/PrefessorTable.js';
-import ClassroomsTable from './components/Profiles/DepartmentProfile/Classrooms/ClassroomsTable.js';
-import Notifications from './components/Notifications/Notifications.js';
-import ProgramModulesTable from './components/Profiles/DepartmentProfile/Programs/ProgramModules/ProgramModulesTable.js';
-import AddProgramModule from './components/Profiles/DepartmentProfile/Programs/AddProgramModule.js';
+
+import ProgramManage from "./components/Profiles/DepartmentProfile/Programs/ProgramManage.js";
+import ProfessorTable from "./components/Profiles/DepartmentProfile/Proffessor/PrefessorTable.js";
+import ClassroomsTable from "./components/Profiles/DepartmentProfile/Classrooms/ClassroomsTable.js";
+import Notifications from "./components/Notifications/Notifications.js";
+import ProgramModulesTable from "./components/Profiles/DepartmentProfile/Programs/ProgramModules/ProgramModulesTable.js";
+import AddProgramModule from "./components/Profiles/DepartmentProfile/Programs/AddProgramModule.js";
+import AddStudent from "./components/Profiles/CollegeProfile/AddStudent/AddStudent.jsx";
+import StudentsTable from "./components/Profiles/CollegeProfile/StudentsTable/StudentsTable.jsx";
+import EditStudent from "./components/Profiles/CollegeProfile/StudentsTable/EditStudent.jsx";
+
+import { QueryClientProvider, QueryClient } from "react-query";
+import {ReactQueryDevtools } from "react-query/devtools";
+
 
 let firstInitilize=true;
 function App() {
@@ -140,8 +148,7 @@ function App() {
           element: <EditStudent />,
         },
         {
-          path: "/Changeusername",
-          element: <Changeusername />,
+         
         },
         {
           path:"/Schedule",
@@ -171,6 +178,7 @@ function App() {
 
     ]
    }
+
   ]);
 
   return (

@@ -34,9 +34,12 @@ let initialValues = {
   birthcountry: "",
   city: "",
   country: "",
-  city: "",
   selectedCountry: "",
   countries: [],
+  acceptancetype:"",
+  fatherwork:"",
+  note:"",
+  bloodgroup:"",
 };
 const AddStudent = () => {
   const profile = useSelector((state) => state.profile.profile);
@@ -244,7 +247,7 @@ const AddStudent = () => {
         <SelectStep
           name="2"
           selectStep={selectStep}
-          text="location info"
+          text="extra information"
           check={stetp}
         />
         <SelectStep

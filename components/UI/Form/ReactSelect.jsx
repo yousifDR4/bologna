@@ -4,7 +4,7 @@ import Select from 'react-select';
 const ReactSelect = ({word,name,options}) => {
   return (
     <>
-    <label htmlFor={name}>{word}</label>
+    <label className=""htmlFor={name}>{word}</label>
     <Field>
       {(probs) => {
         const { form } = probs;
