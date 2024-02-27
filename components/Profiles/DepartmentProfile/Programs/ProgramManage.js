@@ -5,7 +5,7 @@ import BachelorFour from "./BachelorFour";
 import Speciality from "./Speciality";
 import AddProgram from "./AddProgram";
 import AddNewModule from "../Modules_s/AddNewModule";
-import AddProgramModule from "./AddProgramModule";
+import AddProgramModule from "./add_program_module/AddProgramModule";
 import BachelorFive from "./BachelorFive";
 const MemorizeBachelorFour =memo(BachelorFour);
 const MemorizeBachelorFive=memo(BachelorFive );

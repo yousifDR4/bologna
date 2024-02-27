@@ -284,3 +284,25 @@ export const getSchedule = (Department_id) => {
       throw error; 
     });
 };
+export const get_Schedule_promise=(program,levels)=>{
+
+  const q = query(
+    collection(db, "schedulemodule"),
+    and(
+      where("program", "==", program),
+      where("level", "==", levels)
+    )
+  );
+  return getDocs(q);
+}
+export const get_commite_promise=(semester,Department_id)=>{
+
+  const q = query(
+    collection(db, "Committe"),
+    and(
+      where("Department_id", "==", Department_id),
+      where("semester", "==", semester)
+    )
+  );
+  return getDocs(q);
+}

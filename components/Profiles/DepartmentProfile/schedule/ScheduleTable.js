@@ -142,11 +142,11 @@ export const ModuleContainer=(probs)=>{
           <Typography >
             <List sx={{padding:"0",margin:"0"}}  subheader={
         <ListSubheader component="div" id="nested-list-subheader" sx={{margin:"0 !important",paddingBottom:"0"}}>
-          {modules.filter((mod)=>(mod.id === module.moduleId))[0].name}
+          {modules.filter((mod)=>(mod.id === module.module))[0]?.name}
         </ListSubheader>
       } >
                 <ListItem sx={{paddingTop:"0",margin:"0"}}>
-                    <ListItemText primary="classroom" secondary={classrooms.filter((c)=>c.id === module.classroomId)[0].name}/>
+                    <ListItemText primary="classroom" secondary={classrooms.filter((c)=>c.id === module.class)[0].name}/>
                 </ListItem>
                 <ListItem sx={{paddingTop:"0",margin:"0"}}>
                     <ListItemText primary="Type" secondary={module.type}/>
