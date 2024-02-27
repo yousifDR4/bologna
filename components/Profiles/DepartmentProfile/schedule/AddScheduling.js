@@ -12,12 +12,13 @@ import ReactSelect from 'react-select';
 
 export default function AddScheduling(probs) {
   const [open, setOpen] = React.useState(false);
-  let {initialValues,edit,modules,classes,disabled,study}=probs;
+  let {initialValues,edit,modules,classes,disabled,study,select}=probs;
   const [selectedModule,setSelectedModule]=React.useState(edit ? initialValues["moduleId"] ||'':""); //editing parameters to ignore just set edit to false
   const [selectedClass,setSelectedClass]=React.useState(edit ? initialValues["classroomId"] ||'':"");
   const [selectedType,setSelectedType]=React.useState(edit ? initialValues["type"] ||'':"");
   const [selectedStartingTime,setSelectedStartingTime]=React.useState(edit ? {value:initialValues["startingTime"],label:initialValues["startingTime"]} ||'':"");
   const [selectedEndingTime,setSelectedEndingTime]=React.useState(edit ? {value:initialValues["endingTime"],label:initialValues["endingTime"]} ||'':"");
+  const [selectedDay,setSelectedDay]=React.useState(edit ? {value:initialValues["day"],label:initialValues["day"]} ||'':"");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,6 +31,8 @@ export default function AddScheduling(probs) {
   setSelectedClass(event.target.value)
   else if(event.target.name === "type")
   setSelectedType(event.target.value) 
+else if(event.target.name === "day")
+setSelectedDay(event.target.value)
  };
   const handleClose = () => {
     setOpen(false);
@@ -54,6 +57,8 @@ export default function AddScheduling(probs) {
             checkEDate,
             checkENO,
             notes} = formJson;
+            
+            console.log(formJson,program,establishDate,establishNo,checkEDate,checkENO,notes);
             handleClose();
           },
         }}
@@ -73,6 +78,7 @@ export default function AddScheduling(probs) {
           labelId="module"
           onChange={handleChange}
           fullWidth
+          required
           value={selectedModule}
            sx={{
         height: '2.5rem',
@@ -94,6 +100,7 @@ export default function AddScheduling(probs) {
           name="class"
           label="Class"
           labelId="class"
+          required
           onChange={handleChange}
           fullWidth
           value={selectedClass}
@@ -118,6 +125,7 @@ export default function AddScheduling(probs) {
           name="type"
           label="Type"
           labelId="type"
+          required
           onChange={handleChange}
           fullWidth
           value={selectedType}
@@ -137,9 +145,40 @@ export default function AddScheduling(probs) {
             <MenuItem value="Inside Classroom">Inside Classroom</MenuItem>
         </Select>
         </FormControl>
+        <FormControl sx={{minWidth:"100%",paddingLeft:"0",margin:"8px 0 4px "}} size="small" >
+          <InputLabel id="day" sx={{color:"var(--styling1) !important"}}>Day</InputLabel>
+          <Select
+          name="day"
+          label="Day"
+          labelId="day"
+          required
+          onChange={handleChange}
+          fullWidth
+          value={selectedDay}
+           sx={{
+        height: '2.5rem',
+        color: 'var(--styling1)',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--styling1) !important'
+        },
+        '& .MuiSvgIcon-root': {
+            color: 'var(--styling1)'
+        }
+    }}
+        >
+            <MenuItem value={1}>Sunday</MenuItem>
+            <MenuItem value={2}>Monday</MenuItem>
+            <MenuItem value={3}>Tuesday</MenuItem>
+            <MenuItem value={4}>Wednesday</MenuItem>
+            <MenuItem value={5}>Thursday</MenuItem>
+            <MenuItem value={6}>Friday</MenuItem>
+            <MenuItem value={7}>Saturday</MenuItem>
+        </Select>
+        </FormControl>
         <Box sx={{display:"grid",gridTemplateColumns:"1fr 1fr",width:"100%"}}>
         <ReactSelect 
         hideSelectedOptions
+        required
         value={selectedStartingTime}
         onChange={(e)=>{setSelectedStartingTime(e)}}
         options={study === "morning"? generateTimeArrayInRange(480,900,5):generateTimeArrayInRange(720,1170,5)}
@@ -147,6 +186,7 @@ export default function AddScheduling(probs) {
         ></ReactSelect>
         <ReactSelect 
         hideSelectedOptions
+        required
         value={selectedEndingTime}
         onChange={(e)=>setSelectedEndingTime(e)}
         options={study === "morning"? generateTimeArrayInRange(480,900,5):generateTimeArrayInRange(720,1170,5)}

@@ -135,7 +135,7 @@ const Schedule=()=>{
             <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.8rem",flex:"1"}} >
             Schedule
             </Typography>
-            <AddScheduling edit={false} modules={modules} classes={classrooms} study={selectedStudy} disabled={disableButton}/>
+            <AddScheduling edit={false} modules={modules} classes={classrooms} study={selectedStudy} disabled={disableButton} selectedDivision={selectedDivision} selectedLevel={selectedLevel} selectedProgram={selectedProgram} selectedSpeciality={selectedSpeciality}/>
             </Typography>
             <Typography component="span" sx={{width:"100%",display:"flex",flexWrap:"wrap",gap:"0.5rem"}}>
             <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small" >
