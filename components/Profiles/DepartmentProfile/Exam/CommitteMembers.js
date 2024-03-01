@@ -25,8 +25,8 @@ export default function CommitteMembers(probs) {
   const [examComitte,setExamComitte]=React.useState([]);
   const [value, setValue] = React.useState('1');
   React.useEffect(()=>{
-    const initialCheckValuesIWithId=initialValues["checkingCommitte"].length > 0 ? initialValues["checkingCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["checkingCommitte"];
-    const initialExamValuesIWithId=initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["examCommitte"];
+    const initialCheckValuesIWithId=initialValues["checkingCommitte"]?initialValues["checkingCommitte"].length > 0 ? initialValues["checkingCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["checkingCommitte"]:[];
+    const initialExamValuesIWithId=initialValues["examCommitte"]?initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["examCommitte"]:[];
     console.log(initialExamValuesIWithId);
     console.log(initialCheckValuesIWithId);
     setCheckingComitte(initialCheckValuesIWithId);
@@ -56,8 +56,8 @@ export default function CommitteMembers(probs) {
   };
   const handleClose = () => {
     setOpen(false);
-    const initialCheckValuesIWithId=initialValues["checkingCommitte"].length > 0 ? initialValues["checkingCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["checkingCommitte"];
-    const initialExamValuesIWithId=initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["examCommitte"];
+    const initialCheckValuesIWithId=initialValues["checkingCommitte"]?initialValues["checkingCommitte"].length > 0 ? initialValues["checkingCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["checkingCommitte"]:[];
+    const initialExamValuesIWithId=initialValues["examCommitte"]?initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["examCommitte"]:[];
     console.log(initialExamValuesIWithId);
     console.log(initialCheckValuesIWithId);
     setCheckingComitte(initialCheckValuesIWithId);

@@ -138,10 +138,10 @@ const Exams=()=>{
           id="panel1-header"
           
         >
-          {modules.filter((mod)=>mod.id===exam.module)[0].name}
+          {modules.filter((mod)=>mod.id===exam.module).length > 0 ? modules.filter((mod)=>mod.id===exam.module)[0].name :"Exam Not Found!"}
         </AccordionSummary>
         <AccordionDetails>    
-     <List sx={{  display:"flex",flexWrap:"wrap"}}>
+     <List disablePadding sx={{  display:"flex",flexWrap:"wrap"}}>
       <ListItem sx={{padding:"0"}}>
         <StyledListItemText primary="Level" secondary={exam.level} />
       </ListItem >
@@ -149,7 +149,7 @@ const Exams=()=>{
         <StyledListItemText primary="Module" secondary={committes.filter((com)=>com.id===exam.committe)[0].establishNo}  />
       </ListItem>
       <ListItem sx={{padding:"0"}}>
-        <StyledListItemText primary="Try" secondary={exam.try} />
+        <StyledListItemText primary="Try" secondary={+exam.try === 1 ? "First Try":"Second Try" } />
       </ListItem>
     </List>  
     </AccordionDetails>

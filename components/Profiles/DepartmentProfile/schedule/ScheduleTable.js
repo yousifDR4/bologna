@@ -1,12 +1,14 @@
 import { Calculate, Class, Laptop, LaptopOutlined, MoreVertRounded, Science } from "@mui/icons-material";
 import { Box, Button, List, ListItem, ListItemText, ListSubheader, Menu, MenuItem, Popover, Typography } from "@mui/material";
 import { useState } from "react";
-import AddScheduling from "./AddScheduling";
+import AddScheduling from "./AddScheduling"
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';;
 let arr=[
     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
 ];
 const ScheduleTable=(probs)=>{
- const {modules,timeStart,timeEnd,classRooms,modulesList}=probs;
+ const {modules,timeStart,timeEnd,classRooms,modulesList,isLoading}=probs;
  const [startHours, startMinutes] = timeStart.split(':').map(Number);
  const [endHours,endMinutes]=timeEnd.split(':').map(Number);
  let numberOfRows=((endHours*60 + endMinutes)-(startHours*60 + startMinutes))/5 +6;
@@ -24,8 +26,22 @@ const ScheduleTable=(probs)=>{
     }
     return `${rowNumber+6}/${endRowNumber+6}`;
  }
+ if(isLoading){
+  return(
+    <Stack spacing={1} marginTop="0.8rem" sx={{height:"50rem"}}>
+      
+      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"5%"}} />
+      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
+
+    </Stack>
+  )
+ }
  return(
-    <Box sx={{width:"100%",borderRadius:"10px",maxWidth:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"0.5fr repeat(7,1fr)",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",marginTop:"0.8rem",minWidth:"70rem"}}>
+    <Box   sx={{width:"100%",borderRadius:"10px",maxWidth:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"0.5fr repeat(7,1fr)",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",marginTop:"0.8rem",minWidth:"70rem"}}>
         {[...Array(+endHours- +startHours +1)].map((_, index) => (<><Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes,true)}`,gridColumn:"0",}}>{startHours+index}:{startMinutes}</Box>{[...Array(+endHours- +startHours +1)].map((_, secIndex)=>(<Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes)}`,gridColumn:secIndex+2,borderTop:"1px dotted #B8BFC6"}}></Box>))}</>))
         }
         {[...Array(7)].map((_, index) => (<Box sx={{gridRow:"1/6",gridColumn:index+2,justifySelf:"center"}}>{arr[index]}</Box>))
