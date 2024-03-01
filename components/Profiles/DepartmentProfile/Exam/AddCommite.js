@@ -8,12 +8,16 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { AddOutlined, Edit } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
+import { db } from '../../../../store/fire';
+import { addDoc, collection } from 'firebase/firestore';
 const fields=[   
 "establishNo",
 "establishDate",
 "checkEDate",
 "checkENO",
 "notes"]
+
 export default function AddCommitte(probs) {
   const [open, setOpen] = React.useState(false);
   let {programs,initialValues,edit}=probs;
@@ -28,6 +32,8 @@ export default function AddCommitte(probs) {
   const handleClose = () => {
     setOpen(false);
   };
+  const profile = useSelector((state) => state.profile.profile);
+  const Department_id = profile.Department_id;
 
   return (
     <React.Fragment>
@@ -39,15 +45,28 @@ export default function AddCommitte(probs) {
         onClose={handleClose}
         PaperProps={{
           component: 'form',
-          onSubmit: (event) => {
+          onSubmit: async(event) => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
-            const {program,establishNo,
-            establishDate,
-            checkEDate,
-            checkENO,
-            notes} = formJson;
+           const x = formJson;
+            const filteredObject = Object.entries(x).reduce(
+              (acc, [key, value]) => {
+                if (value !== "") {
+                  acc[key] = value;
+                }
+                return acc;
+              },
+              {}
+            );
+            const id = await addDoc(collection(db, "Committe"), {
+              ...x[0],
+              ...filteredObject,
+              Department_id: Department_id,
+            
+              program: selectedProgram,
+             
+            });
             handleClose();
           },
         }}

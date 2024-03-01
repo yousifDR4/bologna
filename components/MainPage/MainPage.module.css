@@ -112,10 +112,7 @@
     opacity: 0;
   }
 }
-.headline button svg {
-  animation: slideOutAndFade 0.8s cubic-bezier(0.785, 0.135, 0.15, 0.86)
-    infinite;
-}
+
 
 .title button:hover {
   transition: 600ms ease-in-out;
