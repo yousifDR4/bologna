@@ -60,6 +60,7 @@ export default function AddScheduling(probs) {
       ? { value: initialValues["day"], label: initialValues["day"] } || ""
       : ""
   );
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -72,6 +73,7 @@ export default function AddScheduling(probs) {
     else if(event.target.name === "day")
 setSelectedDay(event.target.value)
   };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -144,6 +146,7 @@ setSelectedDay(event.target.value)
               day:+filteredObject.day
             });
             handlerefetch();
+
             handleClose();
           },
         }}
@@ -317,6 +320,7 @@ setSelectedDay(event.target.value)
               placeholder="Ending Time"
             ></ReactSelect>
           </Box>
+
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

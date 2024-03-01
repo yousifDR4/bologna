@@ -226,64 +226,7 @@ const Navbar = () => {
           </div>
         </ul>
         <div className={`${active} ${classes.asideList}`}>
-          <ul>
-         
-            <li>
-              <Link to="/" onClick={showAsideListHandler}>
-                APS
-              </Link>
-            </li>
-            {!isLoggedIn && (
-              <li>
-                <Link to="/Login" onClick={showAsideListHandler}>
-                  <img src={login} alt="" className={classes.login} />
-                  Login
-                </Link>{" "}
-                <div className={classes.innerLine} />
-              </li>
-            )}
-            <li>
-              <Link to="/" onClick={showAsideListHandler}>
-                <img src={question} alt="" />
-                what's APS
-              </Link>
-              <div className={classes.innerLine} />
-            </li>
-            <li>
-              <Link to="/" onClick={showAsideListHandler}>
-                <img src={idea} alt="" />
-                How it works
-              </Link>
-              <div className={classes.innerLine} />
-            </li>
-            <li>
-              <Link to="/Universities" onClick={showAsideListHandler}>
-                <img src={university} alt="" />
-                Colleges using it
-              </Link>
-              <div className={classes.innerLine} />
-            </li>
-            {isCollegeAccount && (
-              <li>
-                <Link to="/CollegeProfile">
-                  <img src={profilePicture} alt="" />
-                  College Profile
-                </Link>
-              </li>
-            )}
-             {accountType==="College" && (
-              <li>
-                <Link to="/AddStudent">Add Studnt</Link>
-              </li>
-            )}
-              {accountType==="College" && (
-              <li>
-                <Link to="/StudentsTable">Students Table</Link>
-              </li>
-            )}
-
-
-       </ul>
+        
         <ul >
                 <li><Link to="/"  onClick={showAsideListHandler}>APS</Link></li>
                {!isLoggedIn && <li><Link to="/Login" onClick={showAsideListHandler}><img src={login} alt="" className={classes.login}/>Login</Link> <div className={classes.innerLine}/></li>}

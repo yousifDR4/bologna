@@ -105,8 +105,9 @@ const Schedule = () => {
     let funcName = "setSelected" + event.target.name;
     console.log(funcName);
     functionMap[funcName](event.target.value);
-  };
-  if (isLoading||!Department_id ||loading) {
+
+     };
+   if (isLoading||!Department_id ||loading) {
     return <Loader />;
   }
   let disableButton =
@@ -114,23 +115,149 @@ const Schedule = () => {
     selectedLevel !== "" &&
     selectedProgram !== "" &&
     selectedSpeciality !== "";
-
-  return (
-    <Box
-      sx={{ width: "100%", padding: "1.4rem 1rem", boxSizing: "border-box" }}
-    >
-      <AppBar
-        position="static"
-        sx={{ bgcolor: "transparent", boxShadow: "none", width: "100%" }}
-      >
-        <Toolbar
-          sx={{
-            paddingLeft: "0!important",
-            width: "100%",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.8rem",
-          }}
+    return(
+        <Box sx={{width:"100%",padding:"1.4rem 1rem",boxSizing:"border-box"}}>
+             <AppBar position="static" sx={{bgcolor:"transparent",boxShadow:"none",width:"100%"}}>
+          <Toolbar sx={{paddingLeft:"0!important",width:"100%",display:"flex",flexWrap:"wrap",gap:"0.8rem"}}>
+            <Typography component="span" sx={{width:"100%",display:"flex"}}>
+            <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.8rem",flex:"1"}} >
+            Schedule
+            </Typography>
+            <AddScheduling edit={false} modules={modules} classes={classrooms} study={selectedStudy} disabled={disableButton} selectedDivision={selectedDivision} selectedLevel={selectedLevel} selectedProgram={selectedProgram} selectedSpeciality={selectedSpeciality}/>
+            </Typography>
+            <Typography component="span" sx={{width:"100%",display:"flex",flexWrap:"wrap",gap:"0.5rem"}}>
+            <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small" >
+            <InputLabel id="program" sx={{color:"var(--styling1) !important"}}>Program</InputLabel>
+            <Select
+          id="program"
+          label="Program"
+          name="Program"
+          labelId="program"
+          onChange={handleChange}
+          value={selectedProgram}
+           sx={{
+        height: '2.5rem',
+        bgcolor:"#fff",
+        color: 'var(--styling1)',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--styling1) !important'
+        },
+        '& .MuiSvgIcon-root': {
+            color: 'var(--styling1)'
+        }
+    }}
+    variant="outlined"
+        >
+            { programs.map((prog)=>{
+          return <MenuItem value={prog.id} key={prog.id}>{prog.name}</MenuItem>
+            })
+            }
+        </Select>
+        </FormControl>
+        <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small">
+        <InputLabel id="level" sx={{color:"var(--styling1) !important"}}>Level</InputLabel>
+            <Select
+          id="level"
+          name="Level"
+          label="Level"
+          labelId="level"
+          onChange={handleChange}
+          disabled={!selectedProgramObject?.type}
+          value={selectedLevel}
+           sx={{
+        height: '2.5rem',
+        bgcolor:"#fff",
+        color: 'var(--styling1)',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--styling1) !important'
+        },
+        '& .MuiSvgIcon-root': {
+            color: 'var(--styling1)'
+        }
+    }}
+    variant="outlined"
+        >
+            { selectedProgramObject?.type ? [...Array(selectedProgramObject["type"])].map((_, index) => (
+    <MenuItem key={index} value={index+1}>{index+1}</MenuItem>
+  )):""
+            }
+        </Select></FormControl>
+       <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small" >
+        <InputLabel id="speciality" sx={{color:"var(--styling1) !important"}}>Speciality</InputLabel>
+            <Select
+          id="speciality"
+          label="Speciality"
+          name="Speciality"
+          labelId="speciality"
+          onChange={handleChange}
+          value={selectedSpeciality}
+          disabled={!selectedProgramObject?.speciality || selectedProgramObject?.speciality < selectedLevel}
+           sx={{
+        height: '2.5rem',
+        bgcolor:"#fff",
+        color: 'var(--styling1)',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--styling1) !important'
+        },
+        '& .MuiSvgIcon-root': {
+            color: 'var(--styling1)'
+        }
+    }}
+    variant="outlined"
+        >
+            { specialities.map((sp)=>{
+          return <MenuItem value={sp.id}>{sp.name}</MenuItem>
+            })
+            }
+        </Select></FormControl>
+        <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small">
+        <InputLabel id="study" sx={{color:"var(--styling1) !important"}}>Study Type</InputLabel>
+            <Select
+          id="study"
+          label="Study"
+          name="Study"
+          labelId="study"
+          onChange={handleChange}
+          value={selectedSpeciality}
+          disabled={!selectedProgramObject?.eveningStudy}
+           sx={{
+        height: '2.5rem',
+        bgcolor:"#fff",
+        color: 'var(--styling1)',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--styling1) !important'
+        },
+        '& .MuiSvgIcon-root': {
+            color: 'var(--styling1)'
+        }
+    }}
+    variant="outlined"
+        >
+           <MenuItem value="morning">Morning Study</MenuItem>
+           <MenuItem value="evening">Evening Study</MenuItem>
+        </Select></FormControl>
+        <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small">
+        <InputLabel id="division" sx={{color:"var(--styling1) !important"}}>Division</InputLabel>
+            <Select
+          id="division"
+          label="Division"
+          name="Division"
+          labelId="division"
+          onChange={handleChange}
+          value={selectedDivision}
+          disabled={selectedStudy.length < 1}
+           sx={{
+        height: '2.5rem',
+        bgcolor:"#fff",
+        color: 'var(--styling1)',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--styling1) !important'
+        },
+        '& .MuiSvgIcon-root': {
+            color: 'var(--styling1)'
+        }
+    }}
+    variant="outlined"
         >
           <Typography component="span" sx={{ width: "100%", display: "flex" }}>
             <Typography

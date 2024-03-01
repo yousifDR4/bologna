@@ -143,6 +143,7 @@ export const ModuleContainer=(probs)=>{
             <List sx={{padding:"0",margin:"0"}}  subheader={
         <ListSubheader component="div" id="nested-list-subheader" sx={{margin:"0 !important",paddingBottom:"0"}}>
           {modules.filter((mod)=>(mod.id === module.module))[0]?.name}
+
         </ListSubheader>
       } >
                 <ListItem sx={{paddingTop:"0",margin:"0"}}>
