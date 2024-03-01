@@ -10,12 +10,14 @@ import TodaySchedule from "./TodaySchedule";
 import Loader from "../../../UI/Loader/Loader";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-
+import StudentCalendar from "./StudentCalendar";
+import Posts from "./Posts";
+let initValue=[{title:"The end of Semester",user:"University of Baghdad",describtion:"The Popup is a utility component for creating various kinds of popups. It relies on the third-party Floating UI library for positioning"},{title:"Something to remember",user:"University of Baghdad",describtion:"The Popup is a utility component for creating various kinds of popups. It relies on the third-party Floating UI library for positioning"}]
 const Home=()=>{
     let modulesSch=[{
         startingTime:"8:30",
         endingTime:"9:30",
-        day:6,
+        day:4,
         name:"gfff",
         moduleId:"2xlqUWREDJlWYKvAcIXt",
         classroomId:"Wg02U4gQeL1J4RtNTOOn",
@@ -26,7 +28,7 @@ const Home=()=>{
         {
             startingTime:"11:30",
             endingTime:"13:20",
-            day:1,
+            day:4,
             name:"gf2f",
             moduleId:"8zTysIWH52b5hpdO26ge",
             classroomId:"Wg02U4gQeL1J4RtNTOOn",
@@ -36,9 +38,9 @@ const Home=()=>{
     
             },
             {
-                startingTime:"9:30",
+                startingTime:"10:30",
                 endingTime:"11:30",
-                day:7,
+                day:4,
                 name:"gf3f",
                 moduleId:"I2qrI4HRfR5Jgvjigcwu",
                 classroomId:"Wg02U4gQeL1J4RtNTOOn",
@@ -50,7 +52,7 @@ const Home=()=>{
                 {
                     startingTime:"23:40",
                     endingTime:"24:30",
-                    day:6,
+                    day:4,
                     name:"gfiu89iu4f",
                     moduleId:"QHX2CalYd0nQtudw4sul",
                     classroomId:"Wg02U4gQeL1J4RtNTOOn",
@@ -68,10 +70,12 @@ const Home=()=>{
     const [modules,setModules]=useState([]);
     const [schedule,setSchedule]=useState(modulesSch);
     const [grades,setGrades]=useState([]);
-    const [quizes,setQuizes]=useState([]);
-    const [midTerms,setMidTerms]=useState([]);
-    const [formativeAsses,setFormativeAsses]=useState({modules:["physics","Math","Algorithms"],grades:[{type:"bar",label:"Your grades",data:[10,25,30]},{type:"bar",label:"Average class grade",data:[15,10,12]},{type:"bar",label:"Average class grade",data:[15,10,12]}]});
-    const [notices,setNotices]=useState([]);
+    const today=new Date();
+    console.log(today);
+    const [quizes,setQuizes]=useState([{date:today,module:"2xlqUWREDJlWYKvAcIXt",title:"quiz1"}]);
+    const [midTerms,setMidTerms]=useState([{date:today,module:"2xlqUWREDJlWYKvAcIXt",title:"Physics"}]);
+    const [formativeAsses,setFormativeAsses]=useState({modules:["physics","Math","Algorithms"],grades:[{type:"bar",label:"Your grades",data:[10,25,30]},{type:"bar",label:"Average class grade",data:[15,10,12]}]});
+    const [notices,setNotices]=useState(initValue);
     const [loading,setLoading]=useState({attendancePercentage:true,lstWeekAttendPer:true,assginments:true,noModules:true,noModules:true,schedule:true,grades:true,midTerms:true,notices:true});
     const [intLoading,setintLoading]=useState(true);
     const profile = useSelector((state) => state.profile.profile);
@@ -103,8 +107,8 @@ const Home=()=>{
         return <Loader/>
     }
     return(
-        <Box sx={{width:"100%",display:"grid",justifyItems:"center"}}>
-            <Box sx={{display:"flex",flexWrap:"wrap",margin:"0.8rem 0.5rem",columnGap:"2rem",rowGap:"0.8rem"}}>
+        <Box sx={{width:"100%",display:"grid",justifyItems:"center",boxSizing:"border-box"}}>
+            <Box sx={{display:"flex",maxWidth:"100vw",boxSizing:"border-box",flexWrap:"wrap",padding:"0.8rem 0.5rem",columnGap:"2rem",rowGap:"0.8rem"}}>
             <Box sx={{display:"flex",flexWrap:"wrap",width:"100%",maxWidth:1100,height:"fit-content",rowGap:"2rem",columnGap:"1rem"}}>
             <InfoCards attendancePercentage={attendancePercentage} lstWeekAttendPer={lstWeekAttendPer} assginments={assginments} noModules={noModules}/>
             <UpcomingClasses schedule={schedule}/>
@@ -119,8 +123,14 @@ const Home=()=>{
             <ChartsLegend />
     </ResponsiveChartContainer>
            </Box>
+           <Box sx={{maxWidth:320}}>
+           <StudentCalendar quizes={quizes} midTerms={midTerms} assginments={assginments} modules={modules}/>
+           </Box>
+           <Box sx={{flex:"1"}}>
+            <Posts notices={notices}/>
+           </Box>
             </Box>
-            <Box>
+            <Box sx={{overflow:"auto",maxWidthidth:"100%",boxSizing:"border-box"}}> 
             <TodaySchedule modules={schedule} modulesList={modules} classRooms={classrooms} timeStart="8:30" timeEnd="14:30"/>
             </Box>
             </Box>

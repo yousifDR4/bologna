@@ -3,7 +3,6 @@ import { Box, Button, List, ListItem, ListItemText, ListSubheader, Menu, MenuIte
 import { useState } from "react";
 const TodaySchedule=(probs)=>{
     const {modules,timeStart,timeEnd,classRooms,modulesList}=probs;
-    console.log(modulesList,classRooms);
  const [startHours, startMinutes] = timeStart.split(':').map(Number);
  const [endHours,endMinutes]=timeEnd.split(':').map(Number);
  let numberOfRows=((endHours*60 + endMinutes)-(startHours*60 + startMinutes))/5 +6;
@@ -25,7 +24,7 @@ let todayClasses=modules.filter((classSch)=>{
         return (classSch.day === day +1);
         });
  return(
-    <Box sx={{width:"100%",borderRadius:"10px",maxWidth:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"10% 1fr",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",boxShadow:"1",minWidth:"30rem"}}>
+    <Box sx={{boxSizing:"border-box",borderRadius:"10px",display:"grid",gridTemplateColumns:"10% 1fr",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",boxShadow:"1",minWidth:"30rem"}}>
         {[...Array(+endHours- +startHours +1)].map((_, index) => (<><Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes,true)}`,gridColumn:"1",}} color="text.secondary">{startHours+index}:{startMinutes}</Box>{[...Array(+endHours- +startHours +1)].map((_, secIndex)=>(<Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes)}`,gridColumn:"2",borderTop:"1px dotted #B8BFC6"}}></Box>))}</>))
         }
         <Box sx={{gridRow:"1/6",gridColumn:"1/5",justifySelf:"left"}} color="text.secondary">Your schedule</Box>

@@ -16,7 +16,7 @@ const InfoCards=(probs)=>{
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
  let attendanceComment=attendancePercentage >= lstWeekAttendPer ? `${attendancePercentage-lstWeekAttendPer}% higher than last week` : `${attendancePercentage-lstWeekAttendPer}% lower than last week`
     return(
-        <Box sx={{width:"100%",height:"fit-content",display:"grid",gridTemplateColumns:isLargeScreen ? "1fr 1fr 1fr" : isSmallScreen ? "1fr ":"1fr 1fr",gap:"1rem"}}>
+        <Box sx={{width:"100%",maxWidth:"100%",height:"fit-content",display:"grid",gridTemplateColumns:isLargeScreen ? "1fr 1fr 1fr" : isSmallScreen ? "1fr ":"1fr 1fr",gap:"1rem"}}>
         <Card sx={{ width:"100%",minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#CCE4FB",fontFamily:"GraphikLight" }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 ,fontFamily:"GraphikLight"}}  gutterBottom>
