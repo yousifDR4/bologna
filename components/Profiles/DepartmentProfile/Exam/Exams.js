@@ -1,105 +1,177 @@
 import { useEffect, useState } from "react";
-import Box from '@mui/material/Box';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { Button, ButtonGroup, List, ListItem, ListItemText } from "@mui/material";
-import { get_Subjects, get_prof, get_progs } from "../../../../store/getandset";
+import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import {
+  Button,
+  ButtonGroup,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import {
+  get_Subjects,
+  get_Subjects_prog_promise,
+  get_prof,
+  get_progs,
+} from "../../../../store/getandset";
 import { useSelector } from "react-redux";
 import Loader from "../../../UI/Loader/Loader";
 import styled from "@emotion/styled";
-import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Delete } from "@mui/icons-material";
 import AddExam from "./AddExam";
-import ArticleIcon from '@mui/icons-material/Article';
-let initcommittes=[
-    {
-        program:{name:"University of Baghdad",id:"JpF0GPA2vFDPRvfgmzMu"},
-        establishNo:"19291",
-        establishDate:"2019/2/2",
-        checkEDate:"2019/2/5",
-        checkENO:"190900",
-        notes:"",
-        semester:1,
-        examCommitte:[{id:"83837373",name:"mohammed",level:1}],
-        checkingCommitte:[{id:"83837373",name:"mohammed",level:1}],
-        id:"01"
-    }
-]
-let initexams=[
-    {
-        committe:"01",
-        level:"2",
-        module:"5v1EYMCREB0zpB5OWRwd",
-        try:"1",
-        program:"JpF0GPA2vFDPRvfgmzMu",
-    }
-]
-const Exams=()=>{
-    const [selectedProgram,setSelectedProgram]=useState("");
-    const [exams,setExams]=useState(initcommittes);
-    const [committes,setCommittes]=useState([]);
-    const [programs,setPrograms]=useState([]);
-    const [modules,setModules]=useState([]);
-    const [loading,setLoading]=useState(true);
-    const [reLoad,setReLoad]=useState(false);
-    const profile = useSelector((state) => state.profile.profile);
-    const Department_id = profile.Department_id;
-    const professorsoid=profile.professors;
-    const handleChange = (event) => {
-        setSelectedProgram(event.target.value)
-      };
-      useEffect(()=>{
-        const loadCommittes=async ()=>{
-            setLoading(true);
-            try{
-            const p1=get_progs(Department_id);
-            const p2 = get_Subjects(Department_id);
-            // Access data for each document snapshot in the array
-             const [progs,sbj]=await Promise.all([p1,p2])
-             console.log(progs);
-             console.log(sbj);
-            setPrograms(progs ? progs : []); 
-            setModules(sbj);
-            setExams(initexams);
-            setLoading(false);
-            setCommittes(initcommittes);
-            }
-            catch(e){
-              console.log(e);
-                setLoading(false);
-            }
-        }
-        if(Department_id){
-        loadCommittes();
-        }
-      },[reLoad,profile])
-      if(loading){
-        return(
-            <Loader />
-        )
+import ArticleIcon from "@mui/icons-material/Article";
+import { useQuery } from "react-query";
+let initcommittes = [
+  {
+    program: { name: "University of Baghdad", id: "JpF0GPA2vFDPRvfgmzMu" },
+    establishNo: "19291",
+    establishDate: "2019/2/2",
+    checkEDate: "2019/2/5",
+    checkENO: "190900",
+    notes: "",
+    semester: 1,
+    examCommitte: [{ id: "83837373", name: "mohammed", level: 1 }],
+    checkingCommitte: [{ id: "83837373", name: "mohammed", level: 1 }],
+    id: "01",
+  },
+];
+let initexams = [
+  {
+    committe: "01",
+    level: "2",
+    module: "5v1EYMCREB0zpB5OWRwd",
+    try: "1",
+    program: "JpF0GPA2vFDPRvfgmzMu",
+  },
+];
+const Exams = () => {
+  const [selectedProgram, setSelectedProgram] = useState("");
+  const [exams, setExams] = useState(initcommittes);
+  const [committes, setCommittes] = useState([]);
+  const [programs, setPrograms] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [reLoad, setReLoad] = useState(false);
+  const profile = useSelector((state) => state.profile.profile);
+  const Department_id = profile.Department_id;
+  const professorsoid = profile.professors;
+  const handleChange = (event) => {
+    setSelectedProgram(event.target.value);
+  };
+  useEffect(() => {
+    const loadCommittes = async () => {
+      setLoading(true);
+      try {
+        const p1 = get_progs(Department_id);
+        const p2 = get_Subjects(Department_id);
+        // Access data for each document snapshot in the array
+        const [progs, sbj] = await Promise.all([p1, p2]);
+        console.log(progs);
+        console.log(sbj);
+        setPrograms(progs ? progs : []);
+       
+        setExams(initexams);
+        setLoading(false);
+        setCommittes(initcommittes);
+      } catch (e) {
+        console.log(e);
+        setLoading(false);
       }
-    return(
-        <Box sx={{ display:"flex",flexDirection:"column",flexGrow: "1",margin:"0.6rem 0.6rem 0rem 0.6rem",padding:"0 0.8rem"}}>
-        <AppBar position="static" sx={{borderTopLeftRadius:"10px",borderTopRightRadius:"10px",bgcolor:"transparent",boxShadow:"none",}}>
-          <Toolbar sx={{paddingLeft:"0!important"}}>
-            <Typography component="span" sx={{flexGrow: 1}}>
-            <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
+    };
+    if (Department_id) {
+      loadCommittes();
+    }
+  }, [reLoad, profile]);
+  const promise = ()=>get_Subjects_prog_promise(
+    programs.filter((p) => p.id === selectedProgram)[0].type,
+    Department_id
+  );
+  const {
+    data: modules,
+    isLoading,
+    error,
+    isFetching,
+    refetch,
+  } = useQuery(`program:${selectedProgram}`, promise, {
+    enabled: selectedProgram !== "",
+    refetchOnWindowFocus: false,
+
+    select: (data) => {
+      return data
+        ? data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        : [];
+    },
+  });
+  const handlerefetch = () => {
+    refetch();
+  };
+
+  if (loading ||isLoading) {
+    return <Loader />;
+  }
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: "1",
+        margin: "0.6rem 0.6rem 0rem 0.6rem",
+        padding: "0 0.8rem",
+      }}
+    >
+      <AppBar
+        position="static"
+        sx={{
+          borderTopLeftRadius: "10px",
+          borderTopRightRadius: "10px",
+          bgcolor: "transparent",
+          boxShadow: "none",
+        }}
+      >
+        <Toolbar sx={{ paddingLeft: "0!important" }}>
+          <Typography component="span" sx={{ flexGrow: 1 }}>
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{
+                fontFamily: "Graphik",
+                color: "var(--styling1)",
+                display: "inline",
+                marginRight: "0.8rem",
+              }}
+            >
               Exams List
             </Typography>
-            <AddExam program={programs.filter((p)=>p.id===selectedProgram)[0]} modules={modules} committes={committes} edit={false}/>
-            </Typography>
-            <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small" >
-            <InputLabel id="program" sx={{color:"var(--styling1) !important"}}>Program</InputLabel>
+            <AddExam
+              program={programs.filter((p) => p.id === selectedProgram)[0]}
+              modules= {modules? modules:[]}
+              committes={committes}
+              edit={false}
+            />
+          </Typography>
+          <FormControl
+            sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
+            size="small"
+          >
+            <InputLabel
+              id="program"
+              sx={{ color: "var(--styling1) !important" }}
+            >
+              Program
+            </InputLabel>
             <Select
+
           id="program"
           label="Program"
           labelId="program"
@@ -161,20 +233,20 @@ const Exams=()=>{
             </ListItem>
                 )
             })}
+
         </List>
-      
-        </Box>
       </Box>
-    );
-}
-const StyledListItemText=styled(ListItemText)(({theme})=>({
-  '& .MuiListItemText-primary': {
+    </Box>
+  );
+};
+const StyledListItemText = styled(ListItemText)(({ theme }) => ({
+  "& .MuiListItemText-primary": {
     fontFamily: "GraphikLight",
     fontSize: "0.8rem !important",
-    color:"#595d61"
+    color: "#595d61",
   },
-  '& .MuiListItemText-secondary':{
-    color:"var(--mainText)"
-  }
-}))
+  "& .MuiListItemText-secondary": {
+    color: "var(--mainText)",
+  },
+}));
 export default Exams;

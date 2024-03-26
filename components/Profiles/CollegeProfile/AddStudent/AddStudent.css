@@ -113,7 +113,7 @@ justify-content: flex-end;
  margin: 0px;
 padding-left: 15px;
 padding-right:15px ;
-  color: #4A8BDF;
+  color: red;
   /* Add a border with a specific color */
   margin: 0px;
 }
@@ -124,12 +124,7 @@ padding-right:15px ;
  justify-content: center;
  align-items: center;
  }
- .blue-border {
-  background-color: aqua;
-  border-bottom: 4px solid #4A8BDF;
-  width: 6rem;
- transition: all 0.2s;
-}
+
  .spancolor{
 color: red;
 margin-left: 5px;

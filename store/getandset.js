@@ -325,3 +325,14 @@ export const get_commite_promise=(semester,Department_id)=>{
   );
   return getDocs(q);
 }
+export const get_Subjects_prog_promise =  (type,Deprartment_id) => {
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+    where("Deprartment_id", "==", Deprartment_id),where(
+      "type","==",type
+    )
+    )
+  );
+  return  getDocs(q);
+};

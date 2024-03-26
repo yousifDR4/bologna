@@ -23,7 +23,7 @@ let initialValue={
     program:"",
     module:"",
     ECTS:0,
-    level:0,
+    level:'',
     manager:"",
     revisor:"",
     acceptanceDate:"",
@@ -156,7 +156,10 @@ const submithandler =async()=>{
       }, {});
       console.log(filteredObject);
       let x=modules.filter((m)=>m.id===form.module);
-      const id=await addDoc(collection(db,"activemodule"),{...x[0],...filteredObject});
+      const id=await addDoc(collection(db,"activemodule"),{...x[0],...filteredObject,
+        type: +filteredObject.program,
+        level: +filteredObject.level,
+        ECTS:+filteredObject.ECTS});
       const reportinfo={
         page:location.pathname,
         type:"add",
@@ -204,7 +207,7 @@ const submithandler =async()=>{
                 </div>
                 <div className={classes.button}>
                 <button>Cancel</button>
-                <button  onClick={submithandler} disabled={!completeForm.MInfo}>Save</button>
+                <button  onClick={submithandler} >Save</button>
                 </div>
             </div>
         </main>
