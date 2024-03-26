@@ -106,7 +106,9 @@ const Schedule = () => {
     console.log(funcName);
     functionMap[funcName](event.target.value);
   };
+
   if (!Department_id ||loading) {
+
     return <Loader />;
   }
   let disableButton =
