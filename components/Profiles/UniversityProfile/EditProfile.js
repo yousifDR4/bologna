@@ -209,7 +209,7 @@ const EditProfile = (probs) => {
     if(accountType==="College")
     id=profile.College_id;
   else if(accountType==="University"){
-   id=profile.College_id
+   id=profile.University_id;
   }
   else{
     id=profile.Department_id;

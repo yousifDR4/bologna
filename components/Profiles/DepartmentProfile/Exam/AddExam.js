@@ -24,7 +24,8 @@ export default function AddExam(probs) {
   const handleClose = () => {
     setOpen(false);
   };
-
+console.log(probs);
+console.log(modules);
   return (
     <React.Fragment>
       <Button startIcon={edit? <Edit/>:<AddOutlined/>} variant={edit ? "contained" : "outlined"}  sx={edit ?{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",width:"50%",boxShadow:"none",color:"#fff",border:"none"}:{}} title='Add an Exam' onClick={handleClickOpen}>
@@ -114,7 +115,7 @@ export default function AddExam(probs) {
         }
     }}
         >
-            {modules.filter((mod)=>mod.level === selectedLevel).map((fmod)=><MenuItem value={fmod.id}>{fmod.name}</MenuItem>)}
+            {modules.filter((mod)=>mod?.level === selectedLevel).map((fmod)=><MenuItem value={fmod?.id}>{fmod?.name}</MenuItem>)}
         </Select>
         </FormControl>
         <FormControl sx={{minWidth:"100%",paddingLeft:"0",margin:"8px 0 4px "}} size="small" >

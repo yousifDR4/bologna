@@ -63,7 +63,7 @@ const ModuleInfo = (probs) => {
   const [speciality, setSpeciality] = useState([]);
   const [professors, setProfessors] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
-  const [selectedProgLevels, setSelectedProgLevels] = useState(0);
+  const [selectedProgLevels, setSelectedProgLevels] = useState('');
   const [spYear, setSpYear] = useState(100);
   const [state, dispatch] = useReducer(reducer, intilistate);
   let selectedModule;
@@ -147,6 +147,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
     };
     f();
   }, [auth.currentUser]);
+  console.log(form);
   return (
     <div className={`${classes.container}`}>
       <form action="" className=" form">
