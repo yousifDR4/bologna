@@ -40,7 +40,7 @@ import {
 } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
-import { ArticleOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined } from "@mui/icons-material";
+import { AccountCircleOutlined, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, HomeOutlined, Person, PersonOutlined } from "@mui/icons-material";
 import { errorActions } from "../../store/error-slice";
 let reF = true;
 let x = true;
@@ -61,6 +61,8 @@ const Navbar = () => {
   const isUniversityAccount = isLoggedIn ? accountType === "University" : false;
   const isCollegeAccount = isLoggedIn ? accountType === "College" : false;
   const isDepartmentAccount = isLoggedIn ? accountType === "Department" : false;
+  const isStudentAccount = isLoggedIn ? accountType === "student" : false;
+
   const dispatch = useDispatch();
   const showAsideListHandler = () => {
     setShowAsideList((state) => !state);
@@ -226,64 +228,7 @@ const Navbar = () => {
           </div>
         </ul>
         <div className={`${active} ${classes.asideList}`}>
-          <ul>
-         
-            <li>
-              <Link to="/" onClick={showAsideListHandler}>
-                APS
-              </Link>
-            </li>
-            {!isLoggedIn && (
-              <li>
-                <Link to="/Login" onClick={showAsideListHandler}>
-                  <img src={login} alt="" className={classes.login} />
-                  Login
-                </Link>{" "}
-                <div className={classes.innerLine} />
-              </li>
-            )}
-            <li>
-              <Link to="/" onClick={showAsideListHandler}>
-                <img src={question} alt="" />
-                what's APS
-              </Link>
-              <div className={classes.innerLine} />
-            </li>
-            <li>
-              <Link to="/" onClick={showAsideListHandler}>
-                <img src={idea} alt="" />
-                How it works
-              </Link>
-              <div className={classes.innerLine} />
-            </li>
-            <li>
-              <Link to="/Universities" onClick={showAsideListHandler}>
-                <img src={university} alt="" />
-                Colleges using it
-              </Link>
-              <div className={classes.innerLine} />
-            </li>
-            {isCollegeAccount && (
-              <li>
-                <Link to="/CollegeProfile">
-                  <img src={profilePicture} alt="" />
-                  College Profile
-                </Link>
-              </li>
-            )}
-             {accountType==="College" && (
-              <li>
-                <Link to="/AddStudent">Add Studnt</Link>
-              </li>
-            )}
-              {accountType==="College" && (
-              <li>
-                <Link to="/StudentsTable">Students Table</Link>
-              </li>
-            )}
-
-
-       </ul>
+        
         <ul >
                 <li><Link to="/"  onClick={showAsideListHandler}>APS</Link></li>
                {!isLoggedIn && <li><Link to="/Login" onClick={showAsideListHandler}><img src={login} alt="" className={classes.login}/>Login</Link> <div className={classes.innerLine}/></li>}
@@ -292,7 +237,14 @@ const Navbar = () => {
                 <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/>Colleges using it</Link><div className={classes.innerLine}/></li>
                 {isCollegeAccount && <li><Link to="/CollegeProfile"><img src={profilePicture} alt=""/>College Profile</Link></li>}
                 {isDepartmentAccount && <li><Link to="/DepartmentProfile"><img src={profilePicture} alt=""/>Department Profile</Link></li>}
-                {isDepartmentAccount && <li><Link to="/Home"><img src={profilePicture} alt=""/>Home</Link></li>}
+                {isStudentAccount && <li><Link to="/Home"><HomeOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Home</Link></li>}
+                {isStudentAccount && <li><Link to="/StudentProfile"><AccountCircleOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Profile</Link></li>}
+                {isStudentAccount && <li><Link to="/StudentModules"><img src={moduleIcon} alt=""/> Modules</Link></li>}
+                {isStudentAccount && <li><Link to="/ModuleRegistartion"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules Registartion</Link></li>}
+                {isStudentAccount && <li><Link to="/StudentPresence"><PersonOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Attendance</Link></li>}
+                {isStudentAccount && <li><Link to="/Assesments"><GradingOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Assesments</Link></li>}
+                {isStudentAccount && <li><Link to="/ProfessorModules"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules</Link></li>}
+                {isStudentAccount && <li><Link to="/StudentsAttendance"><GroupOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students Attendance</Link></li>}
                {isUniversityAccount && <li><Link to="/UniversityProfile"><img src={profilePicture} alt=""/>University Profile</Link></li>}
                {isDepartmentAccount && <li><Link to="/Classrooms"><img src={classroom} alt=""/>Classrooms Table</Link></li>}
                {isDepartmentAccount && <li><Link to="/Schedule"><img src={classroom} alt=""/>Schedule</Link></li>}

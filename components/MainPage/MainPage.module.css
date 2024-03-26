@@ -95,7 +95,7 @@
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-button svg {
+.mainPage button svg {
   width: 60px;
   margin-left: 40px;
 }
@@ -112,10 +112,7 @@ button svg {
     opacity: 0;
   }
 }
-/* button svg {
-  animation: slideOutAndFade 0.8s cubic-bezier(0.785, 0.135, 0.15, 0.86)
-    infinite;
-} */
+
 
 .title button:hover {
   transition: 600ms ease-in-out;

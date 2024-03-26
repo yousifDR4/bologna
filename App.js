@@ -23,14 +23,13 @@ import AddNewModule from "./components/Profiles/DepartmentProfile/Modules_s/AddN
 import ModulesTable from "./components/Profiles/DepartmentProfile/Modules_s/ModulesTable.js";
 import EditModule from "./components/Profiles/DepartmentProfile/Modules_s/EditModule.js";
 import AddProffessor from "./components/Profiles/DepartmentProfile/Proffessor/AddProffessor.js";
-
-
 import ProgramManage from "./components/Profiles/DepartmentProfile/Programs/ProgramManage.js";
 import ProfessorTable from "./components/Profiles/DepartmentProfile/Proffessor/PrefessorTable.js";
 import ClassroomsTable from "./components/Profiles/DepartmentProfile/Classrooms/ClassroomsTable.js";
 import Notifications from "./components/Notifications/Notifications.js";
 import ProgramModulesTable from "./components/Profiles/DepartmentProfile/Programs/ProgramModules/ProgramModulesTable.js";
 import AddProgramModule from "./components/Profiles/DepartmentProfile/Programs/add_program_module/AddProgramModule.js"
+
 import AddStudent from "./components/Profiles/CollegeProfile/AddStudent/AddStudent.jsx";
 import StudentsTable from "./components/Profiles/CollegeProfile/StudentsTable/StudentsTable.jsx";
 import EditStudent from "./components/Profiles/CollegeProfile/StudentsTable/EditStudent.jsx";
@@ -42,6 +41,14 @@ import Exams from "./components/Profiles/DepartmentProfile/Exam/Exams.js";
 import Home from "./components/Profiles/StudentProfile/Home/Home.js";
 import ExamComitte from "./components/Profiles/DepartmentProfile/Exam/ExamComitte.js";
 import Schedule from "./components/Profiles/DepartmentProfile/schedule/Schedule.js";
+import StudentModules from "./components/Profiles/StudentProfile/Modules/StudentModules.js";
+import ModulesRegisteration from "./components/Profiles/StudentProfile/ModulesRegisteration.js";
+import StudentPrecense from "./components/Profiles/StudentProfile/StudentPresence.js";
+import StudentProfile from "./components/Profiles/StudentProfile/StudentProfile.js";
+import Assesments from "./components/Profiles/ProfessorProfile/Assesments.js";
+import ProfessorModules from "./components/Profiles/ProfessorProfile/Modules/ProfessorModules.js";
+import StudentsAttendance from "./components/Profiles/ProfessorProfile/StudentsAttendance.js";
+
 
 
 let firstInitilize=true;
@@ -181,6 +188,35 @@ function App() {
           path:"/Home",
           element:<Home/>
         },
+        {
+          path:"/StudentModules",
+          element:<StudentModules/>
+        },  {
+          path:"/ModuleRegistartion",
+          element:<ModulesRegisteration/>
+        },
+        {
+          path:"/StudentPresence",
+          element:<StudentPrecense/>
+        },
+        {
+          path:"/StudentProfile",
+          element:<StudentProfile/>
+        },
+        {
+          path:"/Assesments",
+          element:<Assesments/>
+        },
+        {
+          path:"/ProfessorModules",
+          element:<ProfessorModules/>
+        },
+        {
+          path:"/StudentsAttendance",
+          element:<StudentsAttendance/>
+        }
+
+
 
     ]
    }

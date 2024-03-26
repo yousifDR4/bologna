@@ -171,163 +171,69 @@ const Exams = () => {
               Program
             </InputLabel>
             <Select
-              id="program"
-              label="Program"
-              labelId="program"
-              onChange={handleChange}
-              value={selectedProgram}
-              sx={{
-                height: "2.5rem",
-                bgcolor: "#fff",
-                color: "var(--styling1)",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "var(--styling1) !important",
-                },
-                "& .MuiSvgIcon-root": {
-                  color: "var(--styling1)",
-                },
-              }}
-              variant="outlined"
-            >
-              {programs.map((p) => (
-                <MenuItem value={p.id}>{p.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Toolbar>
-      </AppBar>
-      <Box
-        sx={{
-          border: "none",
-          borderTop: "none",
-          flexGrow: "1",
-          marginBottom: "0.4rem",
-        }}
-      >
-        <List sx={{ display: "flex", gap: "0.5rem", padding: "1rem 0" }}>
-          {exams.filter((exam) => exam.program === selectedProgram).length <
-          1 ? (
-            <Typography
-              variant="h6"
-              sx={{
-                fontFamily: "Graphik",
-                color: "var(--styling1)",
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
-              No exams were found!
-            </Typography>
-          ) : (
-            exams
-              .filter((exam) => exam.program === selectedProgram)
-              .map((exam) => {
-                return (
-                  <ListItem
-                    key={exam.id}
-                    sx={{
-                      width: "19%",
-                      minWidth: "250px",
-                      boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.5rem",
-                      bgcolor: "#fff",
-                      padding: "1rem",
-                    }}
-                  >
-                    <ArticleIcon
-                      sx={{
-                        width: "3rem",
-                        height: "3rem",
-                        color: "var(--styling1)",
-                        background: "var(--backGround)",
-                        borderRadius: "50%",
-                        padding: "0.5rem",
-                      }}
-                    />
-                    <Accordion
-                      sx={{
-                        boxShadow: "none",
-                        border: "1px solid #d1d7dc",
-                        fontFamily: "GraphikLight",
-                        width: "95%",
-                      }}
-                    >
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1-content"
-                        id="panel1-header"
-                      >
-                        {
-                          modules.filter((mod) => mod.id === exam.module)[0]
-                            ?.name
-                        }
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <List sx={{ display: "flex", flexWrap: "wrap" }}>
-                          <ListItem sx={{ padding: "0" }}>
-                            <StyledListItemText
-                              primary="Level"
-                              secondary={exam.level}
-                            />
-                          </ListItem>
-                          <ListItem sx={{ padding: "0" }}>
-                            <StyledListItemText
-                              primary="Module"
-                              secondary={
-                                committes.filter(
-                                  (com) => com.id === exam.committe
-                                )[0].establishNo
-                              }
-                            />
-                          </ListItem>
-                          <ListItem sx={{ padding: "0" }}>
-                            <StyledListItemText
-                              primary="Try"
-                              secondary={exam.try}
-                            />
-                          </ListItem>
-                        </List>
-                      </AccordionDetails>
-                    </Accordion>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: "0.5rem",
-                        width: "100%",
-                        marginTop: "0.8rem",
-                      }}
-                    >
-                      <AddExam
-                        program={
-                          programs.filter((p) => p.id === selectedProgram)[0]
-                        }
-                        modules={modules? modules:[]}
-                        committes={committes}
-                        edit={true}
-                        initialValues={exam}
-                      />
-                      <Button
-                        startIcon={<Delete />}
-                        sx={{
-                          "&:hover": {
-                            bgcolor: "#a2d0fb !important",
-                            border: "none",
-                          },
-                          bgcolor: "#add5fb !important",
-                          width: "50%",
-                          boxShadow: "none",
-                        }}
-                        variant="contained"
-                      >
-                        Delete
-                      </Button>
-                    </Box>
-                  </ListItem>
-                );
-              })
-          )}
+
+          id="program"
+          label="Program"
+          labelId="program"
+          onChange={handleChange}
+          value={selectedProgram}
+           sx={{
+        height: '2.5rem',
+        bgcolor:"#fff",
+        color: 'var(--styling1)',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'var(--styling1) !important'
+        },
+        '& .MuiSvgIcon-root': {
+            color: 'var(--styling1)'
+        }
+    }}
+    variant="outlined"
+        >
+         {programs.map((p)=> <MenuItem value={p.id}>{p.name}</MenuItem>)}
+        </Select>
+        </FormControl>
+          </Toolbar>
+        </AppBar>
+        <Box sx={{border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
+        <List sx={{display:"flex",gap:"0.5rem",padding:"1rem 0"}}>
+        { 
+         exams.filter((exam)=> exam.program===selectedProgram).length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No exams were found!</Typography>:
+            exams.filter((exam)=>exam.program===selectedProgram).map((exam)=>{
+                return(
+     <ListItem key={exam.id} sx={{width: '19%',minWidth:"250px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
+                <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
+                <Accordion sx={{boxShadow:"none",border:"1px solid #d1d7dc",fontFamily:"GraphikLight",width:"95%"}}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+          
+        >
+          {modules.filter((mod)=>mod.id===exam.module).length > 0 ? modules.filter((mod)=>mod.id===exam.module)[0].name :"Exam Not Found!"}
+        </AccordionSummary>
+        <AccordionDetails>    
+     <List disablePadding sx={{  display:"flex",flexWrap:"wrap"}}>
+      <ListItem sx={{padding:"0"}}>
+        <StyledListItemText primary="Level" secondary={exam.level} />
+      </ListItem >
+      <ListItem sx={{padding:"0"}}>
+        <StyledListItemText primary="Module" secondary={committes.filter((com)=>com.id===exam.committe)[0].establishNo}  />
+      </ListItem>
+      <ListItem sx={{padding:"0"}}>
+        <StyledListItemText primary="Try" secondary={+exam.try === 1 ? "First Try":"Second Try" } />
+      </ListItem>
+    </List>  
+    </AccordionDetails>
+    </Accordion>
+    <Box sx={{display:"flex",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
+    <AddExam program={programs.filter((p)=>p.id===selectedProgram)[0]} modules={modules} committes={committes} edit={true} initialValues={exam}/>
+          <Button startIcon={<Delete/>} sx={{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",width:"50%",boxShadow:"none"}} variant="contained">Delete</Button>
+        </Box>
+            </ListItem>
+                )
+            })}
+
         </List>
       </Box>
     </Box>

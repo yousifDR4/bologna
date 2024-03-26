@@ -3,6 +3,7 @@ import classes from "./MainPage.module.css";
 import { ReactComponent as Arrow } from "./reshot-icon-right-arrow-UCA8NGYZDJ.svg";
 import x from "./x.png";
 import { useState } from "react";
+import { Facebook, Instagram, X } from "@mui/icons-material";
 const MainPage = () => {
   const observer=useRef();
   const [visable,setVisable]=useState(false)
@@ -112,14 +113,10 @@ const MainPage = () => {
           <div className={classes.flex}>
             
             <ul>
-              <li>
-               aps
-              </li>
-              <li>product</li>
-              <li>product</li>
-              <li>product</li>
-              <li>product</li>
-              {/* <li><img src={x}/></li> */}
+              
+              <li><Facebook /></li>
+              <li><X/></li>
+              <li><Instagram/></li>
             </ul>       
           </div>
           </div>

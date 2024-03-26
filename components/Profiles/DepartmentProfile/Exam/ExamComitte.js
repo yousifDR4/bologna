@@ -10,9 +10,13 @@ import Select from "@mui/material/Select";
 import {
   Button,
   ButtonGroup,
+  Card,
   List,
   ListItem,
   ListItemText,
+  Paper,
+  Skeleton,
+  Stack,
 } from "@mui/material";
 import { get_commite_promise, get_prof, get_progs } from "../../../../store/getandset";
 import { setLogLevel } from "firebase/app";
@@ -97,7 +101,7 @@ const ExamComitte = () => {
   const handlerefetch=()=>{
     refetch();
   }
-  if (loading|| isLoading ) {
+  if (loading) {
     return <Loader />;
   }
   return (
@@ -119,7 +123,7 @@ const ExamComitte = () => {
           boxShadow: "none",
         }}
       >
-        <Toolbar sx={{ paddingLeft: "0!important" }}>
+        <Toolbar sx={{ paddingLeft: "0!important",display:"flex",flexWrap:"wrap",gap:"0.8rem" }}>
           <Typography component="span" sx={{ flexGrow: 1 }}>
             <Typography
               variant="h5"
@@ -129,14 +133,15 @@ const ExamComitte = () => {
                 color: "var(--styling1)",
                 display: "inline",
                 marginRight: "0.8rem",
+                marginBottom:"0.4rem"
               }}
             >
               Exam Comittes List
             </Typography>
-            <AddCommitte programs={programs} semester={selectedSemester} />
+            <AddCommitte refetch={handlerefetch} programs={programs} semester={selectedSemester} />
           </Typography>
           <FormControl
-            sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
+            sx={{ minWidth: "12rem", width: "15%", paddingLeft: "0" }}
             size="small"
           >
             <InputLabel
@@ -178,8 +183,12 @@ const ExamComitte = () => {
           marginBottom: "0.4rem",
         }}
       >
-        <List sx={{ display: "flex", gap: "0.5rem", padding: "1rem 0" }}>
-          {committes.filter(
+        <List sx={{ display: "flex", gap: "1rem", padding: "1rem 0",flexWrap:"wrap" }}>
+          
+          {isLoading?
+          <ListSkeleton></ListSkeleton>
+          :
+          committes.filter(
             (committe) => committe.semester === selectedSemester
           ).length < 1 ? (
             <Typography
@@ -202,12 +211,13 @@ const ExamComitte = () => {
                     key={committe.id}
                     sx={{
                       width: "19%",
-                      minWidth: "250px",
+                      minWidth: "300px",
                       boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
                       display: "flex",
                       flexDirection: "column",
                       gap: "0.5rem",
                       bgcolor: "#fff",
+                      height:"fit-content"
                     }}
                   >
                     <GroupRoundedIcon
@@ -232,7 +242,7 @@ const ExamComitte = () => {
                         aria-controls="panel1-content"
                         id="panel1-header"
                       >
-                        {committe.program.toLocaleUpperCase()}
+                        {programs.filter((p)=>p.id===committe.program).length > 0 ? programs.filter((p)=>p.id===committe.program)[0].name:"Program Not Found!"}
                       </AccordionSummary>
                       <AccordionDetails>
                         <List sx={{ display: "flex", flexWrap: "wrap" }}>
@@ -282,9 +292,11 @@ const ExamComitte = () => {
                       }}
                     >
                       <AddCommitte
+                      refetch={handlerefetch}
                         programs={programs}
                         initialValues={committe}
                         edit={true}
+                        semester={selectedSemester}
                       />
                       <Button
                         startIcon={<Delete />}
@@ -332,3 +344,27 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
   },
 }));
 export default ExamComitte;
+
+
+const ListSkeleton=()=>{
+  let x=[1,2,3,4,5,6,7];
+  return(
+x.map((x)=>
+<Card sx={{bgcolor:"paper",width: "19%",
+                      minWidth: "300px",}}>
+  <Paper>
+  <Stack spacing={1} sx={{ 
+                      boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                      padding:"1rem 0",
+                      bgcolor:"transparent"
+}}
+    >
+<Skeleton variant="circular" width={40} height={40} sx={{alignSelf:"center",justifySelf:"center"}} />
+<Skeleton variant="rectangular" width={210} height={50} sx={{alignSelf:"center",justifySelf:"center"}}/>
+<Skeleton variant="rounded" width={210} height={50} sx={{alignSelf:"center",justifySelf:"center"}}/>
+</Stack>
+</Paper>
+</Card>
+)
+  )
+}

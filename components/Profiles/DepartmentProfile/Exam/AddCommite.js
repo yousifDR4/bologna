@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { AddOutlined, Edit } from '@mui/icons-material';
+import { AddOutlined, Edit, Upload } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { db } from '../../../../store/fire';
 import { addDoc, collection } from 'firebase/firestore';
@@ -20,9 +20,10 @@ const fields=[
 
 export default function AddCommitte(probs) {
   const [open, setOpen] = React.useState(false);
-  let {programs,initialValues,edit}=probs;
+  let {programs,initialValues,edit,semester,refetch}=probs;
   console.log(edit ? initialValues['program']['id'] ||'':"");
-  const [selectedProgram,setSelectedProgram]=React.useState(edit ? initialValues['program']['id'] ||'':"");
+  const [uplauding, setUplauding] = React.useState(false);
+  const [selectedProgram,setSelectedProgram]=React.useState(edit ? initialValues['program'] ||'':"");
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -47,6 +48,7 @@ export default function AddCommitte(probs) {
           component: 'form',
           onSubmit: async(event) => {
             event.preventDefault();
+            setUplauding(true);
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
            const x = formJson;
@@ -63,10 +65,12 @@ export default function AddCommitte(probs) {
               ...x[0],
               ...filteredObject,
               Department_id: Department_id,
-            
               program: selectedProgram,
+              semester:semester,
              
             });
+            setUplauding(false);
+            refetch();
             handleClose();
           },
         }}
@@ -116,7 +120,7 @@ export default function AddCommitte(probs) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">{edit? "Save":"Add"}</Button>
+          <Button disabled={uplauding} type="submit" startIcon={uplauding ? <Upload/>:""}>{uplauding ? "Uploading":edit? "Save":"Add"}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

@@ -106,7 +106,9 @@ const Schedule = () => {
     console.log(funcName);
     functionMap[funcName](event.target.value);
   };
-  if (isLoading||!Department_id ||loading) {
+
+  if (!Department_id ||loading) {
+
     return <Loader />;
   }
   let disableButton =
@@ -377,6 +379,7 @@ const Schedule = () => {
           timeEnd="14:30"
           classRooms={classrooms}
           modulesList={modules}
+          isLoading={isLoading}
         />
         
       

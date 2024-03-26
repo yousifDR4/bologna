@@ -256,7 +256,7 @@ const EditProfile = (probs) => {
             <p className={classes.errorText}>{error}</p>
           )}
         </div>
-        <div>
+     {!probs.studentProfile    && <div>
           <span>
             <h3>Banner Picture</h3>
             <label htmlFor="bannerPicture">
@@ -277,7 +277,7 @@ const EditProfile = (probs) => {
           {error.length > 0 && !imagesValid.bannerPicture && (
             <p className={classes.errorText}>{error}</p>
           )}
-        </div>
+        </div>}
         <span>
           <button type="button" onClick={cancelHandler}>
             Cancel

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import classes from './AddProgramModule.module.css';
+import classes from "./AddProgramModule.module.css";
 import { useState,useContext } from "react";
-import ModuleInfo from "./ModuleInfo";
 import { addDoc, collection } from "firebase/firestore";
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import { auth, db } from "../../../../../store/fire";
@@ -19,6 +18,7 @@ import ModuleSources from "./ModuleSources";
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Button } from "@mui/material";
+import ModuleInfo from "./ModuleInfo";
 let initialValue={
     program:"",
     module:"",
@@ -211,6 +211,7 @@ const submithandler =async()=>{
                 </div>
             </div>
         </main>
+        
     );
 }
 const CheckIcon=(probs)=>{
