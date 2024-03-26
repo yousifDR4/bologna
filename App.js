@@ -41,6 +41,13 @@ import Exams from "./components/Profiles/DepartmentProfile/Exam/Exams.js";
 import Home from "./components/Profiles/StudentProfile/Home/Home.js";
 import ExamComitte from "./components/Profiles/DepartmentProfile/Exam/ExamComitte.js";
 import Schedule from "./components/Profiles/DepartmentProfile/schedule/Schedule.js";
+import StudentModules from "./components/Profiles/StudentProfile/Modules/StudentModules.js";
+import ModulesRegisteration from "./components/Profiles/StudentProfile/ModulesRegisteration.js";
+import StudentPrecense from "./components/Profiles/StudentProfile/StudentPresence.js";
+import StudentProfile from "./components/Profiles/StudentProfile/StudentProfile.js";
+import Assesments from "./components/Profiles/ProfessorProfile/Assesments.js";
+import ProfessorModules from "./components/Profiles/ProfessorProfile/Modules/ProfessorModules.js";
+import StudentsAttendance from "./components/Profiles/ProfessorProfile/StudentsAttendance.js";
 
 
 
@@ -181,6 +188,35 @@ function App() {
           path:"/Home",
           element:<Home/>
         },
+        {
+          path:"/StudentModules",
+          element:<StudentModules/>
+        },  {
+          path:"/ModuleRegistartion",
+          element:<ModulesRegisteration/>
+        },
+        {
+          path:"/StudentPresence",
+          element:<StudentPrecense/>
+        },
+        {
+          path:"/StudentProfile",
+          element:<StudentProfile/>
+        },
+        {
+          path:"/Assesments",
+          element:<Assesments/>
+        },
+        {
+          path:"/ProfessorModules",
+          element:<ProfessorModules/>
+        },
+        {
+          path:"/StudentsAttendance",
+          element:<StudentsAttendance/>
+        }
+
+
 
     ]
    }

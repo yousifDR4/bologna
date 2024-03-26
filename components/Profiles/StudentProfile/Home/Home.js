@@ -71,7 +71,6 @@ const Home=()=>{
     const [schedule,setSchedule]=useState(modulesSch);
     const [grades,setGrades]=useState([]);
     const today=new Date();
-    console.log(today);
     const [quizes,setQuizes]=useState([{date:today,module:"2xlqUWREDJlWYKvAcIXt",title:"quiz1"}]);
     const [midTerms,setMidTerms]=useState([{date:today,module:"2xlqUWREDJlWYKvAcIXt",title:"Physics"}]);
     const [formativeAsses,setFormativeAsses]=useState({modules:["physics","Math","Algorithms"],grades:[{type:"bar",label:"Your grades",data:[10,25,30]},{type:"bar",label:"Average class grade",data:[15,10,12]}]});
@@ -81,7 +80,9 @@ const Home=()=>{
     const profile = useSelector((state) => state.profile.profile);
     const Department_id = profile.Department_id;
     const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.only('xl'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+
     useEffect(()=>{
         const fetchData=async()=>{
             //....fetch
@@ -108,7 +109,7 @@ const Home=()=>{
     }
     return(
         <Box sx={{width:"100%",display:"grid",justifyItems:"center",boxSizing:"border-box"}}>
-            <Box sx={{display:"flex",maxWidth:"100vw",boxSizing:"border-box",flexWrap:"wrap",padding:"0.8rem 0.5rem",columnGap:"2rem",rowGap:"0.8rem"}}>
+            <Box sx={{display:"flex",maxWidth:"100vw",boxSizing:"border-box",justifyContent:"center",flexWrap:"wrap",padding:"0.8rem 0.5rem",columnGap:"2rem",rowGap:"0.8rem"}}>
             <Box sx={{display:"flex",flexWrap:"wrap",width:"100%",maxWidth:1100,height:"fit-content",rowGap:"2rem",columnGap:"1rem"}}>
             <InfoCards attendancePercentage={attendancePercentage} lstWeekAttendPer={lstWeekAttendPer} assginments={assginments} noModules={noModules}/>
             <UpcomingClasses schedule={schedule}/>
@@ -123,14 +124,14 @@ const Home=()=>{
             <ChartsLegend />
     </ResponsiveChartContainer>
            </Box>
-           <Box sx={{maxWidth:320}}>
+           <Box sx={{maxWidth: 350,}}>
            <StudentCalendar quizes={quizes} midTerms={midTerms} assginments={assginments} modules={modules}/>
            </Box>
            <Box sx={{flex:"1"}}>
             <Posts notices={notices}/>
            </Box>
             </Box>
-            <Box sx={{overflow:"auto",maxWidthidth:"100%",boxSizing:"border-box"}}> 
+            <Box sx={{overflow:"auto",width:isLargeScreen?"fit-content":"100%",display:"flex",flexDirection:"column",maxWidth:isLargeScreen?"100%":1100,boxSizing:"border-box"}}> 
             <TodaySchedule modules={schedule} modulesList={modules} classRooms={classrooms} timeStart="8:30" timeEnd="14:30"/>
             </Box>
             </Box>

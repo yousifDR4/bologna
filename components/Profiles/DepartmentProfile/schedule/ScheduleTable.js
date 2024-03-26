@@ -30,12 +30,12 @@ const ScheduleTable=(probs)=>{
   return(
     <Stack spacing={1} marginTop="0.8rem" sx={{height:"50rem"}}>
       
-      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"5%"}} />
-      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
-      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
-      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
-      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
-      <Skeleton variant="rectangular"  animation="pulse" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="wave" sx={{height:"5%"}} />
+      <Skeleton variant="rectangular"  animation="wave" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="wave" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="wave" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="wave" sx={{height:"20%"}} />
+      <Skeleton variant="rectangular"  animation="wave" sx={{height:"20%"}} />
 
     </Stack>
   )

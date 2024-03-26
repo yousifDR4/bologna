@@ -24,7 +24,7 @@ let todayClasses=modules.filter((classSch)=>{
         return (classSch.day === day +1);
         });
  return(
-    <Box sx={{boxSizing:"border-box",borderRadius:"10px",display:"grid",gridTemplateColumns:"10% 1fr",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",boxShadow:"1",minWidth:"30rem"}}>
+    <Box sx={{boxSizing:"border-box",borderRadius:"10px",display:"grid",gridTemplateColumns:"10% 1fr",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",boxShadow:"1",maxWidth:"25rem",minWidth:"30rem"}}>
         {[...Array(+endHours- +startHours +1)].map((_, index) => (<><Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes,true)}`,gridColumn:"1",}} color="text.secondary">{startHours+index}:{startMinutes}</Box>{[...Array(+endHours- +startHours +1)].map((_, secIndex)=>(<Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes)}`,gridColumn:"2",borderTop:"1px dotted #B8BFC6"}}></Box>))}</>))
         }
         <Box sx={{gridRow:"1/6",gridColumn:"1/5",justifySelf:"left"}} color="text.secondary">Your schedule</Box>
@@ -68,7 +68,7 @@ export const ModuleContainer=(probs)=>{
         >
           <Typography  sx={{display:"flex",flexWrap:"wrap",paddingTop:"0.5rem"}}>
             <Typography component="span" sx={{width:"80%"}}>
-         <Typography variant="body1"> {modules.filter((mod)=>(mod.id === module.moduleId))[0]?.name}</Typography>
+         <Typography variant="body1"> {modules.filter((mod)=>(mod.id === module.moduleId)).length > 0 ? modules.filter((mod)=>(mod.id === module.moduleId))[0].name || "-":"-"}</Typography>
          <Typography component="span" sx={{flex:"1",color:borderColor}}>{module.startingTime + " - " + module.endingTime}</Typography>
          </Typography>
         {icon}
@@ -95,7 +95,7 @@ export const ModuleContainer=(probs)=>{
           <Typography >
             <List sx={{padding:"0",margin:"0"}}  subheader={
         <ListSubheader component="div" id="nested-list-subheader" sx={{margin:"0 !important",paddingBottom:"0"}}>
-          {modules.filter((mod)=>(mod.id === module.moduleId))[0].name}
+          {modules.filter((mod)=>(mod.id === module.moduleId)).length > 0 ? modules.filter((mod)=>(mod.id === module.moduleId))[0].name || "-":"-"}
         </ListSubheader>
       } >
                 <ListItem sx={{paddingTop:"0",margin:"0"}}>

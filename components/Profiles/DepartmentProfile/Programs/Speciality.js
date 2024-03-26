@@ -82,11 +82,11 @@ const Speciality = (probs) => {
                 <tr key={speciality.id}>
                   <td>{speciality.name}</td>
                   <td>
-                    {speciality.prerequisite.map((mod) => {
-                      return mod + "  ";
+                    {speciality.prerequisite.map((mod,index) => {
+                      return mod + (index === speciality.prerequisite.length-1 ?"  ":", ");
                     })}
                   </td>
-                  <td>{speciality.stuedentNum}</td>
+                  <td>{speciality.stuedentNum ?speciality.stuedentNum :0 }</td>
                 </tr>
               );
             })}

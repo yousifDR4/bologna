@@ -120,7 +120,7 @@ else{
             />
             <div>
               <h2>{profile.name}</h2>
-              <p>@{profile.uid}</p>
+              <p>@{profile.username}</p>
             </div>
             <button onClick={() => setShowEdit((prev) => !prev)}>
               <img src={edit} alt="" />

@@ -156,6 +156,46 @@ export const onLogin = (profile) => {
       );
     };
   }
+  if (profile.accountType === "student") {
+    const {
+      accountType,
+      uid,
+      email,
+      departmentName,
+      firstname,
+      lastname,
+      level,
+      number,
+      profilePicture,
+      username,
+      University_id,
+      College_id,
+      Department_id,
+      sex,
+      program,
+    } = profile;
+    return async (dispatch) => {
+      console.log(profile);
+      dispatch(authSlice.actions.logIn({ accountType, uid }));
+      dispatch(
+        profileActions.setProfile({
+          firstname: firstname ? firstname : "",
+          lastname:lastname?lastname:"",
+          departmentName:departmentName?departmentName:"",
+          number:number?number:"",
+          username:  username ?  username: "",
+          email: email ? email : "",
+          profilePicture: profilePicture ? profilePicture : "",
+          University_id:University_id? University_id:"",
+          College_id:College_id?College_id:"",
+          level:  level?  +level:"",
+          Department_id:Department_id?Department_id:uid,
+          sex:sex?sex:"",
+          program:program?program:""
+        })
+      );
+    };
+  }
   if (profile.accountType === "Admin") {
     const { accountType, uid, email } = profile;
     return async (dispatch) => {

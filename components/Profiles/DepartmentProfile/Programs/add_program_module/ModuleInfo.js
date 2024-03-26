@@ -118,6 +118,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
         for (let i = 1; i <= e.target.value; i++) {
           x.push(<option value={i}>{i}</option>);
         }
+        console.log(x);
         return x;
       });
     }

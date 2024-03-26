@@ -90,7 +90,7 @@ margin: 0.6rem 0rem;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: auto;
     row-gap: 1rem;
-   
+    width: 100%;
 }
 .details > div span{
     display: flex;

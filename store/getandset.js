@@ -171,6 +171,25 @@ export const get_Subjects = async (Deprartment_id) => {
   }));
   return data;
 };
+export const get_active_modules = async (Deprartment_id,program,level) => {
+  console.log(Deprartment_id,program,level);
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("level", "==", level),
+      where("program","==",program)
+    ),
+  );
+  const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({
+    ...doc.data(),
+    value: doc.data().name,
+    id: doc.id,
+  }));
+  console.log(data);
+  return data ? data :[];
+};
 const rand=()=>(Math.floor(26*Math.random()))
 export const gen=()=>{
   let capitalLetters = [

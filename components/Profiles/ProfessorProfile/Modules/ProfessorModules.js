@@ -16,10 +16,12 @@ import { auth } from "../../../../store/fire";
 import { useSelector } from "react-redux";
 import { get_Subjects, get_active_modules, get_progs } from "../../../../store/getandset";
 import Loader from "../../../UI/Loader/Loader";
-import ViewModule from "./ViewModule";
-import ViewGrade from "./ViewGrade";
-const StudentModules=()=>{
-    const [studentModules,setStudentModules]=useState([]);
+import ViewModule from "../../StudentProfile/Modules/ViewModule";
+import StudentGrades from "./StudentGrades";
+import ModuleStudents from "./ModuleStudents";
+import StudentsAttendance from "../../StudentProfile/Modules/ModuleAttendance";
+const ProfessorModules=()=>{
+    const [professorModules,setProfessorModules]=useState([]);
     const [programs, setPrograms] = useState([]);
     const [modules,setModules]=useState([]);
     const theme = useTheme();
@@ -46,7 +48,7 @@ const StudentModules=()=>{
           // Access data for each document snapshot in the array
           const [modules,Sujects] = await Promise.all([p1,p2]);
           setModules(Sujects);
-          setStudentModules(modules);
+          setProfessorModules(modules);
           console.log(Sujects);
         } catch (e) {
           console.log(e);
@@ -74,7 +76,7 @@ const StudentModules=()=>{
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
           <Grid  container sx={{width:"100%", gridTemplateColumns:"1fr 1fr 1fr 1fr",display:"grid"}} gridTemplateColumns={{xs:"1fr",sm:"1fr 1fr",lg:"1fr 1fr 1fr",xl:"1fr 1fr 1fr 1fr"}} spacing={{xs:1,sm:2,lg:3,xl:8}}>
             <Grid item>
-            <CustomCard title="Modules" subtitle="Number of registered modules." value="0"/>
+            <CustomCard title="Modules" subtitle="Number of modules." value="0"/>
             </Grid>
             <Grid item>
             <CustomCard title="Core" subtitle="Number of Core type modules." value="0"/>
@@ -88,8 +90,8 @@ const StudentModules=()=>{
           </Grid>
         <List sx={{display:"flex",marginTop:"1rem",gap:"0.5rem",padding:"1rem 0"}}>
         { 
-         studentModules.length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No Modules were Found!</Typography>:
-            studentModules.map((mod)=>{
+         professorModules.length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No Modules were Found!</Typography>:
+            professorModules.map((mod)=>{
                 return(
      <ListItem key={mod.id} sx={{fontFamily:"GraphikLight",width: '19%',minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
     <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
@@ -101,13 +103,12 @@ const StudentModules=()=>{
       <ListItem sx={{padding:"0"}}>
         <StyledListItemText primary="Code" secondary={modules.filter((modu)=>modu.id===mod.module)[0].code}  />
       </ListItem>
-      <ListItem sx={{padding:"0"}}>
-        <StyledListItemText primary="Type" secondary="Full Module" />
-      </ListItem>
     </List>  
-    <Box sx={{display:"flex",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
+    <Box sx={{display:"flex",flexWrap:"wrap",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
       <ViewModule moduleProb={mod} name={modules.filter((modu)=>modu.id===mod.module)[0].name}/>
-      <ViewGrade  grades={[]} name={modules.filter((modu)=>modu.id===mod.module)[0].name}/>
+      <StudentGrades moduleName={modules.filter((modu)=>modu.id===mod.module)[0].name} module={mod}/>
+      <ModuleStudents moduleName={modules.filter((modu)=>modu.id===mod.module)[0].name} module={mod}/>
+      <StudentsAttendance moduleName={modules.filter((modu)=>modu.id===mod.module)[0].name} module={mod}/>
         </Box>
             </ListItem>
                 )
@@ -149,4 +150,4 @@ const CustomCard=(probs)=>{
   </Card>
   )
 }
-export default StudentModules;
+export default ProfessorModules;
