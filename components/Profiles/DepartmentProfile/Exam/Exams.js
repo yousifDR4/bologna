@@ -17,6 +17,8 @@ import {
 import {
   get_Subjects,
   get_Subjects_prog_promise,
+  get_commite_exams_promise,
+  get_exams_promise,
   get_prof,
   get_progs,
 } from "../../../../store/getandset";
@@ -57,10 +59,7 @@ let initexams = [
 ];
 const Exams = () => {
   const [selectedProgram, setSelectedProgram] = useState("");
-  const [exams, setExams] = useState(initcommittes);
-  const [committes, setCommittes] = useState([]);
   const [programs, setPrograms] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const [reLoad, setReLoad] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
@@ -81,9 +80,9 @@ const Exams = () => {
         console.log(sbj);
         setPrograms(progs ? progs : []);
        
-        setExams(initexams);
+     
         setLoading(false);
-        setCommittes(initcommittes);
+     
       } catch (e) {
         console.log(e);
         setLoading(false);
@@ -93,17 +92,35 @@ const Exams = () => {
       loadCommittes();
     }
   }, [reLoad, profile]);
-  const promise = ()=>get_Subjects_prog_promise(
+  const promise1 = ()=>get_Subjects_prog_promise(
     programs.filter((p) => p.id === selectedProgram)[0].type,
     Department_id
   );
+  const promise3=()=> get_exams_promise(Department_id,selectedProgram);
+  const {
+    data: exams=[],
+    isLoading:isLoading3,
+    error:iserror3,
+  isFetching:isFetching3, 
+   
+  } = useQuery(`exams:${selectedProgram}department:${Department_id}`, promise3, {
+   enabled:(!!selectedProgram),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
+console.log(exams,"exam");
+
   const {
     data: modules,
-    isLoading,
-    error,
-    isFetching,
+    isLoading:isLoading1,
+    error:iserror1,
+    isFetching:isFetching1,
     refetch,
-  } = useQuery(`program:${selectedProgram}`, promise, {
+  } = useQuery(`program:${selectedProgram}`, promise1, {
     enabled: selectedProgram !== "",
     refetchOnWindowFocus: false,
 
@@ -113,11 +130,28 @@ const Exams = () => {
         : [];
     },
   });
+  const promise2=()=> get_commite_exams_promise(Department_id);
+
+  const {
+    data: committes,
+    isLoading:isLoading2,
+    error:iserror2,
+  isFetching:isFetching2, 
+   
+  } = useQuery(`semester:${""}department:${Department_id}`, promise2, {
+   enabled:!!Department_id,
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
   const handlerefetch = () => {
     refetch();
   };
 
-  if (loading ||isLoading) {
+  if (loading ||isLoading1||isLoading2||isLoading3) {
     return <Loader />;
   }
   return (

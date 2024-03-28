@@ -336,3 +336,25 @@ export const get_Subjects_prog_promise =  (type,Deprartment_id) => {
   );
   return  getDocs(q);
 };
+export const get_commite_exams_promise=(Department_id)=>{
+
+  const q = query(
+    collection(db, "Committe"),
+    and(
+      where("Department_id", "==", Department_id),
+    )
+  );
+  return getDocs(q);
+}
+export const get_exams_promise=(Deprartment_id,program)=>{
+
+  const q = query(
+    collection(db, "Exams"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("program","==",program)
+    
+    )
+  );
+  return getDocs(q);
+}
