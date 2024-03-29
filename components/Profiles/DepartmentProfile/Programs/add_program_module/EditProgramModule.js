@@ -21,73 +21,74 @@ import { Button } from "@mui/material";
 import ModuleInfo from "./ModuleInfo";
 import { Add, Save, Upload } from "@mui/icons-material";
 import { messageActions } from "../../../../../store/message-slice";
-let initialValue={
-    program:"",
-    module:"",
-    ECTS:0,
-    level:'',
-    manager:"",
-    revisor:"",
-    acceptanceDate:"",
-    lab:"",
-    theory:"",
-    online:"",
-    exercises:"",
-    week1T:"",
-    week2T:"",
-    week3T:"",
-    week4T:"",
-    week5T:"",
-    week6T:"",
-    week7T:"",
-    week8T:"",
-    week9T:"",
-    week10T:"",
-    week11T:"",
-    week12T:"",
-    week13T:"",
-    week14T:"",
-    week15T:"",
-    week1L:"",
-    week2L:"",
-    week3L:"",
-    week4L:"",
-    week5L:"",
-    week6L:"",
-    week7L:"",
-    week8L:"",
-    week9L:"",
-    week10L:"",
-    week11L:"",
-    week12L:"",
-    week13L:"",
-    week14L:"",
-    week15L:"",
-    structHoursCR:{noWeeks:"",noHours:"",totalHours:""},
-    structHoursON:{noWeeks:"",noHours:"",totalHours:""},
-    structHoursSC:{noWeeks:"",noHours:"",totalHours:""},
-    structHoursLB:{noWeeks:"",noHours:"",totalHours:""},
-    structHoursPR:{noWeeks:"",noHours:"",totalHours:""},
-    structHoursCL:{noWeeks:"",noHours:"",totalHours:""},
-    unStructHours:{},
-    AssesmentLab:{activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
-    AssesmentProject:{activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
-    AssesmentQuizes:{activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
-    AssesmentOnline:{activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
-    AssesmentOnsight:{activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
-    AssesmentReports:{activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
-    books:[],
-    onlineSources:""
-    
-}
 
-const AddProgramModule=()=>{
+
+const EditProgramModule=(probs)=>{
+    const {moduleProb=[],progress=0,completion}=probs;
+    let initialValue={
+        program: moduleProb.program || "",
+    module: moduleProb.module || "",
+    ECTS: moduleProb.ECTS || "",
+    level: moduleProb.level || "",
+    manager: moduleProb.manager || "",
+    revisor: moduleProb.revisor || "",
+    acceptanceDate: moduleProb.acceptanceDate || "",
+    lab: moduleProb.lab || "",
+    theory: moduleProb.theory || "",
+    online: moduleProb.online || "",
+    exercises: moduleProb.exercises || "",
+    week1T: moduleProb.week1T || "",
+    week2T: moduleProb.week2T || "",
+    week3T: moduleProb.week3T || "",
+    week4T: moduleProb.week4T || "",
+    week5T: moduleProb.week5T || "",
+    week6T: moduleProb.week6T || "",
+    week7T: moduleProb.week7T || "",
+    week8T: moduleProb.week8T || "",
+    week9T: moduleProb.week9T || "",
+    week10T: moduleProb.week10T || "",
+    week11T: moduleProb.week11T || "",
+    week12T: moduleProb.week12T || "",
+    week13T: moduleProb.week13T || "",
+    week14T: moduleProb.week14T || "",
+    week15T: moduleProb.week15T || "",
+    week1L: moduleProb.week1L || "",
+    week2L: moduleProb.week2L || "",
+    week3L: moduleProb.week3L || "",
+    week4L: moduleProb.week4L || "",
+    week5L: moduleProb.week5L || "",
+    week6L: moduleProb.week6L || "",
+    week7L: moduleProb.week7L || "",
+    week8L: moduleProb.week8L || "",
+    week9L: moduleProb.week9L || "",
+    week10L: moduleProb.week10L || "",
+    week11L: moduleProb.week11L || "",
+    week12L: moduleProb.week12L || "",
+    week13L: moduleProb.week13L || "",
+    week14L: moduleProb.week14L || "",
+    week15L: moduleProb.week15L || "",
+        structHoursCR:moduleProb.structHoursCR || {noWeeks:"",noHours:"",totalHours:""},
+        structHoursON:moduleProb.structHoursON || {noWeeks:"",noHours:"",totalHours:""},
+        structHoursSC:moduleProb.structHoursSC || {noWeeks:"",noHours:"",totalHours:""},
+        structHoursLB:moduleProb.structHoursLB || {noWeeks:"",noHours:"",totalHours:""},
+        structHoursPR:moduleProb.structHoursPR || {noWeeks:"",noHours:"",totalHours:""},
+        structHoursCL:moduleProb.structHoursCL ||{noWeeks:"",noHours:"",totalHours:""},
+        unStructHours:moduleProb.unStructHours || {},
+        AssesmentLab:moduleProb.AssesmentLab || {activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
+        AssesmentProject:moduleProb.AssesmentProject || {activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
+        AssesmentQuizes:moduleProb.AssesmentQuizes || {activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
+        AssesmentOnline:moduleProb.AssesmentOnline || {activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
+        AssesmentOnsight: moduleProb.AssesmentOnsight || {activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
+        AssesmentReports:moduleProb.AssesmentReports || {activated:false,noTimes:"",degreePerTime:"",noWeeks:[]},
+        books:moduleProb.books || [],
+        onlineSources:moduleProb.onlineSources || ""
+    }
     const dispatch=useDispatch();
 const [form,setForm]=useState(initialValue);
-const [progressCounter,setProgressCounter]=useState(0);
+const [progressCounter,setProgressCounter]=useState(progress);
 const [disable,setDisable]=useState(false);
 const [modules,setModules]=useState([]); 
-const [completeForm,setCompleteForm]=useState({MInfo:false,MTheor:false,MLab:false,MSTH:false,MUSTH:false,MAST:false,MLS:false}); //used in progress bar and classes style
+const [completeForm,setCompleteForm]=useState(completion); //used in progress bar and classes style
 const [rightContainer,setRightContainer]=useState(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} setForm={setForm} setm={setModules} form={form}/>);
 const [program,setProgram]=useState(4);
 const [header,setHeader]=useState({title:"Module Information"});
@@ -231,4 +232,4 @@ if(probs.check){
 }
 return <ErrorRoundedIcon sx={{color:"#B8BFC6",verticalAlign:"middle",marginLeft:"0.2rem"}}/>
 }
-export default AddProgramModule;
+export default EditProgramModule;
