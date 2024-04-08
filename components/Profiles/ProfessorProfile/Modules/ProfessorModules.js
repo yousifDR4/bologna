@@ -38,11 +38,14 @@ const ProfessorModules=()=>{
         try {
           console.log(profile);
           setLoading(true);
+<<<<<<< HEAD
           let Lprograms= await get_progs(Department_id);
           console.log(Lprograms);
           setPrograms(Lprograms);
           let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
           console.log(progType,Department_id,profile.level);
+=======
+>>>>>>> 83950651bd562ddd913ba3399f13ed3f6bfb358b
           const p1 = get_professor_modules(Department_id,profile.username);
           const p2 = get_Subjects(Department_id);
           // Access data for each document snapshot in the array

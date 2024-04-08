@@ -40,7 +40,7 @@ import {
 } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
-import { AccountCircleOutlined, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, HomeOutlined, Person, PersonOutlined } from "@mui/icons-material";
+import { AccountCircleOutlined, AppRegistration, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, GroupWork, Groups3Outlined, Home, HomeOutlined, Person, PersonOutlined, Schedule } from "@mui/icons-material";
 import { errorActions } from "../../store/error-slice";
 let reF = true;
 let x = true;
@@ -248,15 +248,18 @@ const Navbar = () => {
                 {isProfessorAccount && <li><Link to="/Assesments"><GradingOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Assesments</Link></li>}
                 {isProfessorAccount && <li><Link to="/ProfessorModules"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules</Link></li>}
                 {isProfessorAccount && <li><Link to="/StudentsAttendance"><GroupOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students Attendance</Link></li>}
+                {isProfessorAccount && <li><Link to="/ProfessorHome"><Home sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Home</Link></li>}
                {isUniversityAccount && <li><Link to="/UniversityProfile"><img src={profilePicture} alt=""/>University Profile</Link></li>}
                {isDepartmentAccount && <li><Link to="/Classrooms"><img src={classroom} alt=""/>Classrooms Table</Link></li>}
-               {isDepartmentAccount && <li><Link to="/Schedule"><img src={classroom} alt=""/>Schedule</Link></li>}
+               {isDepartmentAccount && <li><Link to="/Schedule"><Schedule sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Schedule</Link></li>}
+               {isDepartmentAccount && <li><Link to="/Division"><Groups3Outlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Divisions</Link></li>}
                { isDepartmentAccount && <div className={classes.container}>
               <li onClick={()=>collapseHandler('pr')} className={activatedList.includes('pr')? classes.activeList :""}><img src={program} alt=""/> Program  <img src={collapse}/></li>
               { activatedList.includes('pr') &&
               <>
                <li><Link to="/ProgramModules"><img src={moduleIcon} alt=""/> Program Modules</Link></li>
             <li><Link to="/AddProgramModule"><img src={addModule} alt=""/> Add Module</Link> </li> 
+           <li><Link to="/StudentsModuleRegisteration"><AppRegistration sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Student Registartion</Link></li>
             {isDepartmentAccount && <li><Link to="/ProgramManage"><img src={manage} alt=""/> Manage Program</Link></li>}
 
             </>
