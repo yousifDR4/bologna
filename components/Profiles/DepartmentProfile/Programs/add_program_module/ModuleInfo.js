@@ -103,11 +103,8 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
       inputsValid.online &&
       inputsValid.exercises
     ) {
-      console.log("valid");
       setFormIsValid((prev)=> {return{...prev ,"MInfo":true}});
     } else {
-      console.log("unvalid");
-
       setFormIsValid((prev)=> {return{...prev ,"MInfo":false}});
     }
   }, [inputsValid]);
@@ -136,7 +133,6 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
     const f = async () => {
       
       const p1 = get_Subjects(Department_id);
-      console.log(professorsoid);
      const p2=get_prof(professorsoid);
       const p3=get_classRooms(Department_id);
       const p4=get_progs(Department_id)
@@ -217,11 +213,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
               <option value={""} disabled hidden>
                 select...
               </option>
-              {form.program !== "" && 
-              [...Array(+form.program)].map((_, index) => (
-                <option key={index} value={index+1}>{index+1}</option>
-              ))
-              }
+              {selectedProgLevels}
             </select>
           </span>
     <List sx={{ width: '100%', bgcolor: '#F1F1F3', display:"flex",flexWrap:"wrap"}} className={classes.selectedModule}>
@@ -279,7 +271,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
                 select...
               </option>
               {professors.map((p) => {
-                return <option value={p.id}>{p.username}</option>;
+                return <option value={p.id}>{p.name}</option>;
               })}
             </select>
           </span>
@@ -297,7 +289,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
                 select...
               </option>
               {professors.map((p) => {
-                return <option value={p.id}>{p.username}</option>;
+                return <option value={p.id}>{p.name}</option>;
               })}
             </select>
           </span>
@@ -352,24 +344,6 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
               type=""
               onChange={onchange}
               value={form.exercises}
-            >
-              <option value={""} disabled hidden>
-                select...
-              </option>
-              {classrooms.map((c) => {
-                return <option value={c.id}>{c.name}</option>;
-              })}
-            </select>
-          </span>
-          <span>
-            <label className="text">
-              Online<span className={classes.star}>*</span>
-            </label>
-            <select
-              name="online"
-              type=""
-              onChange={onchange}
-              value={form.online}
             >
               <option value={""} disabled hidden>
                 select...

@@ -34,8 +34,7 @@ export default function AddAssesment(probs) {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(selectedDate);
-console.log(`${selectedDate.$M+1}/${selectedDate.$D}/${selectedDate.$y}`);
+
   return (
     <React.Fragment>
       <Button  disabled={selectedModule === ""} startIcon={edit? <Edit/>:<AddOutlined/>} variant={edit ? "contained" : "outlined"}  sx={edit ?{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",width:"50%",boxShadow:"none",color:"#fff",border:"none"}:{}}  onClick={handleClickOpen}>

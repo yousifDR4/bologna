@@ -17,7 +17,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Delete } from "@mui/icons-material";
 import ArticleIcon from '@mui/icons-material/Article';
-import { get_active_modules, get_professor_modules, get_progs } from "../../../store/getandset";
+import { get_active_modules, get_progs } from "../../../store/getandset";
 import Loader from "../../UI/Loader/Loader";
 import AddAssesment from "./AddAssesments";
 let initcommittes=[
@@ -61,12 +61,8 @@ const Assesments=()=>{
                 let Lprograms= await get_progs(Department_id);
                 let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
                 console.log(progType,Department_id,profile.level);
-              
-                const p2 = await get_professor_modules(Department_id,profile.username);
-               
-             
-               
-                setModules(p2);
+                const p1 = await get_active_modules(Department_id,progType,profile.level);
+                setModules(p1);
                 setLoading(false);
             }
             catch(e){

@@ -107,20 +107,10 @@ const ModuleAssesment=(probs)=>{
       }
       const onSelect=(choice,inputName,fieldName)=>{
         console.log(choice);
-        if(choice.length > 0){
-          let choices=[];
-          choice.map((ch)=>choices.push((ch.value)));
         setForm((prev) => {
           console.log(prev);
-          return { ...prev, [fieldName]:{...prev[fieldName],[inputName]:choices} };
+          return { ...prev, [fieldName]:{...prev[fieldName],[inputName]:choice} };
         });
-      }
-      else{
-        setForm((prev) => {
-          console.log(prev);
-          return { ...prev, [fieldName]:{...prev[fieldName],[inputName]:[]} };
-        });
-      }
       }
       const blurHandler=(e,fieldName)=>{
         setFieldTouched((prev) => {
@@ -128,14 +118,13 @@ const ModuleAssesment=(probs)=>{
           return { ...prev, [fieldName]:{...prev[fieldName],[e.target.name]:true} };
         });
       };
-      console.log(form["AssesmentLab"]["activated"]);
       return(
         <div className={classes.mainContainer}>
         { <Alert severity={assesmentsActivaed >= 4 ? "success":"error"}>Number of assesments activated {assesmentsActivaed} </Alert>}
        { <Alert severity="info" sx={{marginTop:"0.4rem"}}>The sum of specified degrees: {totalAssesmentDegree} </Alert>} 
         <ul className={classes.listContainer}>
        {fields.map(({ key, value })=>{
-       let isDisabled=form[key]["noWeeks"].includes("Continuously Throughout the semester");
+       let isDisabled=form[key]["noWeeks"].filter((choice)=> choice["value"]==="Continuously Throughout the semester").length>0;
        let choices=[            //set the initial value of choices of noWeeks field
        {label:"Continuously Throughout the semester",value:"Continuously Throughout the semester",id:"0",isDisabled:!isDisabled && form[key]["noWeeks"].length > 0},
      ];
@@ -152,7 +141,7 @@ const ModuleAssesment=(probs)=>{
      <li key={key + value}>
       <div className={`${classes.container}`} key={key + value}>
       <form action="" className=" form">
-      <FormControlLabel value={form[key]["activated"]} className={ classes.cardTitle}control={<Checkbox name="activated"  checked={form[key]["activated"]}   onChange={(e)=>onchange(e,key)}/>} label={findTitle(key)} />
+      <FormControlLabel className={ classes.cardTitle}control={<Checkbox name="activated" value={form[key]["activated"]} onChange={(e)=>onchange(e,key)}/>} label={findTitle(key)} />
         <div className={classes.fields}>
       <span>
         <label className="text">
@@ -199,7 +188,6 @@ const ModuleAssesment=(probs)=>{
         isMulti
         closeMenuOnSelect={false}
         onChange={(choice)=>onSelect(choice,"noWeeks",key)}
-        value={form[key]["noWeeks"] !== "" ? choices.filter((ch)=>form[key]["noWeeks"].includes(ch.value)) : ""}
         name="noWeeks"
         isDisabled={!form[key]["activated"] || form[key]["noTimes"] === ""}
         />

@@ -152,7 +152,7 @@ export const get_prof = async (professorsoid) => {
       query(collection(db, "users"), where("uid", "in", professorsoid))
     );
     const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      console.log(data);
+
     return data;
   } catch (e) {
     return [];
@@ -178,26 +178,7 @@ export const get_active_modules = async (Deprartment_id,program,level) => {
     and(
       where("Deprartment_id", "==", Deprartment_id),
       where("level", "==", level),
-      where("type","==",program)
-    ),
-  );
-  const docs = await getDocs(q);
-  const data = docs.docs.map((doc) => ({
-    ...doc.data(),
-    value: doc.data().name,
-    id: doc.id,
-  }));
-  console.log(data);
-  return data ? data :[];
-};
-export const get_professor_modules = async (Deprartment_id,Professor_id) => {
-  console.log(Deprartment_id,Professor_id);
-  const q = query(
-    collection(db, "activemodule"),
-    and(
-      where("Deprartment_id", "==", Deprartment_id),
-      where("progress", "==", 100),
-      where("manager","==",Professor_id)
+      where("program","==",program)
     ),
   );
   const docs = await getDocs(q);
@@ -377,22 +358,3 @@ export const get_exams_promise=(Deprartment_id,program)=>{
   );
   return getDocs(q);
 }
-export const get_professor_modules = async (Deprartment_id,Professor_id) => {
-  console.log(Deprartment_id,Professor_id);
-  const q = query(
-    collection(db, "activemodule"),
-    and(
-      where("Deprartment_id", "==", Deprartment_id),
-      where("progress", "==", 100),
-      where("manager","==",Professor_id)
-    ),
-  );
-  const docs = await getDocs(q);
-  const data = docs.docs.map((doc) => ({
-    ...doc.data(),
-    value: doc.data().name,
-    id: doc.id,
-  }));
-  console.log(data);
-  return data ? data :[];
-};
