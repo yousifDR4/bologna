@@ -6,7 +6,7 @@ import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgres
 import { auth, db } from "../../../../../store/fire";
 import { useLocation } from "react-router-dom";
 import { setreport } from "../../../../../store/getandset";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ModuleTheory from "./ModuleTheory";
 import ModuleLab from "./ModuleLab";
 import ModuleStructuredHours from "./ModuleSrtructuredHours";
@@ -19,8 +19,6 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Button } from "@mui/material";
 import ModuleInfo from "./ModuleInfo";
-import { Add, Save, Upload } from "@mui/icons-material";
-import { messageActions } from "../../../../../store/message-slice";
 let initialValue={
     program:"",
     module:"",
@@ -82,7 +80,6 @@ let initialValue={
 }
 
 const AddProgramModule=()=>{
-    const dispatch=useDispatch();
 const [form,setForm]=useState(initialValue);
 const [progressCounter,setProgressCounter]=useState(0);
 const [disable,setDisable]=useState(false);
@@ -91,7 +88,6 @@ const [completeForm,setCompleteForm]=useState({MInfo:false,MTheor:false,MLab:fal
 const [rightContainer,setRightContainer]=useState(<ModuleInfo title="MInfo" setFormIsValid={setCompleteForm} setForm={setForm} setm={setModules} form={form}/>);
 const [program,setProgram]=useState(4);
 const [header,setHeader]=useState({title:"Module Information"});
-const [uploading,setUploading]=useState(false);
 useEffect(() => {
     updateProgress();
   }, [completeForm]);
@@ -152,8 +148,6 @@ const location=useLocation()
 const profile=useSelector(state=>state.profile.profile);
 const Department_id=profile.Department_id;
 const submithandler =async()=>{
-    setUploading(true);
-    try{
     const filteredObject = Object.entries(form).reduce((acc, [key, value]) => {
         if (value !== "") {
           acc[key] = value;
@@ -163,8 +157,6 @@ const submithandler =async()=>{
       console.log(filteredObject);
       let x=modules.filter((m)=>m.id===form.module);
       const id=await addDoc(collection(db,"activemodule"),{...x[0],...filteredObject,
-        progress:progressCounter,
-        completedSections:completeForm,
         type: +filteredObject.program,
         level: +filteredObject.level,
         ECTS:+filteredObject.ECTS});
@@ -180,13 +172,11 @@ const submithandler =async()=>{
       }
       setreport(reportinfo,Department_id) 
       //form contains all the values to be uploaded
-      setUploading(false);
-      dispatch(messageActions.setMessage({messageContent:"The Module was added succesfully!",severity:"success"}))
-      setForm(initialValue);
-    }
+      try{
+
+      }
       catch(e){
         console.log(e);
-        setUploading(false);
       }
 }
     return(
@@ -216,7 +206,8 @@ const submithandler =async()=>{
                     </div>
                 </div>
                 <div className={classes.button}>
-                <Button onClick={submithandler} startIcon={uploading ? <Upload/> :<Save/>}  variant="outlined" disabled={!completeForm.MInfo || uploading}>{uploading ?"Uploading":"Save"}</Button>
+                <button>Cancel</button>
+                <button  onClick={submithandler} >Save</button>
                 </div>
             </div>
         </main>

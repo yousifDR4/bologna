@@ -18,21 +18,17 @@ import {
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../../../../store/fire";
 import { useSelector } from "react-redux";
-import { TableLoader } from "../StudentsModuleRegisteration";
-import Loader from "../../../UI/Loader/Loader";
 const key = "Compact Table";
 
 const ProfessorTable = () => {
   const profile = useSelector((state) => state.profile.profile);
   const [modules, setModules] = useState([]);
-  const [loading,setLoading]=useState(true);
   useEffect(() => {
     //fetch
     setModules([
      
     ]);
     const f=async()=>{
-      try{
       if(!profile.professors)
       return;
     else if(profile.professors.length === 0){
@@ -61,13 +57,7 @@ const compose=newpbj.map((obj)=>{
 })
 console.log(newpbj);
 setModules(compose)
-}
-catch(e){
-
-} 
-finally{
-  setLoading(false);
-}
+   
     }
 
 f();
@@ -142,9 +132,6 @@ img{
   function onSortChange(action, state) {
     console.log(action, state);
   }
-  if(loading){
-    return <Loader/>
-  }
   return (
     <div className={classes.container}>
 
@@ -161,9 +148,8 @@ img{
                 </HeaderRow>
               </Header>
 
-             <Body>
-                
-             {  tableList.map((module) => (
+              <Body>
+                {tableList.map((module) => (
                   <Row key={module.name} item={module}>
                     <Cell>{module.name}</Cell>
                     <Cell>{module.password}</Cell>
@@ -171,7 +157,6 @@ img{
                   </Row>
                 ))}
               </Body>
-              
             </>
           )}
         </Table>

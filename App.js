@@ -48,9 +48,6 @@ import StudentProfile from "./components/Profiles/StudentProfile/StudentProfile.
 import Assesments from "./components/Profiles/ProfessorProfile/Assesments.js";
 import ProfessorModules from "./components/Profiles/ProfessorProfile/Modules/ProfessorModules.js";
 import StudentsAttendance from "./components/Profiles/ProfessorProfile/StudentsAttendance.js";
-import ProfessorHome from "./components/Profiles/ProfessorProfile/Home/ProfessorHome.js";
-import StudentsModuleRegisteration from "./components/Profiles/DepartmentProfile/StudentsModuleRegisteration.js";
-import Divsions from "./components/Profiles/DepartmentProfile/Divisions/Divsion.js";
 
 
 
@@ -152,7 +149,7 @@ function App() {
         {
           path: "/AddStudent",
 
-          element: <AddStudent/>,
+          element: <AddStudent />,
         },
         {
           path: "/StudentsTable",
@@ -217,19 +214,8 @@ function App() {
         {
           path:"/StudentsAttendance",
           element:<StudentsAttendance/>
-        },
-        {
-          path:"/ProfessorHome",
-          element:<ProfessorHome/>
-        },
-        {
-          path:"/StudentsModuleRegisteration",
-          element:<StudentsModuleRegisteration/>
-        },
-        {
-          path:"/Division",
-          element:<Divsions/>
-        },
+        }
+
 
 
     ]

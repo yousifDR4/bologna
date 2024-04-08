@@ -333,7 +333,7 @@ variant="outlined"
            </Grid>
       </Toolbar>
     </AppBar>
-    <Box sx={{ height: "600px", width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}>
+    <Box sx={{ height: "400", width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}>
       <DataGrid
         rows={data}
         columns={columns}

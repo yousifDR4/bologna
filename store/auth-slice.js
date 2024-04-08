@@ -156,46 +156,6 @@ export const onLogin = (profile) => {
       );
     };
   }
-  if (profile.role === "Proffessor") {
-    const {
-      name,
-      accountType,
-      uid,
-      Department_id,
-      College_id,
-      Degree,
-      University_id,
-      city,
-      describtion,
-      email,
-      sex,
-      username,
-      role,
-      profilePicture,
-      country
-    } = profile;
-    return async (dispatch) => {
-      dispatch(authSlice.actions.logIn({ accountType:role, uid }));
-      dispatch(
-        profileActions.setProfile({
-          name: name ? name : "",
-          username:  username ?  username: "",
-          email: email ? email : "",
-          describtion: describtion ? describtion : "",
-          profilePicture: profilePicture ? profilePicture : "",
-          city: city ? city : "",
-          University_id:University_id? University_id:"",
-          College_id:College_id?College_id:"",
-          Department_id:Department_id?Department_id:uid,
-          role:role?role:"",
-          Degree:Degree ? Degree:"",
-          sex:sex?sex:"",
-          country:country?country:"",
-
-        })
-      );
-    };
-  }
   if (profile.accountType === "student") {
     const {
       accountType,
