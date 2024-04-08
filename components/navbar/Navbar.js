@@ -237,6 +237,8 @@ const Navbar = () => {
                 <li><Link to="/" onClick={showAsideListHandler}><img src={idea} alt=""/>How it works</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/>Colleges using it</Link><div className={classes.innerLine}/></li>
                 {isCollegeAccount && <li><Link to="/CollegeProfile"><img src={profilePicture} alt=""/>College Profile</Link></li>}
+                {isCollegeAccount && <li><Link to="/StudentsTable"><img src={profilePicture} alt=""/>Student table</Link></li>}
+                {isCollegeAccount && <li><Link to="/AddStudent"><img src={profilePicture} alt=""/>AddStudent</Link></li>}
                 {isDepartmentAccount && <li><Link to="/DepartmentProfile"><img src={profilePicture} alt=""/>Department Profile</Link></li>}
                 {isStudentAccount && <li><Link to="/Home"><HomeOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Home</Link></li>}
                 {isStudentAccount && <li><Link to="/StudentProfile"><AccountCircleOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Profile</Link></li>}

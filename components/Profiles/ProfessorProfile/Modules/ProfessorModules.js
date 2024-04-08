@@ -14,7 +14,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { auth } from "../../../../store/fire";
 import { useSelector } from "react-redux";
-import { get_Subjects, get_active_modules, get_progs } from "../../../../store/getandset";
+import { get_Subjects, get_active_modules, get_professor_modules, get_progs } from "../../../../store/getandset";
 import Loader from "../../../UI/Loader/Loader";
 import ViewModule from "../../StudentProfile/Modules/ViewModule";
 import StudentGrades from "./StudentGrades";
@@ -43,7 +43,7 @@ const ProfessorModules=()=>{
           setPrograms(Lprograms);
           let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
           console.log(progType,Department_id,profile.level);
-          const p1 = get_active_modules(Department_id,progType,profile.level);
+          const p1 = get_professor_modules(Department_id,profile.username);
           const p2 = get_Subjects(Department_id);
           // Access data for each document snapshot in the array
           const [modules,Sujects] = await Promise.all([p1,p2]);
