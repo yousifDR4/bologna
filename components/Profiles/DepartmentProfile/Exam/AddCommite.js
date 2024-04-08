@@ -10,7 +10,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { AddOutlined, Edit, Upload } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { db } from '../../../../store/fire';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 const fields=[   
 "establishNo",
 "establishDate",
@@ -48,6 +48,7 @@ export default function AddCommitte(probs) {
           component: 'form',
           onSubmit: async(event) => {
             event.preventDefault();
+            if (!edit){
             setUplauding(true);
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
@@ -72,7 +73,35 @@ export default function AddCommitte(probs) {
             setUplauding(false);
             refetch();
             handleClose();
-          },
+          }
+          else{
+            setUplauding(true);
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries(formData.entries());
+           const x = formJson;
+            const filteredObject = Object.entries(x).reduce(
+              (acc, [key, value]) => {
+                if (value !== "") {
+                  acc[key] = value;
+                }
+                return acc;
+              },
+              {}
+            );
+             await setDoc(doc(db, "Committe",initialValues.id), {
+              ...x[0],
+              ...filteredObject,
+              Department_id: Department_id,
+              program: selectedProgram,
+              semester:semester,
+             
+            });
+            setUplauding(false);
+            refetch();
+            handleClose();
+          }
+        }
+        ,
         }}
       >
         <DialogTitle>Add a Committe</DialogTitle>

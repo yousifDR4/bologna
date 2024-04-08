@@ -8,7 +8,7 @@ import profilePicture from "../../../Images/profilePicutre.jpg"
 import { Book, BookRounded, BookmarksRounded, Edit, Subject, SubjectRounded } from "@mui/icons-material";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import EditProfile from "../UniversityProfile/EditProfile";
+import EditProfile from "./EditProfile";
 function StudentProfile() {
     const profile = useSelector((state) => state.profile.profile);
     const [programs,setPrograms]=useState([]);
