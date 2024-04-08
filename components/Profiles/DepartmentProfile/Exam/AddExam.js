@@ -8,13 +8,19 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { AddOutlined, Edit } from '@mui/icons-material';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../../store/fire';
+import { useSelector } from 'react-redux';
 export default function AddExam(probs) {
+  const profile = useSelector((state) => state.profile.profile);
+  const Department_id = profile.Department_id;
   const [open, setOpen] = React.useState(false);
   let {modules,committes,program,initialValues,edit}=probs;
   const [selectedCommitte,setSelectedCommitte]=React.useState(edit ? initialValues['committe'] ||'':"");
   const [selectedLevel,setSelectedLevel]=React.useState(edit ? initialValues['level'] ||'':"");
   const [selectedModule,setSelectedModule]=React.useState(edit ? initialValues['module'] ||'':"");
   const [selectedTry,setSelectedTry]=React.useState(edit ? initialValues['try'] ||'':"");
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -36,8 +42,18 @@ console.log(modules);
         onClose={handleClose}
         PaperProps={{
           component: 'form',
-          onSubmit: (event) => {
+          onSubmit: async(event) => {
             event.preventDefault();
+            const info = {
+              committe: selectedCommitte,
+              level:selectedLevel,
+              try:selectedTry,
+              module:selectedModule,
+              Deprartment_id:Department_id,
+              program:program.id
+            };
+            const ref=await addDoc(collection(db,"Exams"),info)
+              
             handleClose();
           },
         }}
