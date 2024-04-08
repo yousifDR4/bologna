@@ -110,10 +110,8 @@ const ModulesRegisteration=()=>{
           const p2 = get_Subjects(Department_id);
           // Access data for each document snapshot in the array
           const [modules,Sujects] = await Promise.all([p1,p2]);
-          setRegisteredModules((prev)=>{return [modules[0].id,...prev]});
-          setInitialRegMod((prev)=>{return [modules[0].id,...prev]});
           setModules(Sujects);
-          setStudentModules(modules);
+          setStudentModules(modules.filter((mod)=>mod.progress === 100));
           console.log(Sujects);
         } catch (e) {
           console.log(e);
@@ -141,7 +139,7 @@ const ModulesRegisteration=()=>{
             <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",flex:"1",width:"100%",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
               Modules List
             </Typography>
-            <Button type="button" onClick={()=>{setInitialRegMod(registerdModules); setEdit(false)}} disabled={(!edit || arrayEquals(initialRegMod,registerdModules)) || (!isRegisterationValid.Core || !isRegisterationValid.ECTS)} variant={(!edit || arrayEquals(initialRegMod,registerdModules)) || (!isRegisterationValid.Core || !isRegisterationValid.ECTS) ? "contained":"outlined"} startIcon={<SaveIcon/>}>Save Changes</Button>
+            <Button type="button" onClick={()=>{setInitialRegMod(registerdModules); setEdit(false)}} disabled={!edit} variant={!edit  ? "contained":"outlined"} startIcon={<SaveIcon/>}>Save Changes</Button>
             </Toolbar>
         </AppBar>
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
@@ -167,7 +165,7 @@ const ModulesRegisteration=()=>{
      <ListItem key={mod.id} sx={{fontFamily:"GraphikLight",width: '19%',minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
     <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
     {modules.filter((modu)=>modu.id===mod.module)[0].name}
-     <List sx={{fontFamily:"GraphikLight",  display:"flex",flexWrap:"wrap"}}>
+     <List sx={{fontFamily:"GraphikLight",width:"100%",  display:"flex",flexWrap:"wrap"}}>
       <ListItem sx={{padding:"0"}}>
         <StyledListItemText primary="Name" secondary= {modules.filter((modu)=>modu.id===mod.module)[0].name} />
       </ListItem >

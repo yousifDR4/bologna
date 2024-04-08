@@ -178,6 +178,7 @@ function ViewModule(probs) {
     {(value === "3" ) && <ModuleLab moduleProb={module}  />}
     {(value === "4" ) && <ModuleTheory moduleProb={module}  />}
     {(value === "5" ) && <ModuleSSH moduleProb={module}  />}
+    {(value === "6" ) && <ModuleUSSH moduleProb={module}  />}
     </Box>
     
             </DialogContent>
@@ -337,31 +338,31 @@ const ModuleUSSH=(probs)=>{
     let initialValue={
         unStructHours:moduleProb.unStructHours || {},
     }
-
     return(
         <List sx={{display:"flex",flexDirection:"row",flexWrap:"wrap"}}>
             {Object.entries(initialValue).map(([key, value],index) => (
+              Object.entries(value).map(([key2, value2],index) => (
                 <ListItem sx={{minWidth:"200px",width:"30%"}}>
                     <Card sx={{width:"100%",boxShadow:"3"}}>
                     <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {key}
+          {key2}
         </Typography>
         <List>
             <ListItem>
-                <ListItemText primary="Number of weeks" secondary={value.noWeeks}/>
+                <ListItemText primary="Number of weeks" secondary={value2.noWeeks}/>
             </ListItem>
             <ListItem>
-            <ListItemText primary="Number of Hours" secondary={value.noHours}/>
+            <ListItemText primary="Number of Hours" secondary={value2.noHours}/>
             </ListItem>
             <ListItem>
-            <ListItemText primary="Total Hours" secondary={value.totalHours}/>
+            <ListItemText primary="Total Hours" secondary={value2.totalHours}/>
             </ListItem>
         </List>
       </CardContent>
                     </Card>
                 </ListItem>
-      ))}
+      ))))}
         </List>
     )
 }
