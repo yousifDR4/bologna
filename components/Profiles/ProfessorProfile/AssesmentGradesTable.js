@@ -116,12 +116,13 @@ export function StudentsTable(probs) {
         {
           field: 'division',
           headerName: `Division` ,
-          width:"200"
+          width:"150"
         },
         {
             field: 'grade',
           headerName: `Grade` ,
-          width:"200",
+          width:"100",
+          type:"number",
           editable: true,
       preProcessEditCellProps: (params) => {
         const hasError = params.props.value < 0 || params.props.value > assesment.grades;

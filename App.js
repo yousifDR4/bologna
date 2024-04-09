@@ -48,6 +48,7 @@ import StudentProfile from "./components/Profiles/StudentProfile/StudentProfile.
 import Assesments from "./components/Profiles/ProfessorProfile/Assesments.js";
 import ProfessorModules from "./components/Profiles/ProfessorProfile/Modules/ProfessorModules.js";
 import StudentsAttendance from "./components/Profiles/ProfessorProfile/StudentsAttendance.js";
+import ProfessorHome from "./components/Profiles/ProfessorProfile/Home/ProfessorHome.js";
 
 
 
@@ -210,6 +211,10 @@ function App() {
         {
           path:"/ProfessorModules",
           element:<ProfessorModules/>
+        },
+        {
+          path:"/ProfessorHome",
+          element:<ProfessorHome/>
         },
         {
           path:"/StudentsAttendance",

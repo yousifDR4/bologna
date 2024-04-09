@@ -254,7 +254,7 @@ return (
 };
 export default ProgramModulesTable;
 
-const TableLoader=()=>{
+export const TableLoader=()=>{
   return(
     <Stack spacing={1} marginTop="0.8rem" sx={{height:"40rem",width:"100%"}}>
 

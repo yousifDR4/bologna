@@ -225,6 +225,19 @@ export const get_professor_assesments = async (Deprartment_id,Professor_id,modul
   console.log(docs.docs);
   return docs ? docs :[];
 };
+export const get_module_students = async (Deprartment_id,module_id) => {
+  console.log(Deprartment_id,module_id);
+  const q = query(
+    collection(db, "users"),
+    and(
+      where("Department_id", "==", Deprartment_id),
+      where("registerdModules","array-contains",module_id),
+    ),
+  );
+  const docs = await getDocs(q);
+  console.log(docs.docs);
+  return docs ? docs :[];
+};
 const rand=()=>(Math.floor(26*Math.random()))
 export const gen=()=>{
   let capitalLetters = [
