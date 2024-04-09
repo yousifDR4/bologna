@@ -152,7 +152,7 @@ console.log(formIsValid);
         "password": state.password,
         "accountType": "Department",
         "createType": "username",
-        "role": "Proffessor", 
+        "role": "Professor", 
         "path": {
           "University_id": profile.University_id,
           "College_id": profile.College_id,

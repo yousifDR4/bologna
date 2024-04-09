@@ -61,7 +61,7 @@ const Navbar = () => {
   const isUniversityAccount = isLoggedIn ? accountType === "University" : false;
   const isCollegeAccount = isLoggedIn ? accountType === "College" : false;
   const isDepartmentAccount = isLoggedIn ? accountType === "Department" : false;
-  const isProfessorAccount = isLoggedIn ? accountType === "Proffessor" : false;
+  const isProfessorAccount = isLoggedIn ? accountType === "Professor" : false;
   const isStudentAccount = isLoggedIn ? accountType === "student" : false;
 
   const dispatch = useDispatch();

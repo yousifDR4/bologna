@@ -203,7 +203,7 @@ export const onLogin = (profile) => {
       dispatch(profileActions.setProfile({ email: email ? email : "" }));
     };
   }
-  if (profile.role === "Proffessor") {
+  if (profile.role === "Professor") {
     const {
       name,
       accountType,
