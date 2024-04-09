@@ -93,6 +93,7 @@ const [rightContainer,setRightContainer]=useState(<ModuleInfo title="MInfo" setF
 const [program,setProgram]=useState(4);
 const [header,setHeader]=useState({title:"Module Information"});
 const [uploading,setUploading]=useState(false);
+console.log(completeForm);
 useEffect(() => {
     updateProgress();
   }, [completeForm]);
