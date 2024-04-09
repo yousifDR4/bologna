@@ -111,6 +111,7 @@ const ModulesRegisteration=()=>{
           // Access data for each document snapshot in the array
           const [modules,Sujects] = await Promise.all([p1,p2]);
           setModules(Sujects);
+          console.log(modules);
           setStudentModules(modules.filter((mod)=>mod.progress === 100));
           console.log(Sujects);
         } catch (e) {
@@ -126,6 +127,7 @@ const ModulesRegisteration=()=>{
     if(loading){
       return <Loader/>
     }
+    studentModules.filter((mod)=>registerdModules.includes(mod.id));
     console.log(registerdModules);
     console.log(initialRegMod);
     console.log(registeredECTS);

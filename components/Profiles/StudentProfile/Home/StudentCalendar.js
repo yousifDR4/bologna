@@ -99,8 +99,7 @@ if(isDateInAssignments){
         color='info'
         overlap="circular"
       >
-        <PickersDay sx={{border:"1px solid #fff",borderColor:(value.$D === day.$D && value.$M === day.$M)? "var(--styling1)":"",borderRadius:"50%"}} onDaySelect={(value)=>{setValue(value);console.log(value.$D);console.log(day.$D);}} outsideCurrentMonth={outsideCurrentMonth} day={day} />
-      </StyledBadge>
+     <PickersDay  sx={{border:"1px solid #fff",borderColor:(value.$D === day.$D && value.$M === day.$M)? "var(--styling1)":"",borderRadius:"50%"}} onDaySelect={(value)=>{setValue(value);console.log(value.$D);console.log(day.$D);}} outsideCurrentMonth={outsideCurrentMonth} day={day} />      </StyledBadge>
     );
   }const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {

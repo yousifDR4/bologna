@@ -213,7 +213,11 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
               <option value={""} disabled hidden>
                 select...
               </option>
-              {selectedProgLevels}
+              {form.program !== "" && 
+              [...Array(+form.program)].map((_, index) => (
+                <option key={index} value={index+1}>{index+1}</option>
+              ))
+              }
             </select>
           </span>
     <List sx={{ width: '100%', bgcolor: '#F1F1F3', display:"flex",flexWrap:"wrap"}} className={classes.selectedModule}>
@@ -271,7 +275,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
                 select...
               </option>
               {professors.map((p) => {
-                return <option value={p.id}>{p.name}</option>;
+                return <option value={p.id}>{p.username}</option>;
               })}
             </select>
           </span>
@@ -289,7 +293,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
                 select...
               </option>
               {professors.map((p) => {
-                return <option value={p.id}>{p.name}</option>;
+                return <option value={p.id}>{p.username}</option>;
               })}
             </select>
           </span>
