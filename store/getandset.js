@@ -179,6 +179,7 @@ export const get_active_modules = async (Deprartment_id,program,level) => {
       where("Deprartment_id", "==", Deprartment_id),
       where("level", "==", level),
       where("type","==",program)
+
     ),
   );
   const docs = await getDocs(q);
@@ -198,6 +199,7 @@ export const get_professor_modules = async (Deprartment_id,Professor_id) => {
       where("Deprartment_id", "==", Deprartment_id),
       where("progress", "==", 100),
       where("manager","==",Professor_id)
+
     ),
   );
   const docs = await getDocs(q);
@@ -377,3 +379,22 @@ export const get_exams_promise=(Deprartment_id,program)=>{
   );
   return getDocs(q);
 }
+export const get_professor_modules = async (Deprartment_id,Professor_id) => {
+  console.log(Deprartment_id,Professor_id);
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("progress", "==", 100),
+      where("manager","==",Professor_id)
+    ),
+  );
+  const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({
+    ...doc.data(),
+    value: doc.data().name,
+    id: doc.id,
+  }));
+  console.log(data);
+  return data ? data :[];
+};
