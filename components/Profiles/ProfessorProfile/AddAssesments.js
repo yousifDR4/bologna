@@ -12,7 +12,8 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { addDoc, collection, setDoc } from "firebase/firestore";
 import { auth, db } from "../../../store/fire";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { messageActions } from "../../../store/message-slice";
 
 export default function AddAssesment(probs) {
   const [open, setOpen] = React.useState(false);
@@ -20,7 +21,7 @@ export default function AddAssesment(probs) {
   const [selectedType, setSelectedType] = React.useState(
     edit ? initialValues["type"] || "" : ""
   );
-
+  const dispatch=useDispatch();
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   
@@ -80,6 +81,7 @@ export default function AddAssesment(probs) {
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
             console.log(selectedDate);
+            try{
             const info = {
               M: selectedDate.$M,
               D: selectedDate.$D,
@@ -93,6 +95,12 @@ export default function AddAssesment(probs) {
             };
             console.log(info);
             await addDoc(collection(db,"Assesment"), info);
+            dispatch(messageActions.setMessage({messageContent:"The Assesment was added succesfully!",severity:"success"}))
+            probs.refetch();
+          }
+          catch(e){
+            dispatch(messageActions.setMessage({messageContent:"The Assesment creation process failed!",severity:"error"}))
+          }
             handleClose();
           },
         }}
@@ -129,6 +137,10 @@ export default function AddAssesment(probs) {
                 },
               }}
             >
+               <MenuItem key="asmd" value="AssesmentMidTerm">
+                      {" "}
+                      Midterm Assesment
+                    </MenuItem>
               {selectedModuleObj?.AssesmentLab
                 ? selectedModuleObj.AssesmentLab.activated && (
                     <MenuItem key="asl" value="AssesmentLab">

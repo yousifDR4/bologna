@@ -346,7 +346,7 @@ const StyledListItemText = styled(ListItemText)(({ theme }) => ({
 export default ExamComitte;
 
 
-const ListSkeleton=()=>{
+export const ListSkeleton=()=>{
   let x=[1,2,3,4,5,6,7];
   return(
 x.map((x)=>

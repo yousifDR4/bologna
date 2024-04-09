@@ -17,39 +17,21 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Delete } from "@mui/icons-material";
 import ArticleIcon from '@mui/icons-material/Article';
-import { get_active_modules, get_professor_modules, get_progs } from "../../../store/getandset";
+import { get_active_modules, get_professor_assesments, get_professor_modules, get_progs } from "../../../store/getandset";
 import Loader from "../../UI/Loader/Loader";
 import AddAssesment from "./AddAssesments";
-let initcommittes=[
-    {
-        program:{name:"University of Baghdad",id:"JpF0GPA2vFDPRvfgmzMu"},
-        establishNo:"19291",
-        establishDate:"2019/2/2",
-        checkEDate:"2019/2/5",
-        checkENO:"190900",
-        notes:"",
-        semester:1,
-        examCommitte:[{id:"83837373",name:"mohammed",level:1}],
-        checkingCommitte:[{id:"83837373",name:"mohammed",level:1}],
-        id:"01"
-    }
-]
-let initexams=[
-    {
-        committe:"01",
-        level:"2",
-        module:"5v1EYMCREB0zpB5OWRwd",
-        try:"1",
-        program:"JpF0GPA2vFDPRvfgmzMu",
-    }
-]
+import { auth } from "../../../store/fire";
+import { useQuery } from "react-query";
+import { ListSkeleton } from "../DepartmentProfile/Exam/ExamComitte";
+import AssesmentGradesTable from "./AssesmentGradesTable";
 const Assesments=()=>{
     const [selectedModule,setSelectedModule]=useState("");
-    const [assesments,setAssesments]=useState([]);
+    const [assesments,setAssesments]=useState([{}]);
     const [modules,setModules]=useState([]);
     const [loading,setLoading]=useState(true);
     const [reLoad,setReLoad]=useState(false);
     const profile = useSelector((state) => state.profile.profile);
+    const uid = useSelector((state) => state.auth.uid);
     const Department_id = profile.Department_id;
     const handleChange = (event) => {
         setSelectedModule(event.target.value);
@@ -75,7 +57,23 @@ const Assesments=()=>{
         if(Department_id){
         loadCommittes();
         }
-      },[reLoad,profile])
+      },[reLoad,profile]);
+      const assesmentPromise=()=>get_professor_assesments(Department_id,uid,selectedModule);
+      const {
+        data: Assesments=[],
+        isLoading:isLoadingAssesments,
+        error:iserror,
+      isFetching:isFetching, 
+       refetch
+      } = useQuery(`professor:${uid}department:${Department_id}module:${selectedModule}`, assesmentPromise, {
+       enabled:(!!selectedModule),
+        refetchOnWindowFocus:false,
+      
+        select:(data)=>{
+            return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+        }
+      }
+      );
       if(loading){
         return(
             <Loader />
@@ -89,7 +87,7 @@ const Assesments=()=>{
             <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
               Assesments List
             </Typography>
-            <AddAssesment setAssesments={setAssesments} selectedModule={selectedModule} modules={modules} edit={false}  />
+            <AddAssesment refetch={refetch} setAssesments={setAssesments} selectedModule={selectedModule} modules={modules} edit={false}  />
             </Typography>
             <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small" >
             <InputLabel id="module" sx={{color:"var(--styling1) !important"}}>Module</InputLabel>
@@ -112,18 +110,18 @@ const Assesments=()=>{
     }}
     variant="outlined"
         >
-         {modules.map((p)=> <MenuItem value={p.id}>{p.name}</MenuItem>)}
+         {modules.map((p)=> <MenuItem key={p.id} value={p.id}>{p.name}</MenuItem>)}
         </Select>
         </FormControl>
           </Toolbar>
         </AppBar>
         <Box sx={{border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
-        <List sx={{display:"flex",gap:"0.5rem",padding:"1rem 0"}}>
+        <List sx={{display:"flex",flexWrap:"wrap",gap:"0.5rem",padding:"1rem 0"}}>
         { 
-         assesments.filter((as)=> as.module===selectedModule).length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No assesments were found!</Typography>:
-            assesments.filter((as)=>as.module===selectedModule).map((as)=>{
+        isLoadingAssesments ? <ListSkeleton/> : Assesments.filter((as)=> as.module===selectedModule).length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No assesments were found!</Typography>:
+            Assesments.filter((as)=>as.module===selectedModule).map((as)=>{
                 return(
-     <ListItem key={as.id} sx={{width: '19%',minWidth:"250px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
+     <ListItem key={as.id} sx={{width: '19%',height:"fit-content",minWidth:"250px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
                 <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
                 <Accordion sx={{boxShadow:"none",border:"1px solid #d1d7dc",fontFamily:"GraphikLight",width:"95%"}}>
         <AccordionSummary
@@ -136,19 +134,20 @@ const Assesments=()=>{
         </AccordionSummary>
         <AccordionDetails>    
      <List disablePadding sx={{  display:"flex",flexWrap:"wrap"}}>
-      <ListItem sx={{padding:"0"}}>
-        <StyledListItemText primary="Date" secondary={as.date || "-"} />
+      <ListItem key="1" sx={{padding:"0"}}>
+        <StyledListItemText primary="Date" secondary={`${as.y}/${as.M}/${as.D}` || "-"} />
       </ListItem >
-      <ListItem sx={{padding:"0"}}>
-        <StyledListItemText primary="Grade" secondary={as.grade || "-"}  />
+      <ListItem key="2" sx={{padding:"0"}}>
+        <StyledListItemText primary="Grade" secondary={as.grades || "-"}  />
       </ListItem>
-      <ListItem sx={{padding:"0"}}>
+      <ListItem key="3" sx={{padding:"0"}}>
         <StyledListItemText primary="Notes" secondary={as.notes || "-"} />
       </ListItem>
     </List>  
     </AccordionDetails>
     </Accordion>
     <Box sx={{display:"flex",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
+                <AssesmentGradesTable students={[]} modules={modules} module={selectedModule} assesment={as} />
           <Button startIcon={<Delete/>} sx={{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",width:"50%",boxShadow:"none"}} variant="contained">Delete</Button>
         </Box>
             </ListItem>
