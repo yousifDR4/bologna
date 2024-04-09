@@ -46,6 +46,11 @@ export default function AddAssesment(probs) {
         PaperProps={{
           component: 'form',
           onSubmit: (event) => {
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries(formData.entries());
+            console.log(formJson);
+            console.log(selectedDate);
+            probs.setAssesments((prev)=>[{module:selectedModule,date:formJson["Date"],title:formJson["Assesment Title"],grades:formJson["Assesment Grade"],notes:formJson["Assesment Notes"]},...prev])
             event.preventDefault();
             handleClose();
           },

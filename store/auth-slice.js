@@ -156,7 +156,7 @@ export const onLogin = (profile) => {
       );
     };
   }
-  if (profile.role === "Proffessor") {
+  if (profile.role === "Professor") {
     const {
       name,
       accountType,
