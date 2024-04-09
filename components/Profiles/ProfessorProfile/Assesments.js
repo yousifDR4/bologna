@@ -45,7 +45,7 @@ let initexams=[
 ]
 const Assesments=()=>{
     const [selectedModule,setSelectedModule]=useState("");
-    const [assesments,setExams]=useState([]);
+    const [assesments,setAssesments]=useState([]);
     const [modules,setModules]=useState([]);
     const [loading,setLoading]=useState(true);
     const [reLoad,setReLoad]=useState(false);
@@ -58,10 +58,12 @@ const Assesments=()=>{
         const loadCommittes=async ()=>{
             setLoading(true);
             try{
+
                 let Lprograms= await get_progs(Department_id);
                 let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
                 console.log(progType,Department_id,profile.level);
                 const p1 = await get_professor_modules(Department_id,profile.username);
+
                 setModules(p1);
                 setLoading(false);
             }
@@ -87,7 +89,7 @@ const Assesments=()=>{
             <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
               Assesments List
             </Typography>
-            <AddAssesment  selectedModule={selectedModule} modules={modules} edit={false}  />
+            <AddAssesment setAssesments={setAssesments} selectedModule={selectedModule} modules={modules} edit={false}  />
             </Typography>
             <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small" >
             <InputLabel id="module" sx={{color:"var(--styling1) !important"}}>Module</InputLabel>
@@ -130,7 +132,7 @@ const Assesments=()=>{
           id="panel1-header"
           
         >
-          {as.title?as.title:"Exam Not Found!"}
+          {as.title?as.title:"Title Not Found!"}
         </AccordionSummary>
         <AccordionDetails>    
      <List disablePadding sx={{  display:"flex",flexWrap:"wrap"}}>

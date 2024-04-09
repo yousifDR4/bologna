@@ -72,8 +72,10 @@ export default function AddAssesment(probs) {
         open={open}
         onClose={handleClose}
         PaperProps={{
+
           component: "form",
           onSubmit: async (event) => {
+
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
