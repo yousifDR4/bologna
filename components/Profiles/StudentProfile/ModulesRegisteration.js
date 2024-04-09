@@ -12,7 +12,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { auth } from "../../../store/fire";
+import { auth, db } from "../../../store/fire";
 import { useSelector } from "react-redux";
 import { get_Subjects, get_active_modules, get_progs } from "../../../store/getandset";
 import Loader from "../../UI/Loader/Loader";
@@ -26,13 +26,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { doc, setDoc } from "firebase/firestore";
 function arrayEquals(a, b) {
   return Array.isArray(a) &&
       Array.isArray(b) &&
       a.length === b.length &&
       a.every((val, index) => val === b[index]);
 }
-
 const ModulesRegisteration=()=>{
     const [studentModules,setStudentModules]=useState([]);
     const [programs, setPrograms] = useState([]);
@@ -114,7 +114,7 @@ const ModulesRegisteration=()=>{
           setStudentModules(modules.filter((mod)=>mod.progress === 100));
           console.log(Sujects);
         } catch (e) {
-          console.log(e);
+          console.log(e); 
         } finally {
           setLoading(false);
         }
@@ -129,6 +129,12 @@ const ModulesRegisteration=()=>{
     console.log(registerdModules);
     console.log(initialRegMod);
     console.log(registeredECTS);
+    const regesterstionhandler=
+    async()=>
+    {
+    setDoc(doc(db,"users",auth.currentUser.uid),{registerdModules:registerdModules},
+    {merge:true})
+    }
     return(
         <>
         <Instructions open={viewInstructions} setOpen={setViewInstruction} />
@@ -139,7 +145,7 @@ const ModulesRegisteration=()=>{
             <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",flex:"1",width:"100%",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
               Modules List
             </Typography>
-            <Button type="button" onClick={()=>{setInitialRegMod(registerdModules); setEdit(false)}} disabled={!edit} variant={!edit  ? "contained":"outlined"} startIcon={<SaveIcon/>}>Save Changes</Button>
+            <Button type="button" onClick={regesterstionhandler} disabled={!edit} variant={!edit  ? "contained":"outlined"} startIcon={<SaveIcon/>}>Save Changes</Button>
             </Toolbar>
         </AppBar>
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
