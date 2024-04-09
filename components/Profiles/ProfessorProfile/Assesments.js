@@ -58,8 +58,12 @@ const Assesments=()=>{
         const loadCommittes=async ()=>{
             setLoading(true);
             try{
-              
-              const p1 = await get_professor_modules(Department_id,profile.username);
+
+                let Lprograms= await get_progs(Department_id);
+                let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
+                console.log(progType,Department_id,profile.level);
+                const p1 = await get_professor_modules(Department_id,profile.username);
+
                 setModules(p1);
                 setLoading(false);
             }

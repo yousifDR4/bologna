@@ -179,6 +179,7 @@ export const get_active_modules = async (Deprartment_id,program,level) => {
       where("Deprartment_id", "==", Deprartment_id),
       where("level", "==", level),
       where("type","==",program)
+
     ),
   );
   const docs = await getDocs(q);
@@ -198,6 +199,7 @@ export const get_professor_modules = async (Deprartment_id,Professor_id) => {
       where("Deprartment_id", "==", Deprartment_id),
       where("progress", "==", 100),
       where("manager","==",Professor_id)
+
     ),
   );
   const docs = await getDocs(q);
