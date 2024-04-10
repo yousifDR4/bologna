@@ -211,6 +211,33 @@ export const get_professor_modules = async (Deprartment_id,Professor_id) => {
   console.log(data);
   return data ? data :[];
 };
+export const get_professor_assesments = async (Deprartment_id,Professor_id,module) => {
+  console.log(Deprartment_id,Professor_id,module);
+  const q = query(
+    collection(db, "Assesment"),
+    and(
+      where("Department_id", "==", Deprartment_id),
+      where("uid","==",Professor_id),
+      where("module","==",module),
+    ),
+  );
+  const docs = await getDocs(q);
+  console.log(docs.docs);
+  return docs ? docs :[];
+};
+export const get_module_students = async (Deprartment_id,module_id) => {
+  console.log(Deprartment_id,module_id);
+  const q = query(
+    collection(db, "users"),
+    and(
+      where("Department_id", "==", Deprartment_id),
+      where("registerdModules","array-contains",module_id),
+    ),
+  );
+  const docs = await getDocs(q);
+  console.log(docs.docs);
+  return docs ? docs :[];
+};
 const rand=()=>(Math.floor(26*Math.random()))
 export const gen=()=>{
   let capitalLetters = [
