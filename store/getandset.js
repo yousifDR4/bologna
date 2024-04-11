@@ -235,7 +235,7 @@ export const get_module_students = async (Deprartment_id,module_id) => {
     ),
   );
   const docs = await getDocs(q);
-  console.log(docs.docs);
+  console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
 const rand=()=>(Math.floor(26*Math.random()))
