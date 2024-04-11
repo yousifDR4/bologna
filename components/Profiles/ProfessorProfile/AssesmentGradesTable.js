@@ -11,10 +11,17 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box, Card, CardContent, List, ListItem, ListItemText, Tab, Tabs, Typography } from "@mui/material";
 import { Cancel, Edit, Grade, Group, GroupOutlined, RateReview, Save, StarRounded } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { messageActions } from "../../../store/message-slice";
+import { get_module_students } from "../../../store/getandset";
+import { useQueries, useQuery } from "react-query";
+import { auth } from "../../../store/fire";
 export default function AssesmentGradesTable(probs) {
-    let {moduleName,students,assesment}=probs;
+
+  const profile = useSelector((state) => state.profile.profile);
+  const uid = useSelector((state) => state.auth.uid);
+  const Department_id = profile.Department_id;
+    let {module,assesment}=probs;
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -22,6 +29,25 @@ export default function AssesmentGradesTable(probs) {
       const handleClose = () => {
         setOpen(false);
       };
+
+      const studentPromise=()=>get_module_students(Department_id,module);
+      const {
+        data: students=[],
+        isLoading:isLoadingStudents,
+        error:iserror,
+      isFetching:isFetching, 
+       refetch
+      } = useQuery(`department:${Department_id}module:${module}`, studentPromise, {
+       enabled:(!!Department_id && open ),
+        refetchOnWindowFocus:false,
+      
+        select:(data)=>{
+            return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+        }
+      }
+
+      );
+
     return (
         <>
           <Button startIcon={<StarRounded/>}  sx={{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",width:"50%",boxShadow:"none"}} variant="contained" onClick={handleClickOpen}>
