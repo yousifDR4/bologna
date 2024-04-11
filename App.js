@@ -49,6 +49,7 @@ import Assesments from "./components/Profiles/ProfessorProfile/Assesments.js";
 import ProfessorModules from "./components/Profiles/ProfessorProfile/Modules/ProfessorModules.js";
 import StudentsAttendance from "./components/Profiles/ProfessorProfile/StudentsAttendance.js";
 import ProfessorHome from "./components/Profiles/ProfessorProfile/Home/ProfessorHome.js";
+import Divsions from "./components/Profiles/DepartmentProfile/Divisions/Divsion.js";
 
 
 
@@ -219,6 +220,10 @@ function App() {
         {
           path:"/StudentsAttendance",
           element:<StudentsAttendance/>
+        },
+        {
+          path:"/Division",
+          element:<Divsions/>
         }
 
 

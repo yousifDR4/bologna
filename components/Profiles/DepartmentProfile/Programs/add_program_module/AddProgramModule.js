@@ -189,6 +189,8 @@ const submithandler =async()=>{
         setUploading(false);
       }
 }
+console.log(completeForm.MInfo);
+console.log(uploading);
     return(
         <main className={classes.mainContainer}>
             <div className={classes.secondaryContainer}>

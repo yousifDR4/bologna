@@ -362,6 +362,30 @@ export const get_Schedule_promise=(program,levels)=>{
   );
   return getDocs(q);
 }
+export const get_Schedule_Adv=(program,levels,study,division)=>{
+  const q = query(
+    collection(db, "schedulemodule"),
+    and(
+      where("program", "==", program),
+      where("level", "==", levels),
+      where("study", "==", study),
+      where("division", "==", division)
+    )
+  );
+  return getDocs(q);
+}
+export const get_prof_schedule=(Department_id,day,module)=>{
+  console.log(Department_id,day,module);
+  const q = query(
+    collection(db, "schedulemodule"),
+    and(
+      where("Department_id", "==", Department_id),
+      where("day", "==", day),
+      where("module", "==", module),
+    )
+  );
+  return getDocs(q);
+}
 export const get_commite_promise=(semester,Department_id)=>{
 
   const q = query(
