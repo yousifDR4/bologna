@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Delete, Details, Grade, Info } from "@mui/icons-material";
 import ArticleIcon from '@mui/icons-material/Article';
-import { Button, ButtonGroup, Grid, List, ListItem, ListItemText } from "@mui/material";
+import { Button, ButtonGroup, Grid, Link, List, ListItem, ListItemText } from "@mui/material";
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,17 +12,15 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { auth } from "../../../../store/fire";
+import { auth } from "../../../store/fire";
 import { useSelector } from "react-redux";
-import { get_Subjects, get_active_modules, get_progs } from "../../../../store/getandset";
-import Loader from "../../../UI/Loader/Loader";
-import ViewModule from "./ViewModule";
-import ViewGrade from "./ViewGrade";
-const StudentModules=()=>{
+import { get_Subjects, get_active_completed_modules, get_active_modules, get_progs } from "../../../store/getandset";
+import Loader from "../../UI/Loader/Loader";
+const Library=()=>{
     const [studentModules,setStudentModules]=useState([]);
-    const [programs, setPrograms] = useState([]);
     const [modules,setModules]=useState([]);
     const theme = useTheme();
+    const [books,setBooks]=useState([]);
     const [loading, setLoading] = useState(true);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -38,15 +36,29 @@ const StudentModules=()=>{
           setLoading(true);
           let Lprograms= await get_progs(Department_id);
           console.log(Lprograms);
-          setPrograms(Lprograms);
           let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
           console.log(progType,Department_id,profile.level);
-          const p1 = get_active_modules(Department_id,progType,profile.level);
+          const p1 = get_active_completed_modules(Department_id,progType,profile.level);
           const p2 = get_Subjects(Department_id);
-          // Access data for each document snapshot in the array
+          let lBooks=[];
           const [modules,Sujects] = await Promise.all([p1,p2]);
+          console.log(modules);
           setModules(Sujects);
           setStudentModules(modules);
+          modules.map((mod)=>{
+            if(mod.books){
+                mod.books.map((b)=>{
+                  console.log(b);
+                    if(b.url){
+                        if(b.url.length >0){
+                            lBooks.push({...b,module:mod.module});
+                        }
+                    }
+                })
+            }
+          })
+          console.log(lBooks);
+          setBooks(lBooks);
           console.log(Sujects);
         } catch (e) {
           console.log(e);
@@ -67,51 +79,35 @@ const StudentModules=()=>{
         <AppBar position="static" sx={{width:"100%",borderTopLeftRadius:"10px",borderTopRightRadius:"10px",bgcolor:"transparent",boxShadow:"none",}}>
           <Toolbar sx={{display:"flex",flexWrap:"wrap",paddingLeft:"0!important"}}>
             <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",width:"100%",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
-              Modules List
+              Library
             </Typography>
             </Toolbar>
         </AppBar>
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
-          <Grid  container sx={{width:"100%", gridTemplateColumns:"1fr 1fr 1fr 1fr",display:"grid"}} gridTemplateColumns={{xs:"1fr",sm:"1fr 1fr",lg:"1fr 1fr 1fr",xl:"1fr 1fr 1fr 1fr"}} spacing={{xs:1,sm:2,lg:3,xl:8}}>
-            <Grid item>
-            <CustomCard title="Modules" subtitle="Number of registered modules." value="0"/>
-            </Grid>
-            <Grid item>
-            <CustomCard title="Core" subtitle="Number of Core type modules." value="0"/>
-            </Grid>
-            <Grid item>
-            <CustomCard title="Support" subtitle="Number of Support type modules." value="0"/>
-            </Grid>
-            <Grid item>
-            <CustomCard title="Elective" subtitle="Number of Elective type modules." value="0"/>
-            </Grid>
-          </Grid>
         <List sx={{display:"flex",marginTop:"1rem",gap:"0.5rem",padding:"1rem 0"}}>
         { 
-         studentModules.length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No Modules were Found!</Typography>:
-            studentModules.map((mod)=>{
+         books.length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}> No Books were Found!</Typography>:
+            books.map((book)=>{
                 return(
-     <ListItem key={mod.id} sx={{fontFamily:"GraphikLight",width: '19%',minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
+     <ListItem key={book.name + book.module} sx={{fontFamily:"GraphikLight",width: '19%',minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.7rem",bgcolor:"#fff",padding:"1rem"}}>
     <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
-    {modules.filter((modu)=>modu.id===mod.module)[0].name}
+    {book.name}
      <List sx={{fontFamily:"GraphikLight",  display:"flex",flexWrap:"wrap"}}>
       <ListItem sx={{padding:"0"}}>
-        <StyledListItemText primary="Name" secondary= {modules.filter((modu)=>modu.id===mod.module)[0].name || "Module not found"} />
+        <StyledListItemText primary="Module" secondary= {modules.filter((modu)=>modu.id===book.module).length > 0 ? modules.filter((modu)=>modu.id===book.module)[0].name : "Module not found"}  />
       </ListItem >
       <ListItem sx={{padding:"0"}}>
-        <StyledListItemText primary="Code" secondary={modules.filter((modu)=>modu.id===mod.module)[0].code}  />
+        <StyledListItemText primary="Available in library" secondary={book.available?"Availble":"Not Available"}  />
       </ListItem>
       <ListItem sx={{padding:"0"}}>
-        <StyledListItemText primary="Type" secondary="Full Module" />
+        <StyledListItemText primary="File" secondary={<Link  href={book.url}>View Book</Link>} />
       </ListItem>
     </List>  
     <Box sx={{display:"flex",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
-      <ViewModule moduleProb={mod} name={modules.filter((modu)=>modu.id===mod.module)[0].name}/>
-      <ViewGrade  grades={[]} name={modules.filter((modu)=>modu.id===mod.module)[0].name}/>
         </Box>
             </ListItem>
-                )
-            })}
+            )}
+              )  }
         </List>
         </Box>
       </Box>
@@ -149,4 +145,4 @@ const CustomCard=(probs)=>{
   </Card>
   )
 }
-export default StudentModules;
+export default Library;

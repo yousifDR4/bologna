@@ -40,7 +40,7 @@ import {
 } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
-import { AccountCircleOutlined, AppRegistration, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, GroupWork, Groups3Outlined, Home, HomeOutlined, Person, PersonOutlined, Schedule } from "@mui/icons-material";
+import { AccountCircleOutlined, AppRegistration, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, GroupWork, Groups3Outlined, Home, HomeOutlined, LibraryBooksOutlined, Person, PersonOutlined, Schedule } from "@mui/icons-material";
 import { errorActions } from "../../store/error-slice";
 let reF = true;
 let x = true;
@@ -243,6 +243,7 @@ const Navbar = () => {
                 {isStudentAccount && <li><Link to="/StudentModules"><img src={moduleIcon} alt=""/> Modules</Link></li>}
                 {isStudentAccount && <li><Link to="/ModuleRegistartion"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules Registartion</Link></li>}
                 {isStudentAccount && <li><Link to="/StudentPresence"><PersonOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Attendance</Link></li>}
+                {isStudentAccount && <li><Link to="/Library"><LibraryBooksOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Library</Link></li>}
                 {isProfessorAccount && <li><Link to="/Assesments"><GradingOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Assesments</Link></li>}
                 {isProfessorAccount && <li><Link to="/ProfessorModules"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules</Link></li>}
                 {isProfessorAccount && <li><Link to="/StudentsAttendance"><GroupOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students Attendance</Link></li>}
