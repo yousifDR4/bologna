@@ -71,11 +71,16 @@ const Navbar = () => {
   const active = showAsideList ? classes.active : "";
   const backdrop = showAsideList ? classes.backdrop : "";
   const logoutHandler = async () => {
-    await auth.signOut();
+    try{
     navigate("/");
+    await auth.signOut();
     dispatch(authActions.logOut());
     dispatch(profileActions.logOut());
     setShowAsideList(false);
+    }
+    catch(e){
+      
+    }
   };
   const uid = useSelector(selectuid);
   onAuthStateChanged(

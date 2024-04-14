@@ -31,6 +31,11 @@ import {
   and,
 } from "firebase/firestore";
 import Modules from "./Modules.js";
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Edit, ExpandMore } from "@mui/icons-material";
+import AddPost from "./AddPost.js";
+import { useQuery } from "react-query";
+import { get_posts_promise } from "../../../store/getandset.js";
 const DepartmentProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id=profile.Department_id;
@@ -42,8 +47,10 @@ const DepartmentProfile = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const [showAddModule,setShowAddModule]=useState(false);
+  const [showAddPost, setShowAddPost] = useState(false);
   const isModulesActivated = activatedList === "modules";
   const isAboutActivated = activatedList === "about";
+  const isPostsActivated = activatedList === "posts";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
   const [modules, setDepartments] = useState([]);
@@ -59,7 +66,23 @@ const DepartmentProfile = () => {
       setProfessors(sum.data().count)
     }
     f();
-  },[Department_id])
+  },[Department_id]);
+  const promise=()=> get_posts_promise(Department_id);
+  const {
+    data: posts,
+    isLoading,
+    error,
+  isFetching, 
+  refetch 
+  } = useQuery(`department:${Department_id}`, promise, {
+   enabled:!!Department_id,
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
 if(!loaded){
   return(
     <>
@@ -122,10 +145,11 @@ else{
               <h2>{profile.name}</h2>
               <p>@{profile.username}</p>
             </div>
-            <button onClick={() => setShowEdit((prev) => !prev)}>
+            <Button variant="outlined" startIcon={<Edit/>} onClick={() => setShowEdit((prev) => !prev)}>Edit Profile</Button>
+            {/* <button onClick={() => setShowEdit((prev) => !prev)}>
               <img src={edit} alt="" />
               edit profile
-            </button>
+            </button> */}
           </div>
 
           <div className={classes.info}>
@@ -141,6 +165,12 @@ else{
                 className={isAboutActivated ? classes.activated : ``}
               >
                 About
+              </li>
+              <li
+                onClick={() => setActivatedList("posts")}
+                className={isPostsActivated ? classes.activated : ``}
+              >
+                Posts
               </li>
             </ul>
             {isModulesActivated && (
@@ -168,7 +198,7 @@ else{
               </div>
             )}
             {isAboutActivated && (
-              <div className={classes.aboutContainer}>
+              <Box sx={{boxShadow:"1"}} className={classes.aboutContainer}>
                 <ul>
                   <li
                     onClick={() => setActivatedSection("overview")}
@@ -268,8 +298,51 @@ else{
                     </section>
                   )}
                 </div>
-              </div>
+              </Box>
             )}
+            {
+              isPostsActivated &&
+              <>
+              <AddPost open={showAddPost} setOpen={setShowAddPost}/>
+             <List disablePadding title='Posts' sx={{gap:"0.5rem",paddingTop:"0.9rem",width:"100%",display:"flex",flexDirection:"column",flexWrap:"wrap",alignItems:"center"}}>
+              <ListItem sx={{borderRadius:"0.4rem",minWidth:"340px",boxShadow:"1",bgcolor:"#fff",width:"60%"}}>
+              <ListItemAvatar>
+                   <Avatar src={profile.profilePicture} alt="profile picture" sx={{width:"4rem",height:"4rem"}}>
+                   </Avatar>
+                 </ListItemAvatar>
+                 <ListItemText primary={<Typography onClick={()=>setShowAddPost(true)} sx={{transition:"all 0.15s ease-in",color:"text.secondary",cursor:"pointer",width:"100%",borderRadius:"2rem",padding:"0.6rem 0.6rem",bgcolor:"rgb(240, 242, 245)",":hover":{
+                  bgcolor:"#EEF0F0"
+                 }}}>Share something...</Typography>}  sx={{marginLeft:"0.5rem"}}/>
+              </ListItem>
+        {
+          posts.length < 1 ?  <Typography variant="h6" sx={{fontFamily:"Graphik",marginTop:"2rem",color:"text.secondary",width:"100%",textAlign:"center"}}>No Posts were Found!</Typography>:
+            posts.map((not)=>
+                <Accordion key={not.title + not.description} sx={{borderRadius:"0.4rem",boxShadow:"1",minWidth:"340px",bgcolor:"#fff",width:"60%"}}>
+                <AccordionSummary
+                  expandIcon={<ExpandMore/>}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                  sx={{paddingLeft:"0"}}
+                >
+                <ListItem>
+                  <ListItemAvatar>
+                   <Avatar src={profile.profilePicture} alt="profile picture" sx={{width:"4rem",height:"4rem"}}>
+                   </Avatar>
+                 </ListItemAvatar>
+                 <ListItemText primary={not.title} secondary={not.user} sx={{marginLeft:"0.5rem"}}/>
+               </ListItem>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography fontFamily="GraphikLight">
+                  {not.description}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            )
+        }
+    </List>
+              </>
+            }
           </div>
         </div>
       </div>

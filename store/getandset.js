@@ -323,6 +323,13 @@ export const get_progs_promise=(Deprartment_id)=>{
     );
   return getDocs(q);
 }
+export const get_posts_promise=(Deprartment_id)=>{
+  const q = query(
+    collection(db, "Posts"),
+      where("user", "==", Deprartment_id)
+    );
+  return getDocs(q);
+}
 export const get_modules_count=async(type,level,Deprartment_id)=>{
   const q = query(
     collection(db, "activemodule"),
