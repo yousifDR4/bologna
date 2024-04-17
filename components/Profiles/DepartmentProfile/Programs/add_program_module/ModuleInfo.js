@@ -100,7 +100,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
       inputsValid.acceptanceDate &&
       inputsValid.lab &&
       inputsValid.theory &&
-      inputsValid.online &&
+      
       inputsValid.exercises
     ) {
       setFormIsValid((prev)=> {return{...prev ,"MInfo":true}});
