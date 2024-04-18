@@ -19,7 +19,7 @@ const fields=[
 export default function AddPost(probs) {
   const profile = useSelector((state) => state.profile.profile);
   const [Uploading, setUploading] = React.useState(false);
-  let {initialValues,edit=false,open,setOpen}=probs;
+  let {initialValues,edit=false,open,setOpen,refetch=()=>{}}=probs;
   const dispatch=useDispatch();
   const handleClickOpen = () => {
     setOpen(true);
@@ -47,6 +47,7 @@ console.log(probs);
             let p={title:formJson.title,description:formJson.description,user:auth.currentUser.uid};
             const ref=await addDoc(collection(db,"Posts"),p);
             dispatch(messageActions.setMessage({messageContent:"The Post was added succesfully!",severity:"success"}));
+            refetch();
             }
             catch(e){
                 console.log(e);

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import classes from "./UniversityAccounts.module.css";
-import uob from "../../Images/UniversityofBaghdad.png";
+import uob from "../../Images/profilePicutre.jpg";
 import search from "../../Images/search.png";
 import AddUniversity from "./AddUniversity";
 import { db, auth } from "../../store/fire";
@@ -198,8 +198,7 @@ const UniversityAccounts = () => {
         <ul>
           {university.map((uni,index,arr) => {
           
-       if(( index+1)===Math.floor((arr.length)/2)){
-        console.log("worksss");
+       if(( index+1)===Math.floor((arr.length)/2) &&  (uni.name === "University of Baghdad" || uni.name === "al mustansiriyah university")) {
        return(
         <li key={uni.uid} ref={last} >
           <img src={uni.img} alt="" />
@@ -209,7 +208,7 @@ const UniversityAccounts = () => {
         </li>
       )
        }
-      else
+      else if ((uni.name === "University of Baghdad" || uni.name === "al mustansiriyah university"))
           return(
             <li key={uni.uid} >
               <img src={uni.img} alt="" />

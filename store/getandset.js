@@ -133,6 +133,7 @@ export const get_progs = async (Deprartment_id) => {
  
 
 };
+
 export const get_sp = async (Department_id, levels) => {
   const q = query(
     collection(db, "speciality"),
@@ -292,7 +293,6 @@ export const get_progs_as_college = async (Deprartment_id) => {
   );
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-
   return data;
 };
 export const usernameprofile=async(id)=>{
@@ -306,7 +306,8 @@ const info={password:password,username:username}
 console.log(info);
 return info;
 }
-export const get_prog_promise=(Deprartment_id,levels)=>{
+export const get_prog_promise=(Deprartment_id,levels,s="")=>{
+  console.log(Deprartment_id,levels,s);
   const q = query(
     collection(db, "programs"),
     and(
@@ -316,6 +317,19 @@ export const get_prog_promise=(Deprartment_id,levels)=>{
   );
   return getDocs(q);
 }
+export const get_control = async (Deprartment_id,program) => {
+  console.log(Deprartment_id,program);
+  const q = query(
+    collection(db, "Control"),
+    where("Department_id", "==", Deprartment_id),
+    where("program","==",program)
+  );
+
+return getDocs(q);
+
+ 
+
+};
 export const get_progs_promise=(Deprartment_id)=>{
   const q = query(
     collection(db, "programs"),

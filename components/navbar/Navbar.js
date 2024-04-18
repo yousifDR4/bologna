@@ -40,8 +40,10 @@ import {
 } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
-import { AccountCircleOutlined, AppRegistration, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, GroupWork, Groups3Outlined, Home, HomeOutlined, LibraryBooksOutlined, Person, PersonOutlined, Schedule } from "@mui/icons-material";
+import { AccountCircleOutlined, AppRegistration, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, GroupWork, Groups3Outlined, Home, HomeOutlined, LibraryBooksOutlined, Person, PersonAdd, PersonAddOutlined, PersonOutlined, Schedule } from "@mui/icons-material";
 import { errorActions } from "../../store/error-slice";
+import { Avatar } from "@mui/material";
+import APS from "../../Images/aps logo-02.png";
 let reF = true;
 let x = true;
 let count = 0;
@@ -181,6 +183,10 @@ const Navbar = () => {
     count =notifications;
     console.log("useeff",count);
     },[notifications])
+  useEffect(()=>{
+    count =notifications;
+    console.log("useeff",count);
+    },[notifications])
   return (
     <>
       <div className={backdrop} onClick={showAsideListHandler} />
@@ -188,7 +194,7 @@ const Navbar = () => {
         <ul className={classes.navList}>
           <div>
           
-            <li>
+            <li className={classes.logo}>
               <Link to="/">APS</Link>
             </li>
           </div>
@@ -242,6 +248,8 @@ const Navbar = () => {
                 <li><Link to="/" onClick={showAsideListHandler}><img src={idea} alt=""/>How it works</Link><div className={classes.innerLine}/></li>
                 <li><Link to="/Universities" onClick={showAsideListHandler}><img src={university} alt=""/>Colleges using it</Link><div className={classes.innerLine}/></li>
                 {isCollegeAccount && <li><Link to="/CollegeProfile"><img src={profilePicture} alt=""/>College Profile</Link></li>}
+                {isCollegeAccount && <li><Link to="/AddStudent"><PersonAddOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Add Student</Link></li>}
+                {isCollegeAccount && <li><Link to="/StudentsTable"><GroupOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students Table</Link></li>}
                 {isDepartmentAccount && <li><Link to="/DepartmentProfile"><img src={profilePicture} alt=""/>Department Profile</Link></li>}
                 {isStudentAccount && <li><Link to="/Home"><HomeOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Home</Link></li>}
                 {isStudentAccount && <li><Link to="/StudentProfile"><AccountCircleOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Profile</Link></li>}

@@ -45,8 +45,6 @@ const DepartmentProfile = () => {
   const [activatedList, setActivatedList] = useState("modules");
   const [activatedSection, setActivatedSection] = useState("overview");
   const [showEdit, setShowEdit] = useState(false);
-  const [showDropDown, setShowDropDown] = useState(false);
-  const [showAddModule,setShowAddModule]=useState(false);
   const [showAddPost, setShowAddPost] = useState(false);
   const isModulesActivated = activatedList === "modules";
   const isAboutActivated = activatedList === "about";

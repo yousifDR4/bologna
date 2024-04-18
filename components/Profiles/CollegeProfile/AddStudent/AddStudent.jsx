@@ -16,6 +16,7 @@ import Steptwo from "./Steptwo.jsx";
 import { getIdToken } from "firebase/auth";
 import { errorActions } from "../../../../store/error-slice.js";
 import Stepone from "./Stepone.jsx";
+import { Box } from "@mui/material";
 let initialValues = {
   department: "",
   firstname: "",
@@ -229,6 +230,7 @@ const AddStudent = () => {
   console.log(initRef.current);
 
   return (
+    <Box sx={{width:"100%",height:"100%",display:"flex",justifyContent:"center"}}>
     <div className="mydiv">
       <span>
         {" "}
@@ -241,19 +243,13 @@ const AddStudent = () => {
         <SelectStep
           name="1"
           selectStep={selectStep}
-          text="genral info"
+          text="Genral Information"
           check={stetp}
         />
         <SelectStep
           name="2"
           selectStep={selectStep}
-          text="extra information"
-          check={stetp}
-        />
-        <SelectStep
-          name="3"
-          selectStep={selectStep}
-          text="grade info"
+          text="Extra Information"
           check={stetp}
         />
       </ul>
@@ -267,6 +263,7 @@ const AddStudent = () => {
         {currentstep[stetp]}
       </Formik>
     </div>
+    </Box>
   );
 };
 export default AddStudent;
