@@ -14,9 +14,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../../store/fire";
 import { useSelector } from "react-redux";
-import { Typography } from "@mui/material";
-import { useQueries, useQuery } from "react-query";
-import { get_prog_promise } from "../../../../store/getandset";
 const stSp = [
   {
     name: "ICE",
@@ -27,31 +24,12 @@ const stSp = [
 ];
 const Speciality = (probs) => {
   const { program } = probs;
-  console.log(program);
- 
   const [specialities, setSpecialities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [update, setUpdate] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
-  const promise = () => get_prog_promise(Department_id, program,"hger");
-    const {
-      data: programObj={},
-      isLoading,
-      error,
-    isFetching,  
-    } = useQuery(`levels:${program} department:${Department_id}`, promise, {
-      enabled: (!!Department_id && !!program),
-      refetchOnWindowFocus:false,
-      staleTime:60*1000,
-      select:(data)=>{
-          console.log(data.docs[0]);
-        return data.docs[0] ? { ...data.docs[0].data(), id: data.docs[0].id } :{}
-        
-    }
-    });
-console.log(programObj);
   useEffect(() => {
     if(!Department_id)
     return;
@@ -85,7 +63,7 @@ console.log(programObj);
     setUpdate((prev) => !prev);
     setSpecialities([]);
   };
-  if (loading || isLoading) {
+  if (loading) {
     return <div className={classes.loader}><Loader /></div>;
   } else if (specialities.length > 0) {
     return (
@@ -129,13 +107,7 @@ console.log(programObj);
         )}
       </>
     );
-  }else if(!programObj?.activated){
-return(
-
-    <Typography width="100%" textAlign="center" color="text.secondary"> Program is not Activated!</Typography>
-);
-  } 
-  else {
+  } else {
     return (
       <>
         {showAdd && <AddSpeciality showAdd={setShowAdd} program={program} />}

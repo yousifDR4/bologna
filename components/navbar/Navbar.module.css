@@ -7,7 +7,7 @@ position: sticky;
 font-family: sans-serif;
 padding:1rem 2rem 1rem 2rem;
 /* border-bottom: 0.01rem solid #060640; */
-z-index: 11;
+z-index: 15;
 box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 3px 0px;
 }
 
@@ -25,11 +25,6 @@ box-shadow: rgba(0, 0, 0, 0.05) 0px 3px 3px 0px;
 }
 .nav ul div li{
 margin: 0rem 1rem 0 1rem;
-}
-.nav ul  .logo img{
-  width:4rem;
-  height: 4rem;
-  background: transparent;
 }
 .nav ul div:first-of-type a{
     font-size: 27px;
@@ -53,8 +48,6 @@ margin: 0rem 1rem 0 1rem;
 .nav ul button{
     border: none;
     background-color: #fff;
-    z-index: 0;
-    position: static;
 }
 .nav button img{
     width: 2rem;

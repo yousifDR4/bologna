@@ -411,47 +411,109 @@ const AddProgramModule = () => {
       console.log(e);
       setUploading(false);
     }
-
-      catch(e){
-        console.log(e);
-        setUploading(false);
-      }
-}
-console.log(completeForm.MInfo);
-console.log(uploading);
-    return(
-        <main className={classes.mainContainer}>
-            <div className={classes.secondaryContainer}>
-                <aside className={classes.sideContainer}>
-                    <div className={classes.progressBar}>
-                    <p>Progress</p>
-                    <LinearWithValueLabel value={progressCounter}/>
-                    </div>
-                    <ul>
-                        <li onClick={()=>clickHandler('MInfo')} className={`${header.title=="Module Information" ? classes.activeLink :''} ${completeForm.MInfo? classes.completed:""}`} key="0"><CheckIcon check={completeForm.MInfo}/> Module Information </li>
-                        <li onClick={()=>clickHandler('MTheor')} className={`${header.title=="Theoritical Curriculum" ? classes.activeLink :''} ${completeForm.MTheor? classes.completed:""}`} key="1"><CheckIcon check={completeForm.MTheor}/> Theoritical Curriculum </li>
-                        <li onClick={()=>clickHandler('MLab')} className={`${header.title=="Lab Curriculum" ? classes.activeLink :''} ${completeForm.MLab? classes.completed:""}`} key="2"><CheckIcon check={completeForm.MLab}/> Lab Curriculum </li>
-                        <li onClick={()=>clickHandler('MSTH')} className={`${header.title=="Structured Hours" ? classes.activeLink :''} ${completeForm.MSTH? classes.completed:""}`} key="3"><CheckIcon check={completeForm.MSTH}/> Structured Hours </li>
-                        <li onClick={()=>clickHandler('MUSTH')} className={`${header.title=="UnStructured Hours" ? classes.activeLink :''} ${completeForm.MUSTH? classes.completed:""}`} key="4"><CheckIcon check={completeForm.MUSTH}/> UnStructured Hours </li>
-                        <li onClick={()=>clickHandler('MAST')} className={`${header.title=="Grade Assesment" ? classes.activeLink :''} ${completeForm.MAST? classes.completed:""}`} key="5"><CheckIcon check={completeForm.MAST}/> Grade Assesment </li>
-                        <li onClick={()=>clickHandler('MLS')} className={`${header.title=="Learning Sources" ? classes.activeLink :''} ${completeForm.MLS? classes.completed:""}`} key="6"><CheckIcon check={completeForm.MLS}/> Learning Sources </li>
-                    </ul>
-                </aside>
-                <div className={classes.rightContainer}>
-                    <div className={classes.header}>
-                        <h3>{header.title}</h3>
-                    </div>
-                    <div className={classes.body}>
-                     {rightContainer}
-                    </div>
-                </div>
-                <div className={classes.button}>
-                <Button onClick={submithandler} startIcon={uploading ? <Upload/> :<Save/>}  variant="outlined" disabled={!completeForm.MInfo || uploading}>{uploading ?"Uploading":"Save"}</Button>
-                </div>
-            </div>
-        </main>
-        
-
+  };
+  return (
+    <main className={classes.mainContainer}>
+      <div className={classes.secondaryContainer}>
+        <aside className={classes.sideContainer}>
+          <div className={classes.progressBar}>
+            <p>Progress</p>
+            <LinearWithValueLabel value={progressCounter} />
+          </div>
+          <ul>
+            <li
+              onClick={() => clickHandler("MInfo")}
+              className={`${
+                header.title == "Module Information" ? classes.activeLink : ""
+              } ${completeForm.MInfo ? classes.completed : ""}`}
+              key="0"
+            >
+              <CheckIcon check={completeForm.MInfo} /> Module Information{" "}
+            </li>
+            <li
+              onClick={() => clickHandler("MTheor")}
+              className={`${
+                header.title == "Theoritical Curriculum"
+                  ? classes.activeLink
+                  : ""
+              } ${completeForm.MTheor ? classes.completed : ""}`}
+              key="1"
+            >
+              <CheckIcon check={completeForm.MTheor} /> Theoritical Curriculum{" "}
+            </li>
+            <li
+              onClick={() => clickHandler("MLab")}
+              className={`${
+                header.title == "Lab Curriculum" ? classes.activeLink : ""
+              } ${completeForm.MLab ? classes.completed : ""}`}
+              key="2"
+            >
+              <CheckIcon check={completeForm.MLab} /> Lab Curriculum{" "}
+            </li>
+            <li
+              onClick={() => clickHandler("MSTH")}
+              className={`${
+                header.title == "Structured Hours" ? classes.activeLink : ""
+              } ${completeForm.MSTH ? classes.completed : ""}`}
+              key="3"
+            >
+              <CheckIcon check={completeForm.MSTH} /> Structured Hours{" "}
+            </li>
+            <li
+              onClick={() => clickHandler("MUSTH")}
+              className={`${
+                header.title == "UnStructured Hours" ? classes.activeLink : ""
+              } ${completeForm.MUSTH ? classes.completed : ""}`}
+              key="4"
+            >
+              <CheckIcon check={completeForm.MUSTH} /> UnStructured Hours{" "}
+            </li>
+            <li
+              onClick={() => clickHandler("MAST")}
+              className={`${
+                header.title == "Grade Assesment" ? classes.activeLink : ""
+              } ${completeForm.MAST ? classes.completed : ""}`}
+              key="5"
+            >
+              <CheckIcon check={completeForm.MAST} /> Grade Assesment{" "}
+            </li>
+            <li
+              onClick={() => clickHandler("MLS")}
+              className={`${
+                header.title == "Learning Sources" ? classes.activeLink : ""
+              } ${completeForm.MLS ? classes.completed : ""}`}
+              key="6"
+            >
+              <CheckIcon check={completeForm.MLS} /> Learning Sources{" "}
+            </li>
+          </ul>
+        </aside>
+        <div className={classes.rightContainer}>
+          <div className={classes.header}>
+            <h3>{header.title}</h3>
+          </div>
+          <div className={classes.body}>{rightContainer}</div>
+        </div>
+        <div className={classes.button}>
+          <Button
+            onClick={submithandler}
+            startIcon={uploading ? <Upload /> : <Save />}
+            variant="outlined"
+            disabled={!completeForm.MInfo || uploading}
+          >
+            {uploading ? "Uploading" : "Save"}
+          </Button>
+        </div>
+      </div>
+    </main>
+  );
+};
+const CheckIcon = (probs) => {
+  if (probs.check) {
+    return (
+      <CheckCircleRoundedIcon
+        sx={{ color: "#569388", verticalAlign: "middle", marginLeft: "0.2rem" }}
+      />
     );
   }
   return (
