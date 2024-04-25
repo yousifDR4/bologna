@@ -42,7 +42,9 @@ const ScheduleTable=(probs)=>{
  }
  return(
     <Box   sx={{width:"100%",borderRadius:"10px",maxWidth:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"0.5fr repeat(7,1fr)",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",marginTop:"0.8rem",minWidth:"70rem"}}>
-        {[...Array(+endHours- +startHours +1)].map((_, index) => (<><Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes,true)}`,gridColumn:"0",}}>{startHours+index}:{startMinutes}</Box>{[...Array(+endHours- +startHours +1)].map((_, secIndex)=>(<Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes)}`,gridColumn:secIndex+2,borderTop:"1px dotted #B8BFC6"}}></Box>))}</>))
+
+        {[...Array(+endHours- +startHours +1)].map((_, index) => (<><Box key={index} sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes,true)}`,gridColumn:"1",}}>{startHours+index}:{startMinutes}</Box>{[...Array(+endHours- +startHours +1)].map((_, secIndex)=>(<Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes)}`,gridColumn:secIndex+2,borderTop:"1px dotted #B8BFC6"}}></Box>))}</>))
+
         }
         {[...Array(7)].map((_, index) => (<Box sx={{gridRow:"1/6",gridColumn:index+2,justifySelf:"center"}}>{arr[index]}</Box>))
         }
@@ -50,7 +52,9 @@ const ScheduleTable=(probs)=>{
             modules.map((mod)=>{
                 const [modstartHours, modstartMinutes] = mod.startingTime.split(':').map(Number);
                 const [modendHours,modendMinutes]=mod.endingTime.split(':').map(Number);
-                return <Box sx={{gridRow:calculateRow(modstartHours,modstartMinutes,modendHours,modendMinutes,false),gridColumn:mod.day+1}}><ModuleContainer module={mod} classrooms={classRooms} modules={modulesList}/></Box>
+
+                return <Box sx={{gridRow:calculateRow(modstartHours,modstartMinutes,modendHours,modendMinutes,false),gridColumn:mod.day+2}}><ModuleContainer selectedProgram={selectedProgram} programs={programs} modulesSch={modules} module={mod} classrooms={classRooms} modules={modulesList}/></Box>
+
             })
         }
      

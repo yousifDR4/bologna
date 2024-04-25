@@ -70,6 +70,8 @@ export default function AddBook(probs) {
                 return {...prev,"books":[...prev["books"],{"name":name,"file":fileUrl,"available":checked}]}
             })
             handleClose();
+            setFileUrl(null);
+            setChecked(false);
           },
         }}
       >

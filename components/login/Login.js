@@ -107,6 +107,7 @@ const Login=()=>{
           }
         }
         catch(e){
+          console.log(e);
             setLoading(false);
             dispatchRedux(errorActions.setError({title:"Login Failed",message:"Sorry, unable to login. Please know only registered accounts can login."}));
 

@@ -392,6 +392,9 @@ min-height: 4rem;
     .mainInfo .profilePicture{
         margin-right: 0;
     }
+    .mainInfo div h2{
+        margin-bottom: 0.3rem;
+    }
     .info .navigators{
         justify-content: center;
     padding: 0;

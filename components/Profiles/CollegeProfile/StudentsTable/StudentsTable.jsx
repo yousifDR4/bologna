@@ -36,7 +36,6 @@ const StudentsTable = () => {
   useEffect(() => {
     //fetch
     setModules([]);
-    console.log(profile);
     const f = async () => {
       if (!College_id) return;
 

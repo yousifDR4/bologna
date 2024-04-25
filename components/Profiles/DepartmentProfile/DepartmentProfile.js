@@ -270,6 +270,51 @@ else{
                 </div>
               </div>
             )}
+
+            {
+              isPostsActivated &&
+              <>
+              <AddPost open={showAddPost} setOpen={setShowAddPost} refetch={refetch}/>
+             <List disablePadding title='Posts' sx={{gap:"0.5rem",paddingTop:"0.9rem",width:"100%",display:"flex",flexDirection:"column",flexWrap:"wrap",alignItems:"center"}}>
+              <ListItem sx={{borderRadius:"0.4rem",minWidth:"340px",boxShadow:"1",bgcolor:"#fff",width:"60%"}}>
+              <ListItemAvatar>
+                   <Avatar src={profile.profilePicture} alt="profile picture" sx={{width:"4rem",height:"4rem"}}>
+                   </Avatar>
+                 </ListItemAvatar>
+                 <ListItemText primary={<Typography onClick={()=>setShowAddPost(true)} sx={{transition:"all 0.15s ease-in",color:"text.secondary",cursor:"pointer",width:"100%",borderRadius:"2rem",padding:"0.6rem 0.6rem",bgcolor:"rgb(240, 242, 245)",":hover":{
+                  bgcolor:"#EEF0F0"
+                 }}}>Share something...</Typography>}  sx={{marginLeft:"0.5rem"}}/>
+              </ListItem>
+        {
+          posts.length < 1 ?  <Typography variant="h6" sx={{fontFamily:"Graphik",marginTop:"2rem",color:"text.secondary",width:"100%",textAlign:"center"}}>No Posts were Found!</Typography>:
+            posts.map((not)=>
+                <Accordion key={not.title + not.description} sx={{borderRadius:"0.4rem",boxShadow:"1",minWidth:"340px",bgcolor:"#fff",width:"60%"}}>
+                <AccordionSummary
+                  expandIcon={<ExpandMore/>}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                  sx={{paddingLeft:"0"}}
+                >
+                <ListItem>
+                  <ListItemAvatar>
+                   <Avatar src={profile.profilePicture} alt="profile picture" sx={{width:"4rem",height:"4rem"}}>
+                   </Avatar>
+                 </ListItemAvatar>
+                 <ListItemText primary={not.title} secondary={not.user} sx={{marginLeft:"0.5rem"}}/>
+               </ListItem>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography fontFamily="GraphikLight">
+                  {not.description}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            )
+        }
+    </List>
+              </>
+            }
+
           </div>
         </div>
       </div>

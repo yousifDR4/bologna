@@ -136,6 +136,7 @@ const Navbar = () => {
   useEffect(() => {
     if (!profile.name) return;
     if (!accountType) return;
+    if(isProfessorAccount) return;
     // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
     // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
     const q = listnerq(accountType, profile.Department_id);
@@ -243,6 +244,10 @@ const Navbar = () => {
                 {isStudentAccount && <li><Link to="/StudentModules"><img src={moduleIcon} alt=""/> Modules</Link></li>}
                 {isStudentAccount && <li><Link to="/ModuleRegistartion"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules Registartion</Link></li>}
                 {isStudentAccount && <li><Link to="/StudentPresence"><PersonOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Attendance</Link></li>}
+
+                {isStudentAccount && <li><Link to="/Library"><LibraryBooksOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Library</Link></li>}
+                {isProfessorAccount && <li><Link to="/ProfessorProfile"><AccountCircleOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Profile</Link></li>}
+
                 {isProfessorAccount && <li><Link to="/Assesments"><GradingOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Assesments</Link></li>}
                 {isProfessorAccount && <li><Link to="/ProfessorModules"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules</Link></li>}
                 {isProfessorAccount && <li><Link to="/StudentsAttendance"><GroupOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students Attendance</Link></li>}

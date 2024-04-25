@@ -20,12 +20,21 @@ import { auth, db } from "../../../../store/fire";
 import { useSelector } from "react-redux";
 import { TableLoader } from "../StudentsModuleRegisteration";
 import Loader from "../../../UI/Loader/Loader";
+
+import { Typography } from "@mui/material";
+import BasicMenu from "../../../UI/Menu";
+import { Edit } from "@mui/icons-material";
+import EditProffessor from "./EditProfessor";
+
 const key = "Compact Table";
 
 const ProfessorTable = () => {
   const profile = useSelector((state) => state.profile.profile);
   const [modules, setModules] = useState([]);
+  const [professors,setProfessors]=useState([]);
+  const [showEdit, setshowEdit] = useState(false);
   const [loading,setLoading]=useState(true);
+  const [selectedProfessor, setselectedProfessor] = useState({});
   useEffect(() => {
     //fetch
     setModules([
@@ -46,6 +55,10 @@ const ProfessorTable = () => {
     return  {password: t.data().password,id:t.id}
   });
   const [d1,d2]=await Promise.all([p1,p2]);
+  if(d1.docs){
+    let d=d1.docs.map((doc)=>({...doc.data(),id:doc.id}));
+    setProfessors(d);
+  }
   const arr1=d1.docs.map((doc)=>({name:doc.data().username,id:doc.id}))
 const d3=await Promise.all(d2);
 console.log(arr1);
@@ -127,9 +140,7 @@ font-family:GraphikLight;
     width:fit-content;
     color:var(--styling1);
   }
-  &:nth-of-type(5){
-    text-align:center;
-  }
+
   
 img{
   width:2rem;
@@ -142,10 +153,16 @@ img{
   function onSortChange(action, state) {
     console.log(action, state);
   }
+  const handleClick=(prof)=>{
+    setshowEdit(true);
+    setselectedProfessor(professors.filter(p=>p.id === prof)[0]);
+  }
   if(loading){
     return <Loader/>
   }
   return (
+    <>
+    <EditProffessor open={showEdit} initialValues={selectedProfessor} handleClose={()=>setshowEdit(false)} />
     <div className={classes.container}>
 
       <div className={classes.table}>
@@ -157,7 +174,7 @@ img{
                 <HeaderRow>
                   <HeaderCellSort sortKey="NAME">username</HeaderCellSort>
                   <HeaderCell>password</HeaderCell>
-                  
+                  <HeaderCell>options</HeaderCell>
                 </HeaderRow>
               </Header>
 
@@ -167,7 +184,7 @@ img{
                   <Row key={module.name} item={module}>
                     <Cell>{module.name}</Cell>
                     <Cell>{module.password}</Cell>
-                    
+                    <BasicMenu menuItems={[{title:"Delete",handleClick:()=>{}},{title:"Edit",handleClick:()=>{handleClick(module.id)}}]} menuTitle={<Edit/>}/>
                   </Row>
                 ))}
               </Body>
@@ -177,6 +194,7 @@ img{
         </Table>
       </div>
     </div>
+    </>
   );
 };
 export default ProfessorTable;

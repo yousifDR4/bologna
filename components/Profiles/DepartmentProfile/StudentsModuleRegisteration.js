@@ -2,8 +2,11 @@ import {useEffect, useState} from 'react';
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
-import { get_Sujects,get_active_modules,get_modules, get_prof, get_progs } from '../../../store/getandset';
-import { auth } from '../../../store/fire';
+
+import { get_Sujects,get_active_modules,get_active_modules_promise,get_control,get_modules, get_prof, get_progs, get_students_promise } from '../../../store/getandset';
+import { auth, db } from '../../../store/fire';
+
+
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useSelector } from 'react-redux';
@@ -31,7 +34,6 @@ const StudentsModuleRegisteration = () => {
     setSelectedProgramObejct(
       programs.filter((p) => p.id === selectedProgram)[0]
     );
-    console.log(selectedProgramObject);
 
   }, [selectedProgram]);
   useEffect(()=>{
@@ -39,7 +41,6 @@ const StudentsModuleRegisteration = () => {
     if(!auth.currentUser)
     return;
     const f=async()=>{
-      console.log(1111);
 const p1=get_modules(Department_id);
 const p2 = get_progs(Department_id);
 // Access data for each document snapshot in the array
@@ -52,6 +53,92 @@ setLoading(false);
     f();
 
   },[profile])
+
+
+  const promise=()=> get_control(Department_id,selectedProgramObject?.type ? selectedProgramObject.type : "");
+  const {
+    data: control={},
+    isLoading,
+    error,
+  isFetching, 
+  refetch 
+  } = useQuery(`department:${Department_id}program:${selectedProgramObject?.type ? selectedProgramObject.type : ""}`, promise, {
+   enabled:(!!Department_id && selectedProgram !== ""),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? {...data.docs[0].data(),id:data.docs[0].id} :{}
+    }
+  }
+  );
+
+  const promise2=()=> get_students_promise(Department_id,selectedProgram,selectedLevel);
+  const {
+    data: Students=[],
+    isLoading2,
+    error2,
+  isFetching2, 
+  refetch2 
+  } = useQuery(`department:${Department_id}program:${selectedProgram}level:${selectedLevel}`, promise2, {
+   enabled:(!!Department_id && selectedProgram !== "" && selectedLevel !== ""),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :{}
+    }
+  }
+  );
+  const promise3=()=> get_active_modules_promise(Department_id,selectedProgramObject?.type ? selectedProgramObject.type : "",selectedLevel);
+  const {
+    data: activeModules=[],
+    isLoading3,
+    error3,
+  isFetching3, 
+  refetch3 
+  } = useQuery(`department:${Department_id}program:${selectedProgramObject?.type ? selectedProgramObject.type : ""}level:${selectedLevel}`, promise3, {
+   enabled:(!!Department_id && selectedProgram !== "" && selectedLevel !== ""),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :{}
+    }
+  }
+  );
+  const HandleConfirmation=async ()=>{
+    if(Object.keys(control).length < 1){
+      try{
+        setUploading(true);
+        const id = await addDoc(collection(db, "Control"), {
+          Department_id: Department_id,
+          program: selectedProgramObject.type,
+          enabledRegistration: true
+        });
+      }
+      catch(e){
+        console.log(e);
+      }
+      finally{
+        setUploading(false);
+        refetch();
+      }
+    }
+    else{
+    try{
+      setUploading(true);
+    await setDoc(doc(db, "Control",control.id), {
+      ...control,
+      enabledRegistration: !control.enabledRegistration
+    });
+  }
+  catch(e){
+    console.log(e);
+  }
+  finally{
+    setUploading(false);
+    refetch();
+  }
+  }
+}
 
 
 
@@ -80,14 +167,27 @@ setLoading(false);
     field: 'noModules',
     headerName: 'Number of Registered Modules',
     width: 250,
+    type:"number"
   },
   {
-    field:"registeredModules",
+    field:"registerdModules",
     headerName:"Regisitered Modules",
     width:300,
   },
   ];
-let rows=[];
+
+let stringifyModules=(arr=[])=>{
+  let s="";
+  console.log(activeModules);
+  if(arr){
+    if(arr.length > 0){
+      arr.map((m)=>activeModules.filter((mod)=>m===mod.id).length >0 ? s+=activeModules.filter((mod)=>m===mod.id)[0].name+" ":"");
+    }
+  }
+  console.log(s);
+  return s;
+}
+let rows=Students.map((s)=>({...s,name:s.firstname+" "+s.lastname,noModules:s?.registerdModules?s.registerdModules.length:0,registerdModules:stringifyModules(s.registerdModules)}));
 
 if (loading){
   return <Loader/>
@@ -100,7 +200,7 @@ if (loading){
       <Toolbar sx={{paddingLeft:"0!important",display:"flex",flexWrap:"wrap",gap:"0.9rem",width:"100%"}}>
         <Typography component="span" sx={{flexGrow: 1}}>
         <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
-          Students Registeration
+          Students Registration
         </Typography>
         </Typography>
         <Typography component="span" sx={{width:"100%",display:"flex",flexWrap:"wrap",gap:"0.5rem"}}>
