@@ -19,8 +19,6 @@ import { get_Sujects,get_classRooms,get_modules } from '../../../../store/getand
 import { auth } from '../../../../store/fire';
 import AddClass from './AddClass';
 import { useSelector } from 'react-redux';
-import { Box, Button } from '@mui/material';
-import { Add } from '@mui/icons-material';
 const key = 'Compact Table';
 // let c=[
 //     {
@@ -145,12 +143,14 @@ const updateTable=()=>{
 }
   return (
   <>
- {showAdd && <div className={classes.add}><AddClass classroom={classS} edit={edit} showAdd={setShowAdd} open={showAdd} setReload={setReload}/></div>}
+ {showAdd && <div className={classes.add}><AddClass classroom={classS} edit={edit} showAdd={setShowAdd} setReload={setReload}/></div>}
  {showAdd && <div className={classes.backDrop} onClick={()=>setShowAdd(false)}/>}
     <div className={classes.container}>
         <div className={classes.table}>
-      <Box sx={{display:"flex",flexDirection:"row",padding:"0.8rem 0"}}> <h3>View Classrooms</h3> <Button startIcon={<Add/>} onClick={()=>setShowAdd(true)} sx={{marginLeft:"0.3rem"}} variant='outlined'>Add A Classroom</Button> </Box> 
-      
+        <h3>View Classrooms</h3>
+        <div className={classes.button}>
+        <button onClick={()=>setShowAdd(true)}>Add</button>
+        </div>
     <Table data={data} theme={theme} sort={sort}>
       {(tableList) => (
         <>

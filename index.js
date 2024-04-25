@@ -11,5 +11,5 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <QueryClientProvider client={queryClient}>
 <Provider store={store}><App /></Provider>
-{/* <ReactQueryDevtools position="bottom-right"   initialIsOpen={true}/> */}
+<ReactQueryDevtools position="bottom-right"   initialIsOpen={true}/>
 </QueryClientProvider>);

@@ -163,7 +163,7 @@ const AddDepartment = (probs) => {
         )}
         <div className={classes.button}>
           {" "}
-          <button onClick={submitHandler} disabled={!formIsValid || uploading}>
+          <button onClick={submitHandler} disabled={!formIsValid}>
           {uploading ? "Uploading...":"Add"}
           </button>
         </div>
