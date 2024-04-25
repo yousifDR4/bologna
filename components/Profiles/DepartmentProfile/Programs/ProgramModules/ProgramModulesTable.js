@@ -107,17 +107,17 @@ const promise=()=> get_active_modules(Department_id,selectedProgram !== "" ?   p
 {
   field: 'manager',
   headerName: 'Manager',
-  width: 200,
+  width: 160,
 },
 {
   field: 'midTermHours',
   headerName: 'Midterm Hours',
-  width: 200,
+  width: 160,
 },
 {
   field:"activated",
   headerName:"Activated",
-  width:"100",
+  width:150,
   type:"boolean"
 },
 {
@@ -245,7 +245,7 @@ return (
         }}
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
-
+        
       />:<Typography textAlign="center" marginY={1} color="text.secondary">No Modules were found!</Typography>
 }
     </div>

@@ -3,7 +3,7 @@ import { auth, creatuser, db } from "../../../../store/fire";
 import Select from "react-select";
 import classes from "./AddProgram.module.css";
 import { getIdToken } from "firebase/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addDoc,
   arrayUnion,
@@ -12,7 +12,8 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { get_Sujects } from "../../../../store/getandset";
+import { get_Sujects, get_prof } from "../../../../store/getandset";
+import { displayMessage } from "../../../../store/message-slice";
 let modul = [
   { value: "physics", label: "Physics" },
   { value: "mathII", label: "MathII" },
@@ -38,6 +39,7 @@ const intilistate = {
   programMangertouched: false,
   programCordinator: "",
   programCordinatortouched: false,
+  eveningStudy:false,
 };
 function reducer(state, action) {
   let newstate = {};
@@ -62,13 +64,14 @@ function reducer(state, action) {
         specialtyYeartouched: false,
         programsNeeded: 0,
         programsNeededtouched: false,
-        summerInternship: false,
+        summerInternship: 0,
         summerInternshipYear: 0,
         summerInternshipYeartouched: false,
         programManager: "",
         programManagertouched: false,
         programCordinator: "",
         programCordinatortouched: false,
+        eveningStudy:0,
       };
     default:
   }
@@ -77,7 +80,7 @@ function reducer(state, action) {
 
 const AddProgram = (probs) => {
   const [modules, setModules] = useState(modul);
-  
+  const [professors, setProfessors] = useState([]);
   const [state, dispatch] = useReducer(reducer, intilistate);
   const [uploading, setUploading] = useState(false);
   const inputsValid = {
@@ -92,7 +95,9 @@ const AddProgram = (probs) => {
   };
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
-  const Department_id=profile.Department_id;
+  const Department_id = profile.Department_id;
+  const professorsoid=profile.professors || [];
+  const dispatchRedux=useDispatch();
   useEffect(() => {
     if (
       inputsValid.outcome &&
@@ -109,7 +114,30 @@ const AddProgram = (probs) => {
     }
     console.log(formIsValid);
   }, [inputsValid]);
-
+  useEffect(() => {
+    if (!auth.currentUser) return;
+    console.log("NNNN");
+    const f = async () => {
+      const a = await get_Sujects(Department_id);
+      setModules(a);
+      console.log(a, "a");
+    };
+    f();
+  }, [auth.currentUser]);
+  useEffect( ()=>{
+    const fetch=async()=>{
+      try{
+      const p= await get_prof(professorsoid);
+      setProfessors(p);
+      }
+      catch(e){
+        console.log(e);
+        dispatchRedux(displayMessage("Loading Failed","error"));
+      }
+    }
+    if(Department_id)
+    fetch();
+  },[Department_id,profile])
   const blurHandler = (e) => {
     const action = {
       type: "touch",
@@ -140,14 +168,15 @@ const AddProgram = (probs) => {
         code: state.code,
         specialtyYear: state.specialtyYear,
         programsNeeded: state.programsNeeded,
-        summerInternship: state.summerInternship,
+        summerInternship: +state.summerInternship === 1,
         summerInternshipYear: state.summerInternshipYear,
         programManager: state.programManager,
         programCordinator: state.programCordinator,
         Deprartment_id: Department_id,
         University_id: profile.University_id,
         College_id: profile.College_id,
-        specialty: state.specialty,
+        specialty: +state.specialty === 1,
+        eveningStudy: +state.eveningStudy === 1,
         activated:true,
         type:(probs.ECTS == 240 ? 4:probs.ECTS == 300 ? 5: 6)
       };
@@ -167,16 +196,7 @@ const AddProgram = (probs) => {
     };
     dispatch(action);
   };
-  useEffect(() => {
-    if (!auth.currentUser) return;
-    console.log("NNNN");
-    const f = async () => {
-      const a = await get_Sujects(Department_id);
-      setModules(a);
-      console.log(a, "a");
-    };
-    f();
-  }, [auth.currentUser]);
+
 
   return (
     <div className={`${classes.container}`}>
@@ -220,7 +240,7 @@ const AddProgram = (probs) => {
           </span>
           <span>
             <label className="text">
-              Module Code<span className={classes.star}>*</span>
+              Program Code<span className={classes.star}>*</span>
             </label>
             <input
               name="code"
@@ -244,8 +264,8 @@ const AddProgram = (probs) => {
               onBlur={blurHandler}
               value={state.specialty}
             >
-              <option value={false}>doesn't exist</option>
-              <option value={true}>exist</option>
+              <option value={0}>doesn't exist</option>
+              <option value={1}>exist</option>
             </select>
           </span>
 
@@ -295,8 +315,23 @@ const AddProgram = (probs) => {
               onBlur={blurHandler}
               value={state.summerInternship}
             >
-              <option value={false}>not needed</option>
-              <option value={true}>needed</option>
+              <option value={0}>not needed</option>
+              <option value={1}>needed</option>
+            </select>
+          </span>
+          <span>
+            <label className="text">
+              Is there an evening study<span className={classes.star}>*</span>
+            </label>
+            <select
+              name="eveningStudy"
+              type=""
+              onChange={onchange}
+              onBlur={blurHandler}
+              value={state.eveningStudy}
+            >
+              <option value={0}>doesn't exists</option>
+              <option value={1}>exists</option>
             </select>
           </span>
           <span>
@@ -319,34 +354,41 @@ const AddProgram = (probs) => {
           </span>
           <span>
             <label className="text">
-              Program Manager<span className={classes.star}>*</span>
+              Program Manager
+              <span className={classes.star}>*</span>
             </label>
-            <input
+            <select
               name="programManager"
-              type="text"
+              type=""
               onChange={onchange}
-              onBlur={blurHandler}
               value={state.programManager}
-            />
-            {!inputsValid.programManager && state.programManagertouched && (
-              <p className={classes.errorText}>name must not be empty!</p>
-            )}
+            >
+              <option value={""} disabled hidden>
+                select...
+              </option>
+              {professors.map((p) => {
+                return <option value={p.id}>{p.username}</option>;
+              })}
+            </select>
           </span>
           <span>
             <label className="text">
-              Program Cordinator<span className={classes.star}>*</span>
+              Program Cordinator
+              <span className={classes.star}>*</span>
             </label>
-            <input
+            <select
               name="programCordinator"
-              type="text"
+              type=""
               onChange={onchange}
-              onBlur={blurHandler}
               value={state.programCordinator}
-            />
-            {!inputsValid.programCordinator &&
-              state.programCordinatortouched && (
-                <p className={classes.errorText}>name must not be empty!</p>
-              )}
+            >
+              <option value={""} disabled hidden>
+                select...
+              </option>
+              {professors.map((p) => {
+                return <option value={p.id}>{p.username}</option>;
+              })}
+            </select>
           </span>
           <div className={classes.button}>
             {" "}

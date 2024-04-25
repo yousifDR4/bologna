@@ -27,20 +27,43 @@ import {
   where,
 } from "firebase/firestore";
 import { useFetch } from "../../../hooks/useFetch.jsx";
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Edit, Expand, ExpandMore } from "@mui/icons-material";
+import { useQuery } from "react-query";
+import { get_posts_promise } from "../../../store/getandset.js";
+import AddPost from "../DepartmentProfile/AddPost.js";
 const CollegeProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
+  const College_id=profile.College_id;
   const [activatedList, setActivatedList] = useState("colleges");
   const loaded = useSelector((state) => state.profile.loaded);
   const [activatedSection, setActivatedSection] = useState("overview");
   const [showEdit, setShowEdit] = useState(false);
+  const [showAddPost, setShowAddPost] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const [showAddDepartment,setShowAddDepartment]=useState(false);
+  const isPostsActivated = activatedList === "posts";
   const isDepartmentActivated = activatedList === "colleges";
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
   const {data:departments,load,error}=useFetch(profile.Department_id);
-  console.log(profile.Department_id);
+  const promise=()=> get_posts_promise(College_id);
+  const {
+    data: posts,
+    isLoading,
+    error2,
+  isFetching, 
+  refetch 
+  } = useQuery(`college:${College_id}`, promise, {
+   enabled:!!College_id,
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
   if(!loaded){
     return(
       <>
@@ -107,12 +130,13 @@ const CollegeProfile = () => {
             />
             <div>
               <h2>{profile.name}</h2>
-              <p>@{profile.uid}</p>
+              <p>@{profile.username}</p>
             </div>
-            <button onClick={() => setShowEdit((prev) => !prev)}>
+            <Button variant="outlined" startIcon={<Edit/>} onClick={() => setShowEdit((prev) => !prev)}>Edit Profile</Button>
+            {/* <button onClick={() => setShowEdit((prev) => !prev)}>
               <img src={edit} alt="" />
               edit profile
-            </button>
+            </button> */}
           </div>
 
           <div className={classes.info}>
@@ -121,13 +145,19 @@ const CollegeProfile = () => {
                 onClick={() => setActivatedList("colleges")}
                 className={isDepartmentActivated ? classes.activated : ``}
               >
-                Department
+                Departments
               </li>
               <li
                 onClick={() => setActivatedList("about")}
                 className={isAboutActivated ? classes.activated : ``}
               >
                 About
+              </li>
+              <li
+                onClick={() => setActivatedList("posts")}
+                className={isPostsActivated ? classes.activated : ``}
+              >
+                Posts
               </li>
             </ul>
             {isDepartmentActivated && (
@@ -138,8 +168,7 @@ const CollegeProfile = () => {
                     <li key={dept.uid}>
                       <img src={alkawarizmiPicture} alt="" />
                       <div>
-                        <p>{dept.name}</p> <span>@{dept.uid}</span> <br />
-                        <span>{dept.university}</span>
+                        <p>{dept.name}</p> <span>@{dept.uid}</span> 
                       </div>
                     </li>
                   ))}
@@ -147,7 +176,7 @@ const CollegeProfile = () => {
               </div>
             )}
             {isAboutActivated && (
-              <div className={classes.aboutContainer}>
+              <Box sx={{boxShadow:"1"}} className={classes.aboutContainer}>
                 <ul>
                   <li
                     onClick={() => setActivatedSection("overview")}
@@ -247,8 +276,51 @@ const CollegeProfile = () => {
                     </section>
                   )}
                 </div>
-              </div>
+              </Box>
             )}
+               {
+              isPostsActivated &&
+              <>
+              <AddPost open={showAddPost} refetch={refetch} setOpen={setShowAddPost}/>
+             <List disablePadding title='Posts' sx={{gap:"0.5rem",paddingTop:"0.9rem",width:"100%",display:"flex",flexDirection:"column",flexWrap:"wrap",alignItems:"center"}}>
+              <ListItem sx={{borderRadius:"0.4rem",minWidth:"340px",boxShadow:"1",bgcolor:"#fff",width:"60%"}}>
+              <ListItemAvatar>
+                   <Avatar src={profile.profilePicture} alt="profile picture" sx={{width:"4rem",height:"4rem"}}>
+                   </Avatar>
+                 </ListItemAvatar>
+                 <ListItemText primary={<Typography onClick={()=>setShowAddPost(true)} sx={{transition:"all 0.15s ease-in",color:"text.secondary",cursor:"pointer",width:"100%",borderRadius:"2rem",padding:"0.6rem 0.6rem",bgcolor:"rgb(240, 242, 245)",":hover":{
+                  bgcolor:"#EEF0F0"
+                 }}}>Share something...</Typography>}  sx={{marginLeft:"0.5rem"}}/>
+              </ListItem>
+        {
+          posts.length < 1 ?  <Typography variant="h6" sx={{fontFamily:"Graphik",marginTop:"2rem",color:"text.secondary",width:"100%",textAlign:"center"}}>No Posts were Found!</Typography>:
+            posts.map((not)=>
+                <Accordion key={not.title + not.description} sx={{borderRadius:"0.4rem",boxShadow:"1",minWidth:"340px",bgcolor:"#fff",width:"60%"}}>
+                <AccordionSummary
+                  expandIcon={<ExpandMore/>}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                  sx={{paddingLeft:"0"}}
+                >
+                <ListItem>
+                  <ListItemAvatar>
+                   <Avatar src={profile.profilePicture} alt="profile picture" sx={{width:"4rem",height:"4rem"}}>
+                   </Avatar>
+                 </ListItemAvatar>
+                 <ListItemText primary={not.title} secondary={not.user} sx={{marginLeft:"0.5rem"}}/>
+               </ListItem>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography fontFamily="GraphikLight">
+                  {not.description}
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            )
+        }
+    </List>
+              </>
+            }
           </div>
         </div>
       </div>

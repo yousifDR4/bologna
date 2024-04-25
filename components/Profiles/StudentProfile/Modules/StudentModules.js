@@ -96,7 +96,7 @@ const StudentModules=()=>{
     {modules.filter((modu)=>modu.id===mod.module)[0].name}
      <List sx={{fontFamily:"GraphikLight",  display:"flex",flexWrap:"wrap"}}>
       <ListItem sx={{padding:"0"}}>
-        <StyledListItemText primary="Name" secondary= {modules.filter((modu)=>modu.id===mod.module)[0].name} />
+        <StyledListItemText primary="Name" secondary= {modules.filter((modu)=>modu.id===mod.module)[0].name || "Module not found"} />
       </ListItem >
       <ListItem sx={{padding:"0"}}>
         <StyledListItemText primary="Code" secondary={modules.filter((modu)=>modu.id===mod.module)[0].code}  />
