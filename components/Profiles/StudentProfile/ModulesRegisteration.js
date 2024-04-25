@@ -52,18 +52,24 @@ const ModulesRegisteration=()=>{
     let registerdCore=0;
     let registeredSupp=0;
     let registeredElec=0;
-    for(let i=0;i<registerdModules.length ;i++){
-      registeredECTS+= +studentModules.filter((m)=>m.id === registerdModules[i])[0].ECTS;
-      if(studentModules.filter((m)=>m.id === registerdModules[i])[0].type === "core" || false){
-        registerdCore += 1;
-      }
-      if(studentModules.filter((m)=>m.id === registerdModules[i])[0].type === "support" || false){
-        registeredSupp += 1;
-      }
-      if(studentModules.filter((m)=>m.id === registerdModules[i])[0].type === "elective" || false){
-        registeredElec += 1;
-      }
-    }
+
+useEffect(() => {
+  for(let i=0;i<registerdModules.length ;i++){
+    registeredECTS+= +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS ? +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS:0;
+  }
+
+  let locStudentReg=studentModules.filter((mod)=>profile.registerdModules.includes(mod.id));
+  console.log(locStudentReg);
+  let locMod= modules.filter((mod)=>locStudentReg.some((m)=>m.module===mod.id));
+  console.log(locMod);
+  console.log(locMod);
+    registerdCore = locMod.filter((m)=>m.type === "core").length ;
+    registeredSupp = locMod.filter((m)=>m.type === "support").length ;
+    registeredElec = locMod.filter((m)=>m.type === "elective").length ;
+    setNumbers({ECTS:registeredECTS,core:registerdCore,supp:registeredSupp,elec:registeredElec});
+}, [registerdModules,profile]);
+ 
+
 
     const isRegisterationValid={
       "ECTS":+registeredECTS === 30,
