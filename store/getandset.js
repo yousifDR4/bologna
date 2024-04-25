@@ -275,6 +275,16 @@ export const get_module_students = async (Deprartment_id,module_id) => {
   console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
+export const get_students_grade = async (id) => {
+
+  const q = query(
+    collection(db, "grades"),
+      where("assessmentId", "==", id),
+  );
+  const docs = await getDocs(q);
+  console.log(docs.docs[0].data());
+  return docs ? docs :[];
+};
 const rand=()=>(Math.floor(26*Math.random()))
 export const gen=()=>{
   let capitalLetters = [

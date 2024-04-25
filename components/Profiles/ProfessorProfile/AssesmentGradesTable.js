@@ -3,7 +3,8 @@ import {   GridRowModes,
     DataGrid,
     GridToolbarContainer,
     GridActionsCellItem,
-    GridRowEditStopReasons, } from '@mui/x-data-grid';import Button from '@mui/material/Button';
+    GridRowEditStopReasons,
+   } from '@mui/x-data-grid';import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -13,9 +14,10 @@ import { Box, Card, CardContent, List, ListItem, ListItemText, Tab, Tabs, Typogr
 import { Cancel, Edit, Grade, Group, GroupOutlined, RateReview, Save, StarRounded } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { messageActions } from "../../../store/message-slice";
-import { get_module_students } from "../../../store/getandset";
+import { get_module_students, get_students_grade } from "../../../store/getandset";
 import { useQueries, useQuery } from "react-query";
-import { auth } from "../../../store/fire";
+import { auth, db } from "../../../store/fire";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 export default function AssesmentGradesTable(probs) {
 
   const profile = useSelector((state) => state.profile.profile);
@@ -29,6 +31,21 @@ export default function AssesmentGradesTable(probs) {
       const handleClose = () => {
         setOpen(false);
       };
+      const gradepromise=()=>get_students_grade(assesment.id);
+      const {
+        data:gradeRow=[],
+        isLoading:isLoading,
+        error:iserror2,
+      isFetching:isFetching2, 
+       refetch:refetch2
+      } = useQuery(`module:${module}`, gradepromise, {
+       enabled:( open ),
+        refetchOnWindowFocus:false,
+      
+        select:(data)=>{
+            return data ? data.docs.map((doc)=>({...doc.data(),docid:doc.id})) :[]
+        }
+      })
 
       const studentPromise=()=>get_module_students(Department_id,module);
       const {
@@ -69,7 +86,7 @@ export default function AssesmentGradesTable(probs) {
                 minHeight:"15rem !important"
             }}>
             <Box sx={{ width: '100%',minWidth:"25rem" }}>
-                <StudentsTable students={students} assesment={assesment} module={module}/>
+                <StudentsTable refetch={refetch2}  grade={gradeRow}students={students} assesment={assesment} module={module}/>
     </Box>
     
             </DialogContent>
@@ -88,11 +105,24 @@ export default function AssesmentGradesTable(probs) {
 
 
 export function StudentsTable(probs) {
-    const {assesment,students,module}=probs;
+  const profile = useSelector((state) => state.profile.profile);
+  const uid = useSelector((state) => state.auth.uid);
+  const Department_id = profile.Department_id;
+    const {assesment,students,module,grade,refetch}=probs;
     const dispatch=useDispatch();
     const [rows, setRows] = useState([{id:"1",name:"snow",grade:"10"}]);
     const [rowModesModel, setRowModesModel] = useState({});
 let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
+namedStudents=namedStudents.map((s)=>{
+  let sg=grade.filter((g)=>g.studentId===s.id);
+
+  return{...s,...sg[0]};
+
+}
+
+
+)
+
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
           event.defaultMuiPrevented = true;
@@ -103,8 +133,11 @@ let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
       };
     
-      const handleSaveClick = (id) => () => {
+      const handleSaveClick = (id) => async() => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+
+        
+
       };
     
       const handleDeleteClick = (id) => () => {
@@ -123,9 +156,46 @@ let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
         }
       };
     
-      const processRowUpdate = (newRow) => {
+      const processRowUpdate = async(newRow) => {
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+        console.log(newRow);
+        let edit= namedStudents.filter((st)=>st.id===newRow.id)[0]?.grade ? true :false;
+        if(!edit){
+          try{
+        const info={Department_id:newRow.Department_id,
+          professorId:auth.currentUser.uid,
+          studentId:newRow.uid,
+          level:newRow.level,
+          program:newRow.program,
+          fullmark:assesment.grades,
+          grade:newRow.grade,
+          assessmentId:assesment.id}
+        await addDoc(collection(db,"grades"),info)
+          }
+          catch(e){
+            console.log(e);
+          }
+        }
+        else{
+          try{
+          const info={Department_id:newRow.Department_id,
+            professorId:auth.currentUser.uid,
+            studentId:newRow.uid,
+            level:newRow.level,
+            program:newRow.program,
+            fullmark:assesment.grades,
+            grade:newRow.grade,
+            assessmentId:assesment.id}
+            console.log(newRow);
+          await setDoc(doc(db,"grades",newRow.docid),info)
+          await refetch();
+          
+          }
+          catch(e){
+            console.log(e);
+          }
+        }
         return updatedRow;
       };
     
@@ -151,6 +221,7 @@ let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
           editable: true,
       preProcessEditCellProps: (params) => {
         const hasError = params.props.value < 0 || params.props.value > assesment.grades;
+        
         if(hasError){
             dispatch(messageActions.setMessage({messageContent:"Grade value is not valid!",severity:"error"}))
         }
