@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
-import { auth, creatuser, db } from "../../../../store/fire";
+import { auth, createprofessor, creatuser, db } from "../../../../store/fire";
 import person from "../../../../Images/user.png";
 import Select from "react-select";
 
@@ -145,6 +145,7 @@ console.log(formIsValid);
     // course is variable indicating course number with values 1 or 2
     setUploading(true);
     const IdToken=await getIdToken(auth.currentUser);
+  console.log(state.email);
     try {
       const info = {
         IdToken:IdToken,
@@ -167,7 +168,7 @@ console.log(formIsValid);
       };
       
       console.log(info);
-      const res=await creatuser(info);
+      const res=await createprofessor(info);
 if (!res.uid) {
         console.log("error");
       }
