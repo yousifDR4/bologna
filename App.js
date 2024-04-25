@@ -50,12 +50,6 @@ import ProfessorModules from "./components/Profiles/ProfessorProfile/Modules/Pro
 import StudentsAttendance from "./components/Profiles/ProfessorProfile/StudentsAttendance.js";
 import ProfessorHome from "./components/Profiles/ProfessorProfile/Home/ProfessorHome.js";
 
-import Divsions from "./components/Profiles/DepartmentProfile/Divisions/Divsion.js";
-import Library from "./components/Profiles/library/Library.js";
-import StudentsModuleRegisteration from "./components/Profiles/DepartmentProfile/StudentsModuleRegisteration.js";
-import ProfessorProfile from "./components/Profiles/ProfessorProfile/ProfessorProfile.js";
-
-
 
 
 let firstInitilize=true;
@@ -225,25 +219,7 @@ function App() {
         {
           path:"/StudentsAttendance",
           element:<StudentsAttendance/>
-
-        },
-        {
-          path:"/Division",
-          element:<Divsions/>
-        },
-        {
-          path:"/Library",
-          element:<Library/>
-        },
-        {
-          path:"/StudentsModuleRegisteration",
-          element:<StudentsModuleRegisteration/>
-        },
-        {
-          path:"/ProfessorProfile",
-          element:<ProfessorProfile/>
-        },
-
+        }
 
 
 

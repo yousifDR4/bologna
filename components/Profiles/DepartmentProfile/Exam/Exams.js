@@ -34,9 +34,6 @@ import { Delete } from "@mui/icons-material";
 import AddExam from "./AddExam";
 import ArticleIcon from "@mui/icons-material/Article";
 import { useQuery } from "react-query";
-import { ref } from "firebase/storage";
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 let initcommittes = [
   {
     program: { name: "University of Baghdad", id: "JpF0GPA2vFDPRvfgmzMu" },
@@ -68,10 +65,6 @@ const Exams = () => {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   const professorsoid = profile.professors;
-  const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.only('xl'));
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isSmallScreen= useMediaQuery(theme.breakpoints.down('sm'));
   const handleChange = (event) => {
     setSelectedProgram(event.target.value);
   };
@@ -180,7 +173,7 @@ console.log(exams,"exam");
           boxShadow: "none",
         }}
       >
-        <Toolbar sx={{ paddingLeft: "0!important",display:"flex",flexWrap:"wrap",gap:"0.8rem" }}>
+        <Toolbar sx={{ paddingLeft: "0!important" }}>
           <Typography component="span" sx={{ flexGrow: 1 }}>
             <Typography
               variant="h5"
@@ -199,11 +192,10 @@ console.log(exams,"exam");
               modules= {modules? modules:[]}
               committes={committes}
               edit={false}
-              refetch={refetch}
             />
           </Typography>
           <FormControl
-            sx={{ minWidth: "12rem", width: "15%", paddingLeft: "0" }}
+            sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
             size="small"
           >
             <InputLabel
@@ -238,12 +230,12 @@ console.log(exams,"exam");
           </Toolbar>
         </AppBar>
         <Box sx={{border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
-        <List sx={{display:"flex",justifyContent:isSmallScreen?"center":"start",gap:"0.5rem",padding:"1rem 0"}}>
+        <List sx={{display:"flex",gap:"0.5rem",padding:"1rem 0"}}>
         { 
          exams.filter((exam)=> exam.program===selectedProgram).length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No exams were found!</Typography>:
             exams.filter((exam)=>exam.program===selectedProgram).map((exam)=>{
                 return(
-     <ListItem key={exam.id} sx={{width: '19%',minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
+     <ListItem key={exam.id} sx={{width: '19%',minWidth:"250px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
                 <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
                 <Accordion sx={{boxShadow:"none",border:"1px solid #d1d7dc",fontFamily:"GraphikLight",width:"95%"}}>
         <AccordionSummary
@@ -269,7 +261,7 @@ console.log(exams,"exam");
     </AccordionDetails>
     </Accordion>
     <Box sx={{display:"flex",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
-    <AddExam refetch={refetch} program={programs.filter((p)=>p.id===selectedProgram)[0]} modules={modules} committes={committes} edit={true} initialValues={exam}/>
+    <AddExam program={programs.filter((p)=>p.id===selectedProgram)[0]} modules={modules} committes={committes} edit={true} initialValues={exam}/>
           <Button startIcon={<Delete/>} sx={{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",width:"50%",boxShadow:"none"}} variant="contained">Delete</Button>
         </Box>
             </ListItem>

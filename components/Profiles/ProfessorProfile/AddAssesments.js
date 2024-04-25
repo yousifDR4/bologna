@@ -62,11 +62,8 @@ export default function AddAssesment(probs) {
                 boxShadow: "none",
                 color: "#fff",
                 border: "none",
-                padding:"0.1rem 0.2rem"
               }
-            : {
-              padding:"0.3rem 0.4rem"
-            }
+            : {}
         }
         onClick={handleClickOpen}
       >

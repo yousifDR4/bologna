@@ -9,7 +9,6 @@ import {
   deleteDoc,
   doc,
   getAggregateFromServer,
-  getCountFromServer,
   getDoc,
   getDocs,
   orderBy,
@@ -20,7 +19,6 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "./fire";
-import { PortableWifiOff } from "@mui/icons-material";
 export const setId = async (info) => {
   const { universities_id, Colleges_id, accountType } = info;
   console.log(info, "info");
@@ -213,19 +211,6 @@ export const get_professor_modules = async (Deprartment_id,Professor_id) => {
   console.log(data);
   return data ? data :[];
 };
-export const get_students_count= async(Department_id,modules)=>{
-  console.log(Department_id,modules);
-  const q = query(
-    collection(db, "users"),
-    and(
-      where("Department_id", "==", Department_id),
-      where("registerdModules","array-contains-any",modules),
-    ),
-  );
-  const snapshot = await getCountFromServer(q);
-  
-  return snapshot.data().count || 0;
-}
 export const get_professor_assesments = async (Deprartment_id,Professor_id,module) => {
   console.log(Deprartment_id,Professor_id,module);
   const q = query(
@@ -310,48 +295,6 @@ export const get_prog_promise=(Deprartment_id,levels)=>{
   );
   return getDocs(q);
 }
-
-export const get_control = async (Deprartment_id,program) => {
-  console.log(Deprartment_id,program);
-  const q = query(
-    collection(db, "Control"),
-    where("Department_id", "==", Deprartment_id),
-    where("program","==",program)
-  );
-
-return getDocs(q);
-
- 
-
-};
-export const get_students_promise = async (Deprartment_id,program,level) => {
-  console.log(Deprartment_id,level,program);
-  const q = query(
-    collection(db, "users"),
-    where("Department_id", "==", Deprartment_id),
-    where("program","==",program),
-    where("level","==",+level)
-  );
-
-return getDocs(q);
-
- 
-
-};
-export const get_active_modules_promise = async (Deprartment_id,program,level) => {
-  console.log(Deprartment_id,program,level);
-  const q = query(
-    collection(db, "activemodule"),
-    and(
-      where("Deprartment_id", "==", Deprartment_id),
-      where("level", "==", level),
-      where("type","==",program)
-
-    ),
-  );
-  return getDocs(q);
-};
-
 export const get_progs_promise=(Deprartment_id)=>{
   const q = query(
     collection(db, "programs"),

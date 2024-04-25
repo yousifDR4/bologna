@@ -10,19 +10,17 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { AddOutlined, Edit } from '@mui/icons-material';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../../store/fire';
-import { useDispatch, useSelector } from 'react-redux';
-import { displayMessage } from '../../../../store/message-slice';
+import { useSelector } from 'react-redux';
 export default function AddExam(probs) {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   const [open, setOpen] = React.useState(false);
-  let {modules,committes,program,initialValues,edit,refetch}=probs;
+  let {modules,committes,program,initialValues,edit}=probs;
   const [selectedCommitte,setSelectedCommitte]=React.useState(edit ? initialValues['committe'] ||'':"");
   const [selectedLevel,setSelectedLevel]=React.useState(edit ? initialValues['level'] ||'':"");
   const [selectedModule,setSelectedModule]=React.useState(edit ? initialValues['module'] ||'':"");
   const [selectedTry,setSelectedTry]=React.useState(edit ? initialValues['try'] ||'':"");
-  const [uploading, setuploading] = React.useState(false);
-  const dispatch=useDispatch();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -45,8 +43,6 @@ console.log(modules);
         PaperProps={{
           component: 'form',
           onSubmit: async(event) => {
-            setuploading(true);
-            try{
             event.preventDefault();
             const info = {
               committe: selectedCommitte,
@@ -57,17 +53,8 @@ console.log(modules);
               program:program.id
             };
             const ref=await addDoc(collection(db,"Exams"),info)
-            refetch();
-            dispatch(displayMessage("Exam was Added Successfully","success"))
+              
             handleClose();
-          }
-          catch(e){
-            console.log(e);
-            dispatch(displayMessage("An Error Occurred","error"))
-          }
-          finally{
-            setuploading(false);
-          }
           },
         }}
       >
@@ -174,7 +161,7 @@ console.log(modules);
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" disabled={uploading} >{uploading ? "Uploading..." :edit? "Save":"Add"}</Button>
+          <Button type="submit">{edit? "Save":"Add"}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

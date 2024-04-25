@@ -32,8 +32,6 @@ import AddCommitte from "./AddCommite";
 import { Delete } from "@mui/icons-material";
 import CommitteMembers from "./CommitteMembers";
 import { useQuery } from "react-query";
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 let initcommittes = [
   {
     program: { name: "University of Baghdad", id: "JpF0GPA2vFDPRvfgmzMu" },
@@ -49,6 +47,7 @@ let initcommittes = [
 ];
 const ExamComitte = () => {
   const [selectedSemester, setSelectedSemester] = useState(1);
+
   const [programs, setPrograms] = useState([]);
   const [professors, setProfessors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,10 +55,6 @@ const ExamComitte = () => {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   const professorsoid = profile.professors;
-  const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.only('xl'));
-  const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
-  const isSmallScreen= useMediaQuery(theme.breakpoints.down('sm'));
   const handleChange = (event) => {
     setSelectedSemester(event.target.value);
   };
@@ -116,7 +111,7 @@ const ExamComitte = () => {
         flexDirection: "column",
         flexGrow: "1",
         margin: "0.6rem 0.6rem 0rem 0.6rem",
-        padding: isSmallScreen ? "0 0.4rem" :"0 0.8rem",
+        padding: "0 0.8rem",
       }}
     >
       <AppBar
@@ -138,7 +133,7 @@ const ExamComitte = () => {
                 color: "var(--styling1)",
                 display: "inline",
                 marginRight: "0.8rem",
-                fontSize:isSmallScreen ?"1.3rem":"inherit"
+                marginBottom:"0.4rem"
               }}
             >
               Exam Comittes List
@@ -188,7 +183,7 @@ const ExamComitte = () => {
           marginBottom: "0.4rem",
         }}
       >
-        <List sx={{ display: "flex",justifyContent:isSmallScreen ?"center":"start" ,gap: "1rem", padding: "1rem 0",flexWrap:"wrap" }}>
+        <List sx={{ display: "flex", gap: "1rem", padding: "1rem 0",flexWrap:"wrap" }}>
           
           {isLoading?
           <ListSkeleton></ListSkeleton>
@@ -325,7 +320,7 @@ const ExamComitte = () => {
                       professors={professors}
                       program={
                         programs.filter(
-                          (prog) => prog.id === committe["program"]
+                          (prog) => prog.id === committe["program"]["id"]
                         )[0]
                       }
                     />
