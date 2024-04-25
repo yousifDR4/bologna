@@ -91,9 +91,8 @@ export function StudentsTable(probs) {
     const {assesment,students,module}=probs;
     const dispatch=useDispatch();
     const [rows, setRows] = useState([{id:"1",name:"snow",grade:"10"}]);
-    const [Students,setStudents]=useState(rows);
     const [rowModesModel, setRowModesModel] = useState({});
-
+let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
           event.defaultMuiPrevented = true;
@@ -204,7 +203,7 @@ export function StudentsTable(probs) {
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid 
       sx={{ height: "400", bgcolor:"#fff",width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}
-        rows={Students}
+        rows={namedStudents}
         columns={columns}
         initialState={{
           pagination: {

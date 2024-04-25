@@ -2,8 +2,8 @@ import {useEffect, useState} from 'react';
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
-import { get_Sujects,get_active_modules,get_modules, get_prof, get_progs } from '../../../store/getandset';
-import { auth } from '../../../store/fire';
+import { get_Sujects,get_active_modules,get_control,get_modules, get_prof, get_progs } from '../../../store/getandset';
+import { auth, db } from '../../../store/fire';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useSelector } from 'react-redux';
@@ -12,11 +12,13 @@ import { useQuery } from "react-query";
 import Loader from '../../UI/Loader/Loader';
 import { DataGrid, GridActionsCellItem, GridNoRowsOverlay } from '@mui/x-data-grid';
 import Confirm from '../../UI/Confirm/Confirm';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 
 const StudentsModuleRegisteration = () => {
   const [modules,setModules]=useState([]);
   const [students,setStudents]=useState([]);
   const [regEnabled,setRegEnabled]=useState(false);
+  const [Uploading,setUploading]=useState(false);
   const [confirmOpen,setConfirmOpen]=useState(false);
   const [selectedProgram, setSelectedProgram] = useState("");
   const [selectedLevel, setSelectedLevel] = useState("");
@@ -43,16 +45,70 @@ const StudentsModuleRegisteration = () => {
 const p1=get_modules(Department_id);
 const p2 = get_progs(Department_id);
 // Access data for each document snapshot in the array
-const [mod,progs] = await Promise.all([p1, p2]);
-
+const [mod,progs,cont] = await Promise.all([p1, p2]);
 setModules(mod);
 setPrograms(progs);
 setLoading(false);
+console.log(progs);
     }
     f();
 
-  },[profile])
+  },[profile]);
 
+  const promise=()=> get_control(Department_id,selectedProgramObject?.type ? selectedProgramObject.type : "");
+  const {
+    data: control={},
+    isLoading,
+    error,
+  isFetching, 
+  refetch 
+  } = useQuery(`department:${Department_id}program:${selectedProgramObject?.type ? selectedProgramObject.type : ""}`, promise, {
+   enabled:(!!Department_id && selectedProgram !== ""),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+      console.log(data.docs);
+        return data ? {...data.docs[0].data(),id:data.docs[0].id} :{}
+    }
+  }
+  );
+  
+  const HandleConfirmation=async ()=>{
+    console.log(control);
+    if(Object.keys(control).length < 1){
+      try{
+        setUploading(true);
+        const id = await addDoc(collection(db, "Control"), {
+          Department_id: Department_id,
+          program: selectedProgramObject.type,
+          enabledRegistration: true
+        });
+      }
+      catch(e){
+        console.log(e);
+      }
+      finally{
+        setUploading(false);
+        refetch();
+      }
+    }
+    else{
+    try{
+      setUploading(true);
+    await setDoc(doc(db, "Control",control.id), {
+      ...control,
+      enabledRegistration: !control.enabledRegistration
+    });
+  }
+  catch(e){
+    console.log(e);
+  }
+  finally{
+    setUploading(false);
+    refetch();
+  }
+  }
+}
 
 
   const columns = [
@@ -88,13 +144,13 @@ setLoading(false);
   },
   ];
 let rows=[];
-
+console.log(control);
 if (loading){
   return <Loader/>
 }
   return (
     <>
-    <Confirm open={confirmOpen} setOpen={setConfirmOpen} message={`are you sure you want to ${regEnabled?"disable":"enable"} registartion`} title={`${regEnabled?"Disable":"Enable"} Confirmation`} handleResult={(res)=>{if(res){setRegEnabled(prev=>!prev)}}}/>
+    <Confirm open={confirmOpen} setOpen={setConfirmOpen} message={`are you sure you want to ${control?.enabledRegistration ? control.enabledRegistration : false ?"disable":"enable"} registartion`} title={`${control?.enabledRegistration ? control.enabledRegistration : false?"Disable":"Enable"} Confirmation`} handleResult={(res)=>{if(res){HandleConfirmation()}}}/>
     <Box sx={{ display:"flex",flexDirection:"column",boxSizing:"border-box",flexGrow: "1",width:"100%",padding:"0 0.8rem",marginTop:"0.8rem"}}>
     <AppBar position="static" sx={{borderTopLeftRadius:"10px",borderTopRightRadius:"10px",bgcolor:"transparent",boxShadow:"none",}}>
       <Toolbar sx={{paddingLeft:"0!important",display:"flex",flexWrap:"wrap",gap:"0.9rem",width:"100%"}}>
@@ -185,8 +241,8 @@ if (loading){
                   : ""}
               </Select>
             </FormControl>
-            <FormControl size='small' sx={{display:"grid",alignItems:"center",justifyItems:"center",padding:"0rem 0.3rem",marginBottom:"8px",border:"1px solid rgba(25, 118, 210, 0.5)",borderColor:selectedLevel === ""?"text.secondary":"var(--styling1)",borderRadius:"4px",color:"#1976d2"}}>
-      <FormControlLabel sx={{margin:"0"}} control={<Checkbox checked={regEnabled} onClick={()=>setConfirmOpen(true)} sx={{padding:"0",color:'var(--styling1)'}} disabled={selectedLevel === ""} />} title='Enable Students to register for modules' label=" Enable Registration" />
+            <FormControl  size='small' sx={{display:"grid",alignItems:"center",justifyItems:"center",padding:"0rem 0.3rem",marginBottom:"8px",border:"1px solid rgba(25, 118, 210, 0.5)",borderColor:selectedLevel === ""?"text.secondary":"var(--styling1)",borderRadius:"4px",color:"#1976d2"}}>
+      <FormControlLabel sx={{margin:"0"}} control={<Checkbox  checked={control?.enabledRegistration ? control.enabledRegistration : false} onClick={()=>setConfirmOpen(true)} sx={{padding:"0",color:'var(--styling1)'}} disabled={selectedProgram === "" || Uploading || isFetching} />} title='Enable Students to register for modules' label=" Enable Registration" />
       </FormControl>
             </Typography>
       </Toolbar>

@@ -20,6 +20,7 @@ import {
 import { setreport } from "../../../../store/getandset";
 import { useLocation } from "react-router-dom";
 import { profileActions } from "../../../../store/profile-slice";
+import { displayMessage } from "../../../../store/message-slice";
 
 const intilistate = {
   name: "",
@@ -32,7 +33,7 @@ const intilistate = {
   city: "",
   citytouched: false,
   Degree: "",
-  sex: "",
+  sex: "male",
   password: "",
   passwordtouched: false,
   email: "",
@@ -63,7 +64,7 @@ function reducer(state, action) {
         citytouched: false,
         codetouched: false,
 
-        sex: "",
+        sex: "male",
         Degree: "",
 
       };
@@ -183,19 +184,21 @@ if (!res.uid) {
           Department_id:Department_id,
           seen:[]
         }
-        
-       await setreport(reportinfo,Department_id)
+        dispatchRedux(displayMessage("Account was created succesfully!","success"));
+       await setreport(reportinfo,Department_id);
+        const action = {
+      type: "reset",
+       };
+    dispatch(action);
       }
-      // setUploading(false);
-      // const action={
-      //   type:"reset"
-      // };
-      // dispatch(action);
     } catch (e) {
       console.log(e);
       setUploading(false);
+      dispatchRedux(displayMessage("An error occurred!","error"));
     }
+   finally{
     setUploading(false);
+   }
 
  
 

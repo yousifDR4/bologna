@@ -19,5 +19,12 @@ const messageSlice = createSlice({
       },
     },
   });
+  export const displayMessage = (message,type) => {
+    console.log(message);
+    return  (dispatch) => {
+      console.log(message);
+      dispatch(messageSlice.actions.setMessage({messageContent:message,severity:type}))
+    }
+  };
   export default messageSlice;
 export const messageActions = messageSlice.actions;

@@ -8,7 +8,7 @@ let arr=[
     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"
 ];
 const ScheduleTable=(probs)=>{
- const {modules,timeStart,timeEnd,classRooms,modulesList,isLoading}=probs;
+ const {modules,timeStart,timeEnd,classRooms,modulesList,isLoading,programs,selectedProgram}=probs;
  const [startHours, startMinutes] = timeStart.split(':').map(Number);
  const [endHours,endMinutes]=timeEnd.split(':').map(Number);
  let numberOfRows=((endHours*60 + endMinutes)-(startHours*60 + startMinutes))/5 +6;
@@ -18,8 +18,6 @@ const ScheduleTable=(probs)=>{
     let endRowNumber=(moduleEndHours*60 + moduleEndMinutes)-(moduleStartingHour*60+ModuleStartMinute);
     endRowNumber=(endRowNumber+rowNumber)/5;
     rowNumber=rowNumber/5;
-    console.log(moduleStartingHour,ModuleStartMinute,moduleEndHours,moduleEndMinutes);
-    console.log(endRowNumber,rowNumber);
     if(minus){
         rowNumber--;
         endRowNumber--;
@@ -42,7 +40,7 @@ const ScheduleTable=(probs)=>{
  }
  return(
     <Box   sx={{width:"100%",borderRadius:"10px",maxWidth:"100%",boxSizing:"border-box",display:"grid",gridTemplateColumns:"0.5fr repeat(7,1fr)",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",marginTop:"0.8rem",minWidth:"70rem"}}>
-        {[...Array(+endHours- +startHours +1)].map((_, index) => (<><Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes,true)}`,gridColumn:"0",}}>{startHours+index}:{startMinutes}</Box>{[...Array(+endHours- +startHours +1)].map((_, secIndex)=>(<Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes)}`,gridColumn:secIndex+2,borderTop:"1px dotted #B8BFC6"}}></Box>))}</>))
+        {[...Array(+endHours- +startHours +1)].map((_, index) => (<><Box key={index} sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes,true)}`,gridColumn:"0",}}>{startHours+index}:{startMinutes}</Box>{[...Array(+endHours- +startHours +1)].map((_, secIndex)=>(<Box sx={{gridRow:`${calculateRow(startHours+index,startMinutes,startHours+index+1,startMinutes)}`,gridColumn:secIndex+2,borderTop:"1px dotted #B8BFC6"}}></Box>))}</>))
         }
         {[...Array(7)].map((_, index) => (<Box sx={{gridRow:"1/6",gridColumn:index+2,justifySelf:"center"}}>{arr[index]}</Box>))
         }
@@ -50,7 +48,7 @@ const ScheduleTable=(probs)=>{
             modules.map((mod)=>{
                 const [modstartHours, modstartMinutes] = mod.startingTime.split(':').map(Number);
                 const [modendHours,modendMinutes]=mod.endingTime.split(':').map(Number);
-                return <Box sx={{gridRow:calculateRow(modstartHours,modstartMinutes,modendHours,modendMinutes,false),gridColumn:mod.day+1}}><ModuleContainer module={mod} classrooms={classRooms} modules={modulesList}/></Box>
+                return <Box sx={{gridRow:calculateRow(modstartHours,modstartMinutes,modendHours,modendMinutes,false),gridColumn:mod.day+1}}><ModuleContainer selectedProgram={selectedProgram} programs={programs} modulesSch={modules} module={mod} classrooms={classRooms} modules={modulesList}/></Box>
             })
         }
      
@@ -60,7 +58,7 @@ const ScheduleTable=(probs)=>{
 export default ScheduleTable;
 
 export const ModuleContainer=(probs)=>{
-    let {module,modules,classrooms}=probs;
+    let {module,modules,modulesSch,classrooms,programs,selectedProgram}=probs;
     const [anchorEl, setAnchorEl] =useState(null);
     const [anchorMenu, setAnchorMenu] = useState(null);
   const openMenu = Boolean(anchorMenu);
@@ -125,13 +123,13 @@ export const ModuleContainer=(probs)=>{
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem ><AddScheduling edit={true} modules={modules} initialValues={module} classes={classrooms} study={module.study}/></MenuItem>
+        <MenuItem ><AddScheduling selectedProgram={selectedProgram}  modulesSch={modulesSch}  programs={programs} edit={true} activeMod={modules} initialValues={module} classes={classrooms} study={module.study}/></MenuItem>
         <MenuItem onClick={handleDelete}>Delete</MenuItem>
       </Menu></>
           </Typography>
           <Typography  sx={{display:"flex",flexWrap:"wrap"}}>
             <Typography component="span" sx={{width:"80%"}}>
-         <Typography variant="body1"> {modules.filter((mod)=>(mod.id === module.moduleId))[0]?.name}</Typography>
+         <Typography variant="body1"> {modules.filter((mod)=>(mod.id === module.module))[0]?.name}</Typography>
          <Typography component="span" sx={{flex:"1",color:borderColor}}>{module.startingTime + " - " + module.endingTime}</Typography>
          </Typography>
         {icon}
@@ -163,10 +161,13 @@ export const ModuleContainer=(probs)=>{
         </ListSubheader>
       } >
                 <ListItem sx={{paddingTop:"0",margin:"0"}}>
-                    <ListItemText primary="classroom" secondary={classrooms.filter((c)=>c.id === module.class)[0].name}/>
+                    <ListItemText primary="classroom" secondary={module.class === "online" ?"online":classrooms.filter((c)=>c.id === module.class)[0].name}/>
                 </ListItem>
                 <ListItem sx={{paddingTop:"0",margin:"0"}}>
                     <ListItemText primary="Type" secondary={module.type}/>
+                </ListItem>
+                <ListItem sx={{paddingTop:"0",margin:"0"}}>
+                    <ListItemText primary="Code" secondary={module.code}/>
                 </ListItem>
             </List>
           </Typography>

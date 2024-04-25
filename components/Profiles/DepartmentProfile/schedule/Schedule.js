@@ -9,8 +9,10 @@ import Select from "@mui/material/Select";
 import { useEffect, useState } from "react";
 import { auth } from "../../../../store/fire";
 import {
+  get_Schedule_Adv,
     get_Schedule_promise,
   get_Subjects,
+  get_active_modules,
   get_classRooms,
   get_progs,
 } from "../../../../store/getandset";
@@ -47,6 +49,7 @@ const Schedule = () => {
     setSelectedSpeciality,
     setSelectedStudy,
   };
+  console.log(selectedStudy);
   useEffect(() => {
     console.log("NNNN");
     if (!auth.currentUser) return;
@@ -74,19 +77,37 @@ const Schedule = () => {
       f();
     }
   }, [refitch, profile, Department_id]);
-  const promise=()=> get_Schedule_promise(selectedProgram,selectedLevel);
+  const promise=()=> get_Schedule_Adv(selectedProgram,selectedLevel,selectedStudy,selectedDivision);
   const {
-    data: modulesSch,
+    data: modulesSch = [],
     isLoading,
     error,
   isFetching, 
   refetch 
   } = useQuery(`program:${selectedProgram}levels:${selectedLevel}`, promise, {
-   enabled:selectedProgram!=="", 
+   enabled:selectedProgram!=="" && selectedLevel !== "" && selectedStudy !== "", 
     refetchOnWindowFocus:false,
   
     select:(data)=>{
         return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+        
+    }
+  }
+  );
+  const promise2=()=> get_active_modules(Department_id,selectedProgram !== "" ?   programs.filter((p) => p.id === selectedProgram)[0].type :"",+selectedLevel);
+  const {
+    data: activeMod =[],
+    isLoading2,
+    error2,
+  isFetching2, 
+  refetch2 
+  } = useQuery(`Deprartment_id:${Department_id}program:${selectedProgram !== "" ?   programs.filter((p) => p.id === selectedProgram)[0].type :""}level:${+selectedLevel}`, promise2, {
+   enabled:selectedProgram!=="" && selectedLevel !== "", 
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+      console.log(data);
+        return data ? data :[]
         
     }
   }
@@ -111,11 +132,6 @@ const Schedule = () => {
 
     return <Loader />;
   }
-  let disableButton =
-    selectedDivision !== "" &&
-    selectedLevel !== "" &&
-    selectedProgram !== "" &&
-    selectedSpeciality !== "";
 
   return (
     <Box
@@ -153,12 +169,15 @@ const Schedule = () => {
               modules={modules}
               classes={classrooms}
               study={selectedStudy}
-              disabled={disableButton}
               selectedDivision={selectedDivision}
               selectedLevel={selectedLevel}
               selectedProgram={selectedProgram}
               selectedSpeciality={selectedSpeciality}
+              disabled={selectedProgram === "" || selectedLevel === "" || selectedStudy === "" }
+              programs={programs}
               handlerefetch={handlerefetch}
+              modulesSch={modulesSch}
+              activeMod={activeMod}
             />
           </Typography>
           <Typography
@@ -256,6 +275,41 @@ const Schedule = () => {
               size="small"
             >
               <InputLabel
+                id="study"
+                sx={{ color: "var(--styling1) !important" }}
+              >
+                Study Type
+              </InputLabel>
+              <Select
+                id="study"
+                label="Study Type"
+                name="Study"
+                labelId="study"
+                onChange={handleChange}
+                value={selectedStudy}
+                
+                sx={{
+                  height: "2.5rem",
+                  bgcolor: "#fff",
+                  color: "var(--styling1)",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "var(--styling1) !important",
+                  },
+                  "& .MuiSvgIcon-root": {
+                    color: "var(--styling1)",
+                  },
+                }}
+                variant="outlined"
+              >
+                <MenuItem value="morning">Morning Study</MenuItem>
+             {selectedProgramObject?.eveningStudy &&   <MenuItem value="evening">Evening Study</MenuItem>}
+              </Select>
+            </FormControl>
+            <FormControl
+              sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
+              size="small"
+            >
+              <InputLabel
                 id="speciality"
                 sx={{ color: "var(--styling1) !important" }}
               >
@@ -288,41 +342,6 @@ const Schedule = () => {
                 {specialities.map((sp) => {
                   return <MenuItem value={sp.id}>{sp.name}</MenuItem>;
                 })}
-              </Select>
-            </FormControl>
-            <FormControl
-              sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
-              size="small"
-            >
-              <InputLabel
-                id="study"
-                sx={{ color: "var(--styling1) !important" }}
-              >
-                Study Type
-              </InputLabel>
-              <Select
-                id="study"
-                label="Study"
-                name="Study"
-                labelId="study"
-                onChange={handleChange}
-                value={selectedSpeciality}
-                disabled={!selectedProgramObject?.eveningStudy}
-                sx={{
-                  height: "2.5rem",
-                  bgcolor: "#fff",
-                  color: "var(--styling1)",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "var(--styling1) !important",
-                  },
-                  "& .MuiSvgIcon-root": {
-                    color: "var(--styling1)",
-                  },
-                }}
-                variant="outlined"
-              >
-                <MenuItem value="morning">Morning Study</MenuItem>
-                <MenuItem value="evening">Evening Study</MenuItem>
               </Select>
             </FormControl>
             <FormControl
@@ -375,14 +394,15 @@ const Schedule = () => {
       
           <ScheduleTable
           modules={modulesSch ? modulesSch :[]}
-          timeStart="8:30"
-          timeEnd="14:30"
+          timeStart={selectedStudy === "" ? "8:30" : selectedStudy === "morning" ? "8:30":"12:30"}
+          timeEnd={selectedStudy === "" ? "14:30" : selectedStudy === "morning" ? "14:30":"18:30"}
           classRooms={classrooms}
-          modulesList={modules}
+          modulesList={activeMod}
           isLoading={isLoading}
+          programs={programs}
+          selectedProgram={selectedProgram}
         />
         
-      
       </Box>
     </Box>
   );

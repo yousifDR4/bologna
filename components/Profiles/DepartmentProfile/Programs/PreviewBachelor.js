@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import classes from "./PreviewBachelor.module.css"
 import { useState } from "react";
 import DisplayLevels from "./DisplayLevels";
+import { Box, Button } from "@mui/material";
 let Program={
     activated:true,
     ECTS:240,
@@ -54,11 +55,11 @@ const PreviewBachelor=(probs)=>{
                 </span>
                 <span>
                     <p>Evening Study</p>
-                    <p>{program.eveningStudy == "true" ?"exists" :"doesn't exist" }</p>
+                    <p>{program.eveningStudy  ?"exists" :"doesn't exist" }</p>
                 </span>
                 <span>
                     <p>Summer Internship</p>
-                    <p> {program.summerInternhsip == "true"? "exists":"doesn't exist"}</p>
+                    <p> {program.summerInternship  ? "exists":"doesn't exist"}</p>
                 </span>
                 <span>
                     <p>Department</p>
@@ -72,7 +73,12 @@ const PreviewBachelor=(probs)=>{
                     <p></p>
                     <p></p>
                 </span>
-            </div></div>
+            </div>
+       
+            </div>
+            <Box sx={{width:"100% !important",textAlign:"end"}}>
+            <Button variant="outlined" sx={{marginRight:"0.4rem"}}>Edit</Button>
+            <Button variant="outlined">Delete</Button></Box>
         </div>
     );
 }
