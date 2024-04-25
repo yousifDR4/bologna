@@ -14,9 +14,6 @@
   border-radius: 20px;
   margin: 0 1.5rem;
 }
-.container .noShadow{
-    box-shadow: none;
-}
 .container form > div{
     padding: 2rem;
 }
@@ -49,9 +46,7 @@
     color: #6B6C6D;
   
 }
-.container form.noShadow > .fields{
-    padding: 0;
-}
+
 .container form > .fields{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -77,11 +72,6 @@ overflow: hidden;
 font-size: 110%;
 font-family: GraphikThin;
 color:#6B6C6D;
-}
-.fields input:disabled{
-cursor: not-allowed;
-border-color: #6B6C6D;
-background-color: #EBEBE4 ;
 }
 .container form select{
     padding-left: 0;
