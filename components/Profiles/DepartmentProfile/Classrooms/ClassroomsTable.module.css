@@ -1,24 +1,4 @@
-.button{
-    display: flex;
-    width: 100%;
-    justify-content: end;
-    padding:0  0.5rem 0.4rem 0;
-}
-.table button{
-    background-color:var(--styling1);
-    border: none;
-    color:#fff;
-    width: 6.5rem;
-    font-family: GraphikLight;
-    border-radius: 9px;
-    height: 2rem;
-    align-self: flex-end;
-}
-.table button:hover{
-    background-color: #fff;
-    border: 1px solid var(--styling1);
-    color: var(--styling1);
-}
+
  .add{
     display:block;
     position: fixed;

@@ -52,6 +52,7 @@ import ProfessorHome from "./components/Profiles/ProfessorProfile/Home/Professor
 import Divsions from "./components/Profiles/DepartmentProfile/Divisions/Divsion.js";
 import Library from "./components/Profiles/library/Library.js";
 import StudentsModuleRegisteration from "./components/Profiles/DepartmentProfile/StudentsModuleRegisteration.js";
+import ProfessorProfile from "./components/Profiles/ProfessorProfile/ProfessorProfile.js";
 
 
 
@@ -234,6 +235,10 @@ function App() {
         {
           path:"/StudentsModuleRegisteration",
           element:<StudentsModuleRegisteration/>
+        },
+        {
+          path:"/ProfessorProfile",
+          element:<ProfessorProfile/>
         },
 
 

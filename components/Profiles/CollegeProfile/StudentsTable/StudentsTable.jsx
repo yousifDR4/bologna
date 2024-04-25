@@ -40,9 +40,7 @@ const StudentsTable = () => {
   const [modules, setModules] = useState([]);
   useEffect(() => {
     //fetch
-  
     setModules([]);
-    console.log(profile);
     const f = async () => {
       setloading(true);
       if (!College_id) return;

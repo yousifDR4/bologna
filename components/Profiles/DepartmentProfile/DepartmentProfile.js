@@ -301,7 +301,7 @@ else{
             {
               isPostsActivated &&
               <>
-              <AddPost open={showAddPost} setOpen={setShowAddPost}/>
+              <AddPost open={showAddPost} setOpen={setShowAddPost} refetch={refetch}/>
              <List disablePadding title='Posts' sx={{gap:"0.5rem",paddingTop:"0.9rem",width:"100%",display:"flex",flexDirection:"column",flexWrap:"wrap",alignItems:"center"}}>
               <ListItem sx={{borderRadius:"0.4rem",minWidth:"340px",boxShadow:"1",bgcolor:"#fff",width:"60%"}}>
               <ListItemAvatar>

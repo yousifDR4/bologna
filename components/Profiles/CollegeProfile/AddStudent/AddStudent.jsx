@@ -174,11 +174,13 @@ const AddStudent = () => {
         };
         const res = await createSTUS(info);
         console.log(res);
+        if(res.code){
         if (res.code === "auth/uid-already-exists") {
           console.log("username already exist");
           const error = new Error("uername already exist");
           throw error;
         }
+      }
       } else {
         const IdToken = await getIdToken(auth.currentUser);
         const info = {

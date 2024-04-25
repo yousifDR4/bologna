@@ -24,6 +24,8 @@ import { auth } from "../../../store/fire";
 import { useQuery } from "react-query";
 import { ListSkeleton } from "../DepartmentProfile/Exam/ExamComitte";
 import AssesmentGradesTable from "./AssesmentGradesTable";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 const Assesments=()=>{
     const [selectedModule,setSelectedModule]=useState("");
     const [assesments,setAssesments]=useState([{}]);
@@ -33,6 +35,10 @@ const Assesments=()=>{
     const profile = useSelector((state) => state.profile.profile);
     const uid = useSelector((state) => state.auth.uid);
     const Department_id = profile.Department_id;
+    const theme=useTheme();
+    const isLargeScreen = useMediaQuery(theme.breakpoints.only('xl'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+    const isSmallScreen= useMediaQuery(theme.breakpoints.down('sm'));
     const handleChange = (event) => {
         setSelectedModule(event.target.value);
       };
@@ -80,16 +86,16 @@ const Assesments=()=>{
         )
       }
     return(
-        <Box sx={{ display:"flex",flexDirection:"column",flexGrow: "1",margin:"0.6rem 0.6rem 0rem 0.6rem",padding:"0 0.8rem"}}>
+        <Box sx={{ display:"flex",flexDirection:"column",flexGrow: "1",margin:isSmallScreen ?"0.6rem 0.3rem":"0.6rem 0.6rem 0rem 0.6rem",padding:isSmallScreen ?"0 0.4rem":"0 0.8rem"}}>
         <AppBar position="static" sx={{borderTopLeftRadius:"10px",borderTopRightRadius:"10px",bgcolor:"transparent",boxShadow:"none",}}>
-          <Toolbar sx={{paddingLeft:"0!important"}}>
+          <Toolbar sx={{ paddingLeft: "0!important",display:"flex",flexWrap:"wrap",gap:"0.8rem" }}>
             <Typography component="span" sx={{flexGrow: 1}}>
-            <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
-              Assesments List
+            <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.4rem",fontSize:isSmallScreen ?"1.3rem":"inherit"}} >
+              Assessments List
             </Typography>
             <AddAssesment refetch={refetch} setAssesments={setAssesments} selectedModule={selectedModule} modules={modules} edit={false}  />
             </Typography>
-            <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="small" >
+            <FormControl sx={{minWidth:"12rem",width:"15%",paddingLeft:"0"}} size="small" >
             <InputLabel id="module" sx={{color:"var(--styling1) !important"}}>Module</InputLabel>
             <Select
           id="module"
@@ -116,12 +122,12 @@ const Assesments=()=>{
           </Toolbar>
         </AppBar>
         <Box sx={{border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
-        <List sx={{display:"flex",flexWrap:"wrap",gap:"0.5rem",padding:"1rem 0"}}>
+        <List sx={{display:"flex",justifyContent:isSmallScreen ?"center":"start",flexWrap:"wrap",gap:"0.5rem",padding:"1rem 0"}}>
         { 
         isLoadingAssesments ? <ListSkeleton/> : Assesments.filter((as)=> as.module===selectedModule).length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No assesments were found!</Typography>:
             Assesments.filter((as)=>as.module===selectedModule).map((as)=>{
                 return(
-     <ListItem key={as.id} sx={{width: '19%',height:"fit-content",minWidth:"250px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
+     <ListItem key={as.id} sx={{width: '19%',height:"fit-content",minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
                 <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
                 <Accordion sx={{boxShadow:"none",border:"1px solid #d1d7dc",fontFamily:"GraphikLight",width:"95%"}}>
         <AccordionSummary

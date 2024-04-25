@@ -9,6 +9,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs, Typography } from '@mui/material';
 import { AddOutlined, DeleteOutline, Edit } from '@mui/icons-material';
 import Confirm from '../../../UI/Confirm/Confirm';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../../../store/fire';
+import { useDispatch } from 'react-redux';
+import { displayMessage } from '../../../../store/message-slice';
 const fields=[   
 "establishNo",
 "establishDate",
@@ -18,17 +22,17 @@ const fields=[
 export default function CommitteMembers(probs) {
   let {program,initialValues,edit,professors,semester}=probs;
   const [changeRecord,setChangeRecord]=React.useState(false);
+  const [disable,setDisable]=React.useState(false);
   const [openconfirm,setOpenConfirm]=React.useState(false);
   const [id,setId]=React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [checkingCommitte,setCheckingComitte]=React.useState([]);
   const [examComitte,setExamComitte]=React.useState([]);
   const [value, setValue] = React.useState('1');
+  const dispatch=useDispatch();
   React.useEffect(()=>{
-    const initialCheckValuesIWithId=initialValues["checkingCommitte"]?initialValues["checkingCommitte"].length > 0 ? initialValues["checkingCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["checkingCommitte"]:[];
-    const initialExamValuesIWithId=initialValues["examCommitte"]?initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["examCommitte"]:[];
-    console.log(initialExamValuesIWithId);
-    console.log(initialCheckValuesIWithId);
+    const initialCheckValuesIWithId=initialValues["checkingCommitte"]?initialValues["checkingCommitte"].length > 0 ? initialValues["checkingCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,level:m.level,memberId:currId}; }):initialValues["checkingCommitte"]:[];
+    const initialExamValuesIWithId=initialValues["examCommitte"]?initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,level:m.level,memberId:currId}; }):initialValues["examCommitte"]:[];
     setCheckingComitte(initialCheckValuesIWithId);
     setExamComitte(initialExamValuesIWithId);
   },[]);
@@ -56,8 +60,8 @@ export default function CommitteMembers(probs) {
   };
   const handleClose = () => {
     setOpen(false);
-    const initialCheckValuesIWithId=initialValues["checkingCommitte"]?initialValues["checkingCommitte"].length > 0 ? initialValues["checkingCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["checkingCommitte"]:[];
-    const initialExamValuesIWithId=initialValues["examCommitte"]?initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,name:m.name,level:m.level,memberId:currId}; }):initialValues["examCommitte"]:[];
+    const initialCheckValuesIWithId=initialValues["checkingCommitte"]?initialValues["checkingCommitte"].length > 0 ? initialValues["checkingCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,level:m.level,memberId:currId}; }):initialValues["checkingCommitte"]:[];
+    const initialExamValuesIWithId=initialValues["examCommitte"]?initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,level:m.level,memberId:currId}; }):initialValues["examCommitte"]:[];
     console.log(initialExamValuesIWithId);
     console.log(initialCheckValuesIWithId);
     setCheckingComitte(initialCheckValuesIWithId);
@@ -78,8 +82,21 @@ export default function CommitteMembers(probs) {
     setChangeRecord(true);
     setId(prev=>++prev);
   }
-  console.log(checkingCommitte);
   console.log(examComitte);
+  console.log(initialValues);
+  React.useEffect(() => {
+    let disableLocal=false;
+    if(examComitte.some((obj)=>obj.id === "" || obj.level === "")){
+      disableLocal=true;
+    }
+    else if(checkingCommitte.some((obj)=>obj.id === "" || obj.level === "")){
+      disableLocal=true;
+    }
+    if(disableLocal)
+    setDisable(true);
+    else
+    setDisable(false);
+  }, [examComitte,checkingCommitte,setDisable]);
   return (
     <React.Fragment>
       <Confirm message="All of your unsaved progress will be dismissed!" title="Confirm Exit?" handleResult={handleResult} open={openconfirm} setOpen={setOpenConfirm} />
@@ -88,21 +105,31 @@ export default function CommitteMembers(probs) {
       </Button>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={()=>setOpenConfirm(true)}
         PaperProps={{
           component: 'form',
-          onSubmit: (event) => {
+          onSubmit: async (event) => {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
-            const {program,establishNo,
-            establishDate,
-            checkEDate,
-            checkENO,
-            notes} = formJson;
             //semester 
+            console.log(examComitte);
+            console.log(checkingCommitte);
+            console.log(initialValues);
+            console.log(initialValues.id,db);
+            try{
+              await updateDoc(doc(db, "Committe",initialValues.id), {
+                checkingCommitte:checkingCommitte,
+                examCommitte:examComitte
+              });
+              dispatch(displayMessage("Member were added!","success"));
+            }
+            catch(e){
+              console.log(e);
+              dispatch(displayMessage("An Error Ocurred!","error"));
+            }
             handleClose();
-          
+            
           },
         }}
         fullWidth={true}
@@ -125,7 +152,7 @@ export default function CommitteMembers(probs) {
         <Typography sx={{width:"50%"}}>Level</Typography>
         </Box>
         { examComitte.map((committe,outerIndex)=>(
-          <CustomTab initialValues={committe} program={program} professors={professors} key={outerIndex}  setCommittee={setExamComitte}></CustomTab>
+          <CustomTab type="exam" setDisable={setDisable} initialValues={committe} program={program} professors={professors} examComitte={examComitte} key={outerIndex}  setCommittee={setExamComitte}></CustomTab>
         ))}
       
         <Button startIcon={<AddOutlined/>} variant='outlined' onClick={()=>addHandler("examCommitte")} sx={{width:"100%"}}>Add Committe Member</Button>
@@ -136,7 +163,7 @@ export default function CommitteMembers(probs) {
         <Typography sx={{width:"50%"}}>Level</Typography>
         </Box>
       { checkingCommitte.map((committe,outerIndex)=>(
-          <CustomTab initialValues={committe} program={program} professors={professors} key={outerIndex} setCommittee={setCheckingComitte}/>
+          <CustomTab checkingCommitte={checkingCommitte} type="checking" setDisable={setDisable} initialValues={committe} program={program} professors={professors} key={outerIndex} setCommittee={setCheckingComitte}/>
         ))
         }
         <Button startIcon={<AddOutlined/>} variant='outlined' onClick={()=>addHandler("checkingCommitte")} sx={{width:"100%"}}>Add Committe Member</Button>
@@ -145,18 +172,19 @@ export default function CommitteMembers(probs) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel}>Cancel</Button>
-          <Button type="submit">{edit? "Save":"Add"}</Button>
+          <Button disabled={disable} type="submit">{edit? "Save":"Add"}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
   );
 }
 const CustomTab=(probs)=>{
-  let {program,initialValues,professors,onCommitteeChange,setCommittee}=probs;
+  let {program,type,checkingCommitte=[],initialValues,examComitte=[],professors=[],onCommitteeChange,setCommittee,setDisable}=probs;
   const [selectedProfessor,setSelectedProfessor]=React.useState(initialValues["id"]);
   const [selectedYear,setSelectedYear]=React.useState(initialValues["level"]);
   const handleProffessorChange = (event) => {
     const newProfessorId = event.target.value;
+    console.log(newProfessorId);
     setSelectedProfessor(newProfessorId);
     // Update the corresponding committee object in the parent component
     setCommittee((prev)=>{
@@ -174,6 +202,7 @@ const CustomTab=(probs)=>{
   const handleLevelChange=(event)=>{
     const newLevel = event.target.value;
   setSelectedYear(newLevel);
+  console.log(examComitte);
     // Update the corresponding committee object in the parent component
     setCommittee((prev)=>{
       const updatedCommittees = prev.map((committe) =>
@@ -203,8 +232,10 @@ const CustomTab=(probs)=>{
         }
     }}
         >
-          <MenuItem value="83837373">mohammed</MenuItem>
-            {professors.map((pro)=> <MenuItem value={pro.id}>{pro.name}</MenuItem>)}
+            {type === "exam" && professors.filter((prof)=>examComitte.some(obj=>obj.id === prof.id)).map((pro)=> <MenuItem disabled value={pro.id}>{pro.name}</MenuItem>)}
+            { type === "exam" && professors.filter((prof)=>!examComitte.some(obj=>obj.id === prof.id)).map((pro)=> <MenuItem value={pro.id}>{pro.name}</MenuItem>)}
+            {type === "checking" && professors.filter((prof)=>checkingCommitte.some(obj=>obj.id === prof.id)).map((pro)=> <MenuItem disabled value={pro.id}>{pro.name}</MenuItem>)}
+            { type === "checking" && professors.filter((prof)=>!checkingCommitte.some(obj=>obj.id === prof.id)).map((pro)=> <MenuItem value={pro.id}>{pro.name}</MenuItem>)}
         </Select>
         </FormControl>
         <FormControl sx={{minWidth:"45%",paddingLeft:"0",margin:"8px 0 4px "}} size="small" >

@@ -84,14 +84,14 @@ const Library=()=>{
             </Toolbar>
         </AppBar>
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
-        <List sx={{display:"flex",marginTop:"1rem",gap:"0.5rem",padding:"1rem 0"}}>
+        <List sx={{display:"flex",flexWrap:"wrap",justifyContent:isSmallScreen?"center":"start",marginTop:"0rem",gap:"0.5rem",padding:"1rem 0"}}>
         { 
          books.length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}> No Books were Found!</Typography>:
             books.map((book)=>{
                 return(
-     <ListItem key={book.name + book.module} sx={{fontFamily:"GraphikLight",width: '19%',minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.7rem",bgcolor:"#fff",padding:"1rem"}}>
+     <ListItem key={book.name + book.module} sx={{fontFamily:"GraphikLight",width: '19%',minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.3rem",bgcolor:"#fff",padding:"1rem"}}>
     <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
-    {book.name}
+    <Typography sx={{textAlign:"center"}}>{book.name}</Typography>
      <List sx={{fontFamily:"GraphikLight",  display:"flex",flexWrap:"wrap"}}>
       <ListItem sx={{padding:"0"}}>
         <StyledListItemText primary="Module" secondary= {modules.filter((modu)=>modu.id===book.module).length > 0 ? modules.filter((modu)=>modu.id===book.module)[0].name : "Module not found"}  />
