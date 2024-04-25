@@ -25,26 +25,20 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../../../store/fire";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Options from "./Options";
-import { displayMessage } from "../../../../store/message-slice";
-import { Typography } from "@mui/material";
-import Loader from "../../../UI/Loader/Loader";
 const key = "Compact Table";
 
 const StudentsTable = () => {
   const profile = useSelector((state) => state.profile.profile);
-  const dispatch=useDispatch();
   const College_id = profile.College_id;
-  const [loading, setloading] = useState(true);
   const [modules, setModules] = useState([]);
   useEffect(() => {
     //fetch
     setModules([]);
     const f = async () => {
-      setloading(true);
       if (!College_id) return;
-      try{
+
       const p1 = getDocs(
         query(
           collection(db, "users"),
@@ -82,20 +76,8 @@ const StudentsTable = () => {
       console.log(compose);
       console.log(newpbj);
       setModules(compose);
-    }
-    catch(e){
-      console.log(e.code);
-      if(e.code === "permission-denied")
-      {
-        return;
-      }
-      dispatch(displayMessage("Loading Failed","error"));
-    }
-    finally{
-      setloading(false);
-    }
     };
-  
+
     f();
   }, [profile]);
   const data = {
@@ -171,9 +153,6 @@ img{
   function onSortChange(action, state) {
     console.log(action, state);
   }
-  if(loading){
-    return <Loader/>
-  }
   return (
     <div className={classes.container}>
       <div className={classes.table}>
@@ -191,16 +170,14 @@ img{
               </Header>
 
               <Body>
-                { tableList.length <1 ? <Row> <Typography padding="2rem" sx={{width:"100%",gridColumn:"1/6"}} textAlign="center">No Students Were Found</Typography></Row>:
-                tableList.map((module) => (
+                {tableList.map((module) => (
                   <Row  item={module}>
                    <Cell>{module.departmentName}</Cell>
                     <Cell>{module.name}</Cell>
                     <Cell>{module.password}</Cell>
                     <Cell><div className='relative'><Options id={module.id} code={module}/></div></Cell>
                   </Row>
-                ))
-}
+                ))}
               </Body>
             </>
           )}

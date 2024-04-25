@@ -20,10 +20,12 @@ import { auth, db } from "../../../../store/fire";
 import { useSelector } from "react-redux";
 import { TableLoader } from "../StudentsModuleRegisteration";
 import Loader from "../../../UI/Loader/Loader";
+
 import { Typography } from "@mui/material";
 import BasicMenu from "../../../UI/Menu";
 import { Edit } from "@mui/icons-material";
 import EditProffessor from "./EditProfessor";
+
 const key = "Compact Table";
 
 const ProfessorTable = () => {
@@ -35,10 +37,11 @@ const ProfessorTable = () => {
   const [selectedProfessor, setselectedProfessor] = useState({});
   useEffect(() => {
     //fetch
-    setModules([]);
+    setModules([
+     
+    ]);
     const f=async()=>{
       try{
-        console.log(profile);
       if(!profile.professors)
       return;
     else if(profile.professors.length === 0){
@@ -73,7 +76,7 @@ console.log(newpbj);
 setModules(compose)
 }
 catch(e){
-console.log(e);
+
 } 
 finally{
   setLoading(false);
@@ -177,9 +180,7 @@ img{
 
              <Body>
                 
-             {  
-             tableList.length <1 ? <Row> <Typography padding="2rem" sx={{width:"100%",gridColumn:"1/6"}} textAlign="center">No Professors Were Found</Typography></Row>:
-             tableList.map((module) => (
+             {  tableList.map((module) => (
                   <Row key={module.name} item={module}>
                     <Cell>{module.name}</Cell>
                     <Cell>{module.password}</Cell>

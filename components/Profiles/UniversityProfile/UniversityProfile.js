@@ -28,8 +28,6 @@ import {
 import { useFetch } from "../../../hooks/useFetch.jsx";
 import { useStudensts } from "../../../hooks/useStudents.jsx";
 import Loader from "../../UI/Loader/Loader.js";
-import { Button } from "@mui/material";
-import { Edit } from "@mui/icons-material";
 const UniversityProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
   const loaded=useSelector((state)=>state.profile.loaded);
@@ -111,11 +109,10 @@ const UniversityProfile = () => {
               <h2>{profile.name}</h2>
               <p>@{profile.uid}</p>
             </div>
-            <Button variant="outlined" sx={{fontFamily:"GraphikLight !important"}} startIcon={<Edit/>} onClick={() => setShowEdit((prev) => !prev)}>Edit Profile</Button>
-            {/* <button onClick={() => setShowEdit((prev) => !prev)}>
+            <button onClick={() => setShowEdit((prev) => !prev)}>
               <img src={edit} alt="" />
               edit profile
-            </button> */}
+            </button>
           </div>
 
           <div className={classes.info}>

@@ -31,11 +31,6 @@ import {
   and,
 } from "firebase/firestore";
 import Modules from "./Modules.js";
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
-import { Edit, ExpandMore } from "@mui/icons-material";
-import AddPost from "./AddPost.js";
-import { useQuery } from "react-query";
-import { get_posts_promise } from "../../../store/getandset.js";
 const DepartmentProfile = () => {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id=profile.Department_id;
@@ -45,10 +40,10 @@ const DepartmentProfile = () => {
   const [activatedList, setActivatedList] = useState("modules");
   const [activatedSection, setActivatedSection] = useState("overview");
   const [showEdit, setShowEdit] = useState(false);
-  const [showAddPost, setShowAddPost] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [showAddModule,setShowAddModule]=useState(false);
   const isModulesActivated = activatedList === "modules";
   const isAboutActivated = activatedList === "about";
-  const isPostsActivated = activatedList === "posts";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
   const [modules, setDepartments] = useState([]);
@@ -64,23 +59,7 @@ const DepartmentProfile = () => {
       setProfessors(sum.data().count)
     }
     f();
-  },[Department_id]);
-  const promise=()=> get_posts_promise(Department_id);
-  const {
-    data: posts,
-    isLoading,
-    error,
-  isFetching, 
-  refetch 
-  } = useQuery(`department:${Department_id}`, promise, {
-   enabled:!!Department_id,
-    refetchOnWindowFocus:false,
-  
-    select:(data)=>{
-        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
-    }
-  }
-  );
+  },[Department_id])
 if(!loaded){
   return(
     <>
@@ -143,11 +122,10 @@ else{
               <h2>{profile.name}</h2>
               <p>@{profile.username}</p>
             </div>
-            <Button variant="outlined" startIcon={<Edit/>} onClick={() => setShowEdit((prev) => !prev)}>Edit Profile</Button>
-            {/* <button onClick={() => setShowEdit((prev) => !prev)}>
+            <button onClick={() => setShowEdit((prev) => !prev)}>
               <img src={edit} alt="" />
               edit profile
-            </button> */}
+            </button>
           </div>
 
           <div className={classes.info}>
@@ -163,12 +141,6 @@ else{
                 className={isAboutActivated ? classes.activated : ``}
               >
                 About
-              </li>
-              <li
-                onClick={() => setActivatedList("posts")}
-                className={isPostsActivated ? classes.activated : ``}
-              >
-                Posts
               </li>
             </ul>
             {isModulesActivated && (
@@ -196,7 +168,7 @@ else{
               </div>
             )}
             {isAboutActivated && (
-              <Box sx={{boxShadow:"1"}} className={classes.aboutContainer}>
+              <div className={classes.aboutContainer}>
                 <ul>
                   <li
                     onClick={() => setActivatedSection("overview")}
@@ -296,8 +268,9 @@ else{
                     </section>
                   )}
                 </div>
-              </Box>
+              </div>
             )}
+
             {
               isPostsActivated &&
               <>
@@ -341,6 +314,7 @@ else{
     </List>
               </>
             }
+
           </div>
         </div>
       </div>
