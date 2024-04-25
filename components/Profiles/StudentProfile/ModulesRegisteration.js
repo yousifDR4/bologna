@@ -62,7 +62,9 @@ useEffect(() => {
   }
 
   let locStudentReg=studentModules.filter((mod)=>profile.registerdModules.includes(mod.id));
+  console.log(locStudentReg);
   let locMod= modules.filter((mod)=>locStudentReg.some((m)=>m.module===mod.id));
+  console.log(locMod);
   console.log(locMod);
     registerdCore = locMod.filter((m)=>m.type === "core").length ;
     registeredSupp = locMod.filter((m)=>m.type === "support").length ;
