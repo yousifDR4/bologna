@@ -58,6 +58,8 @@ const ProfessorModules=()=>{
     if(loading){
       return <Loader/>
     }
+    let profModules=professorModules.filter((mod)=>mod.manager===profile.username);
+    let locMod= modules.filter((mod)=>profModules.some((m)=>m.module===mod.id));
     return(
         <>
          <Box sx={{ width:"100%",display:"flex",flexDirection:"column",margin:"0.6rem 0.6rem 0rem 0.6rem",padding:"0 0.8rem"}}>
@@ -71,16 +73,16 @@ const ProfessorModules=()=>{
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
           <Grid  container sx={{width:"100%", gridTemplateColumns:"1fr 1fr 1fr 1fr",display:"grid"}} gridTemplateColumns={{xs:"1fr",sm:"1fr 1fr",lg:"1fr 1fr 1fr",xl:"1fr 1fr 1fr 1fr"}} spacing={{xs:1,sm:2,lg:3,xl:8}}>
             <Grid item>
-            <CustomCard title="Modules" subtitle="Number of modules." value="0"/>
+            <CustomCard title="Modules" subtitle="Number of modules." value={locMod.length}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Core" subtitle="Number of Core type modules." value="0"/>
+            <CustomCard title="Core" subtitle="Number of Core type modules." value={locMod.filter((mod)=>mod.type === "core").length}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Support" subtitle="Number of Support type modules." value="0"/>
+            <CustomCard title="Support" subtitle="Number of Support type modules." value={locMod.filter((mod)=>mod.type === "support").length}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Elective" subtitle="Number of Elective type modules." value="0"/>
+            <CustomCard title="Elective" subtitle="Number of Elective type modules." value={locMod.filter((mod)=>mod.type === "elective").length}/>
             </Grid>
           </Grid>
         <List sx={{display:"flex",marginTop:"1rem",gap:"0.5rem",padding:"1rem 0"}}>

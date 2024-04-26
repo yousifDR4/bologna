@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Box } from "@mui/material";
 import { BarChart, BarPlot } from '@mui/x-charts/BarChart';
 import { ChartsAxis, ChartsLegend, ChartsText, ChartsTooltip, ChartsXAxis, ChartsYAxis, ResponsiveChartContainer } from "@mui/x-charts";
-import { get_Subjects, get_classRooms } from "../../../../store/getandset";
+import { get_All_professor_assesments, get_Subjects, get_classRooms, get_posts, get_posts_promise, get_professor_assesments, get_professor_modules } from "../../../../store/getandset";
 import Loader from "../../../UI/Loader/Loader";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -12,6 +12,7 @@ import StudentCalendar from "../../StudentProfile/Home/StudentCalendar";
 import TodaySchedule from "../../StudentProfile/Home/TodaySchedule";
 import UpcomingClasses from "../../StudentProfile/Home/UpcomingClasses";
 import Posts from "../../StudentProfile/Home/Posts";
+import { auth } from "../../../../store/fire";
 let initValue=[{title:"The end of Semester",user:"University of Baghdad",describtion:"The Popup is a utility component for creating various kinds of popups. It relies on the third-party Floating UI library for positioning"},{title:"Something to remember",user:"University of Baghdad",describtion:"The Popup is a utility component for creating various kinds of popups. It relies on the third-party Floating UI library for positioning"}]
 const ProfessorHome=()=>{
     const [attendancePercentage,setAttendancePercentage]=useState(0);
@@ -23,11 +24,11 @@ const ProfessorHome=()=>{
     const [modules,setModules]=useState([]);
     const [schedule,setSchedule]=useState([]);
     const today=new Date();
-    const [quizes,setQuizes]=useState([{date:today,module:"2xlqUWREDJlWYKvAcIXt",title:"quiz1"}]);
-    const [midTerms,setMidTerms]=useState([{date:today,module:"2xlqUWREDJlWYKvAcIXt",title:"Physics"}]);
+    const [assements, setassements] = useState([]);
     const [notices,setNotices]=useState(initValue);
     const [loading,setLoading]=useState({attendancePercentage:true,lstWeekAttendPer:true,assginments:true,noModules:true,noModules:true,schedule:true,grades:true,midTerms:true,notices:true});
     const [intLoading,setintLoading]=useState(true);
+    const [professorModules, setprofessorModules] = useState([]);
     const profile = useSelector((state) => state.profile.profile);
     const Department_id = profile.Department_id;
     const theme = useTheme();
@@ -41,9 +42,11 @@ const ProfessorHome=()=>{
             try{
             const p1 = get_Subjects(Department_id);
             const p3=get_classRooms(Department_id);
-            const [Sujects,classRooms]=await Promise.all([p1,p3])
+            const p4=get_professor_modules(Department_id,auth.currentUser.uid);
+            const [Sujects,classRooms,pfm]=await Promise.all([p1,p3,p4])
             console.log(Sujects,classRooms);
             setModules(Sujects); 
+            setprofessorModules(pfm);
             setClassrooms(classRooms);
             setintLoading(false);
             }
@@ -51,8 +54,19 @@ const ProfessorHome=()=>{
 
             }
         }
+        const fetchPosts=async()=>{
+            const posts=await get_posts([Department_id,profile.College_id]);
+            setNotices(posts);
+        }
+        const fetchAssesments= async()=>{
+            const asses=await get_All_professor_assesments(auth.currentUser.uid);
+            console.log(asses);
+            setassements(asses);
+        }
         if(profile.Department_id){
         fetchData();
+        fetchPosts();
+        fetchAssesments();
         }
     },[profile]);
     if(intLoading){
@@ -65,7 +79,7 @@ const ProfessorHome=()=>{
             <InfoCards attendancePercentage={attendancePercentage} lstWeekAttendPer={lstWeekAttendPer} assginments={assginments} noModules={noModules}/>
             <UpcomingClasses schedule={schedule}/>
            <Box sx={{maxWidth: 350,}}>
-           <StudentCalendar quizes={quizes} midTerms={midTerms}  modules={modules}/>
+           <StudentCalendar assesments={assements} professorModules={professorModules}  modules={modules}/>
            </Box>
            <Box sx={{flex:"1"}}>
             <Posts notices={notices}/>

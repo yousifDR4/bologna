@@ -275,6 +275,32 @@ export const get_module_students = async (Deprartment_id,module_id) => {
   console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
+export const get_posts= async(ids)=>{
+  const q = query(
+    collection(db, "Posts"),
+      where("user", "in", ids)
+    );
+    const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({
+    ...doc.data(),
+    value: doc.data().name,
+    id: doc.id,
+  }));
+  return data ? data :[];
+}
+export const get_All_professor_assesments= async(professorsoid)=>{
+  const q = query(
+    collection(db, "Assesment"),
+      where("uid", "==", professorsoid)
+    );
+    const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({
+    ...doc.data(),
+    value: doc.data().name,
+    id: doc.id,
+  }));
+  return data ? data :[];
+}
 const rand=()=>(Math.floor(26*Math.random()))
 export const gen=()=>{
   let capitalLetters = [

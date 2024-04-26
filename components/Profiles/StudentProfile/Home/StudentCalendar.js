@@ -8,12 +8,12 @@ import { Assignment, QuestionAnswer, Quiz } from '@mui/icons-material';
 import styled from '@emotion/styled';
 
 export default function StudentCalendar(probs) {
-let {quizes=[],midTerms=[],assignments=[],modules=[]}=probs;
+let {quizes=[],assesments=[],professorModules=[],modules=[]}=probs;
 const today= new AdapterDayjs;
 const [todayActivities,setTodayActivities]=React.useState([]);
 const [value,setValue]=React.useState(today.date());
 
-console.log(value);
+console.log(value,value.$D,value.$M);
   return (
     <>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -25,23 +25,24 @@ console.log(value);
       }}
       slotProps={{
         day: {
-          quizes,midTerms,assignments,setValue,value,setTodayActivities,todayActivities
+          quizes,assesments,setValue,value,setTodayActivities,todayActivities,
         },
-      }}/>
+      }}
+      />
     </LocalizationProvider>
     <List sx={{maxWidth:"100%",overflow:"auto",scrollbarColor:"transparent",display:"flex",flexDirection:"row",gap:"0.4rem"}}>
       {
-        todayActivities.filter((act)=>act.date.getDay() === value.date() && act.date.getMonth() == value.month()).length === 0 ? <Typography color="text.secondary" textAlign="center" width="100%">No Activities</Typography>:""
+        todayActivities.filter((act)=>act.D === value.$D && act.M == value.$M).length === 0 ? <Typography color="text.secondary" textAlign="center" width="100%">No Activities</Typography>:""
       }
       {
-        todayActivities.filter((act)=>act.date.getDay() === value.date() && act.date.getMonth() == value.month()).map(act=>(
+        todayActivities.filter((act)=>act.D === value.$D && act.M == value.$M).map(act=>(
           <ListItem key={act.title} sx={{width:"60%",minWidth:"250px",bgcolor:"#fff", borderRadius:"5px",boxShadow:"1"}}>
               <ListItemAvatar >
                 <Avatar sx={{bgcolor:"#CCE4FB"}}>
                  {act.type === "assignment" ? <Assignment sx={{color:"var(--styling1)"}}/>: act.type==="quiz" ? <Quiz sx={{color:"var(--styling1)"}}/> :<QuestionAnswer sx={{color:"var(--styling1)"}}/>}
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={act.title} secondary={modules.filter((mod)=>(mod.id === act.module))[0].name}/>
+              <ListItemText primary={act.title} secondary={modules.filter((mod)=>professorModules.filter((m)=>(m.id === act.module))[0].module===mod.id)[0].name}/>
         
           </ListItem>
         ))
@@ -51,47 +52,26 @@ console.log(value);
   );
 }
 function specialDay(props) {
-    const {  day, outsideCurrentMonth,quizes,midTerms,assignments,setValue,value,setTodayActivities,todayActivities } = props;
-    let isDateInAssignments;
-    let isDateInMidTerms;
-    let isDateInQuizes;
-   isDateInQuizes = quizes.some(quiz => {if(quiz.date.getDay() === day.date() && quiz.date.getMonth() == day.month()){
-    if(todayActivities.some((act)=>act.title === quiz.title)){
-      return true;
+    const {  day, outsideCurrentMonth,assesments,setValue,value,setTodayActivities,todayActivities,...all } = props;
+    let isDateInAssesments;
+    let counter=todayActivities.filter((assign)=> assign.D === day.$D && assign.M == day.$M).length;
+    assesments.map(assign => {
+    if(assign.D === day.$D && assign.M == day.$M){
+    if(todayActivities.some((act)=>act.id === assign.id)){
+      console.log("mojood");
+      return;
     }
-    setTodayActivities((prev)=>([...prev,{title:quiz.title,date:quiz.date,module:quiz.module,type:"quiz"}]));
-    return true;
-  }});
-   isDateInAssignments = assignments.some(assign => {if(assign.date.getDay() === day.date() && assign.date.getMonth() == day.month())
-    if(todayActivities.some((act)=>act.title === assign.title)){
-      return true;
-    }{
-    setTodayActivities((prev)=>([...prev,{title:assign.title,date:assign.date,module:assign.module,type:"assignment"}]));
-    return true;
-  }
-  });
-   isDateInMidTerms = midTerms.some(midTerm => {if(midTerm.date.getDay() === day.date() && midTerm.date.getMonth() == day.month()){
-    if(todayActivities.some((act)=>act.title === midTerm.title)){
-      return true;
-    }
-    setTodayActivities((prev)=>([...prev,{title:midTerm.title,date:midTerm.date,module:midTerm.module,type:"midTerm"}]));
-    return true;
-  }
+    else{
+    setTodayActivities((prev)=>([...prev,{title:assign.title,id:assign.id,D:assign.D,M:assign.M,module:assign.module,type:"assignment"}]));
   
+    console.log(counter);
+    return true;
+  }
+}
   });
 
-let counter=0;
-if(isDateInQuizes){
-++counter;
-console.log(counter);
-}
-if(isDateInMidTerms){
-    ++counter;
-    console.log(counter);
-}
-if(isDateInAssignments){
-    counter++;
-}
+
+
     return (
       <StyledBadge
         key={props.day.toString()}
@@ -99,7 +79,7 @@ if(isDateInAssignments){
         color='info'
         overlap="circular"
       >
-     <PickersDay  sx={{border:"1px solid #fff",borderColor:(value.$D === day.$D && value.$M === day.$M)? "var(--styling1)":"",borderRadius:"50%"}} onDaySelect={(value)=>{setValue(value);console.log(value.$D);console.log(day.$D);}} outsideCurrentMonth={outsideCurrentMonth} day={day} />      </StyledBadge>
+     <PickersDay  sx={{border:"1px solid #fff",borderColor:(value.$D === day.$D && value.$M === day.$M)? "var(--styling1)":"",borderRadius:"50%"}} onDaySelect={(value)=>{setValue(value);}}  outsideCurrentMonth={outsideCurrentMonth} day={day} />      </StyledBadge>
     );
   }const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {

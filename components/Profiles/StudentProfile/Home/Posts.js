@@ -34,7 +34,7 @@ const Posts=(probs)=>{
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography fontFamily="GraphikLight">
-                  {not.describtion}
+                  {not.description}
                   </Typography>
                 </AccordionDetails>
               </Accordion>

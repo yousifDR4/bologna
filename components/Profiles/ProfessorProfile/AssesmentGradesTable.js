@@ -69,7 +69,7 @@ export default function AssesmentGradesTable(probs) {
                 minHeight:"15rem !important"
             }}>
             <Box sx={{ width: '100%',minWidth:"25rem" }}>
-                <StudentsTable students={students} assesment={assesment} module={module}/>
+                <StudentsTable  students={students} assesment={assesment} module={module}/>
     </Box>
     
             </DialogContent>
@@ -88,7 +88,7 @@ export default function AssesmentGradesTable(probs) {
 
 
 export function StudentsTable(probs) {
-    const {assesment,students,module}=probs;
+    const {assesment,students,module,grades=[]}=probs;
     const dispatch=useDispatch();
     const [rows, setRows] = useState([{id:"1",name:"snow",grade:"10"}]);
     const [rowModesModel, setRowModesModel] = useState({});
@@ -98,13 +98,24 @@ let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
           event.defaultMuiPrevented = true;
         }
       };
-    
+    namedStudents=namedStudents.map((s)=>{
+      let sg=grades.filter((g)=>g.studentId===s.id);
+      let msg={}
+      if(sg.length>0){
+      msg={Department_id:sg[0].Department_id,assessmentId:sg[0].assessmentId,gradeDoc:sg[0].id,fullmark:sg[0].fullmark,grade:sg[0].grade,level:sg[0].level,professorId:sg[0].professorId,program:sg[0].program,studentId:sg[0].studentId}
+      }
+      return{...s,...msg};
+    })
       const handleEditClick = (id) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
       };
     
       const handleSaveClick = (id) => () => {
+        console.log(id);
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+        console.log(namedStudents);
+      console.log(namedStudents.filter((row)=>row.id===id));  
+        
       };
     
       const handleDeleteClick = (id) => () => {
@@ -126,6 +137,8 @@ let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
       const processRowUpdate = (newRow) => {
         const updatedRow = { ...newRow, isNew: false };
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+       let edit= namedStudents.filter((st)=>st.id===newRow.id)[0]?.grade ? true :false;
+       console.log(edit);
         return updatedRow;
       };
     

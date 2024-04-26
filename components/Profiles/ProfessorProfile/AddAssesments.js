@@ -89,6 +89,7 @@ export default function AddAssesment(probs) {
               M: selectedDate.$M,
               D: selectedDate.$D,
               y: selectedDate.$y,
+              type:selectedType,
               title: formJson["Assesment Title"],
               grades: +formJson["Assesment Grade"],
               notes: formJson["Assesment Notes"],
