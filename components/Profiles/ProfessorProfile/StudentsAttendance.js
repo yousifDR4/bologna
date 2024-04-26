@@ -15,10 +15,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { auth } from "../../../store/fire";
+import { auth, db } from "../../../store/fire";
 import Loader from "../../UI/Loader/Loader";
 import { useSelector } from "react-redux";
-import { get_active_modules, get_Subjects, get_progs, get_professor_modules, get_prof_schedule, get_module_students  } from '../../../store/getandset';
+import { get_active_modules, get_Subjects, get_progs, get_professor_modules, get_prof_schedule, get_module_students, get_students_Attendance  } from '../../../store/getandset';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { Avatar, Grid, List } from "@mui/material";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -28,6 +28,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import { Group } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { TableLoader } from '../DepartmentProfile/Programs/ProgramModules/ProgramModulesTable';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 
 
 export default function StudentsAttendance() {
@@ -61,7 +62,7 @@ export default function StudentsAttendance() {
       refetchOnWindowFocus:false,
     
       select:(data)=>{
-        console.log(data);
+       
           return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
           
       }
@@ -79,16 +80,46 @@ export default function StudentsAttendance() {
       refetchOnWindowFocus:false,
     
       select:(data)=>{
-        console.log(data);
+        
           return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
           
       }
     }
     );
-    console.log(moduleStudents);
+    const promise3=()=> get_students_Attendance(selectedModules);
+    const {
+      data: attendances = [],
+      isLoading:isLoading3,
+      isError:error3,
+    isFetching:isFetching3, 
+    refetch:refetch3 
+    } = useQuery(`module:${selectedModules}`, promise3, {
+     enabled: ((!!Department_id) && (selectedModules !== "")), 
+      refetchOnWindowFocus:false,
+    
+      select:(data)=>{
+        
+          return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+          
+      }
+    }
+    );
     let rows= moduleStudents.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
-    console.log(todayLectures);
-    console.log(selectedDate);
+   console.log(rows);
+   console.log(attendances,"att");
+   rows=rows.map((row)=>{
+if (attendances===0) {
+  return {...row}
+}
+    const StudentsAttendance=attendances.filter((attendance)=>row.id===attendance.studentId)[0];
+    console.log(StudentsAttendance,"at");
+      return{...row,attendedHours:StudentsAttendance?StudentsAttendance.attendedHours:null,
+        attendedId:StudentsAttendance?StudentsAttendance.id:null,
+        attended:StudentsAttendance?StudentsAttendance.attended:null
+
+      }
+   })
+   console.log(rows);
     React.useEffect(()=>{
       const loadModules=async ()=>{
           setLoading(true);
@@ -139,8 +170,43 @@ export default function StudentsAttendance() {
     }
   };
 
-  const processRowUpdate = (newRow) => {
+  const processRowUpdate = async(newRow) => {
     const updatedRow = { ...newRow, isNew: false };
+
+if(newRow?.attendedId){
+  try{
+    console.log(newRow);
+  await setDoc(doc(db,"attendance",newRow.attendedId),
+    {
+      attendedHours:newRow.attendedHours,
+      studentId:newRow.id,
+      module:selectedModules,
+      professor:auth.currentUser.uid,
+      attended:newRow.attended,
+    })
+    await refetch3();
+  }
+  catch(e){
+    console.log(e);
+  }
+}
+else{
+    try{
+      console.log(newRow);
+    await addDoc(collection(db,"attendance"),
+      {
+        attendedHours:newRow.attendedHours,
+        studentId:newRow.id,
+        module:selectedModules,
+        professor:auth.currentUser.uid,
+        attended:newRow.attended,
+      })
+      await refetch3();
+    }
+    catch(e){
+      console.log(e);
+    }
+  }
     return updatedRow;
   };
 

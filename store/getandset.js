@@ -275,6 +275,15 @@ export const get_module_students = async (Deprartment_id,module_id) => {
   console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
+export const get_students_Attendance = async (module) => {
+  const q = query(
+    collection(db, "attendance"),
+      where("module", "==", module),
+  );
+  const docs = await getDocs(q);
+  console.log(docs.docs[0].data());
+  return docs ? docs :[];
+};
 export const get_students_grade = async (id) => {
 
   const q = query(
