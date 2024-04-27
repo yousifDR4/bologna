@@ -66,7 +66,8 @@ const Navbar = () => {
   const isDepartmentAccount = isLoggedIn ? accountType === "Department" : false;
   const isProfessorAccount = isLoggedIn ? accountType === "Professor" : false;
   const isStudentAccount = isLoggedIn ? accountType === "student" : false;
-
+  const noNotification=useSelector((state)=>state.notify.noNotification);
+console.log(isProfessorAccount);
   const dispatch = useDispatch();
   const showAsideListHandler = () => {
     setShowAsideList((state) => !state);
@@ -142,7 +143,7 @@ const Navbar = () => {
     setNotifications(0);
   }
   useEffect(() => {
-    if (!profile.name) return;
+   
     if (!accountType) return;
     if(isProfessorAccount) return;
     // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
@@ -168,13 +169,10 @@ const Navbar = () => {
         ) {
           console.log(change.doc.data().seen);
           console.log(notifications);
-          dispatchRedux(notifyActions.setNotificationsNumber({no:noNotification+1}))
-          setNotifications((prev) => {
-            return prev + 1;
-          });
-          console.log("notfacation", notifications);
-          console.log("lol");
-          count =notifications;
+
+          dispatchRedux(notifyActions.AddonNotify())
+        
+    
         }
       });
 
@@ -191,6 +189,7 @@ const Navbar = () => {
     console.log("useeff",count);
     },[notifications])
     let profileLink=isUniversityAccount?"/UniversityProfile":isCollegeAccount?"/CollegeProfile":isDepartmentAccount?"/DepartmentProfile":isProfessorAccount?"/ProfessorProfile":"/StudentProfile";
+
   return (
     <>
       <div className={backdrop} onClick={showAsideListHandler} />
@@ -324,7 +323,7 @@ const Navbar = () => {
              <li><Link to="/Grades"><GradingOutlined sx={{verticalAlign:"middle",padding:"0 !important",margin:"0 !important"}}/> Grades</Link></li>
                </>}
                </div>}
-               {isLoggedIn  && <li><Link to="/Notifications" ><img src={bell} alt=""/>Notifications{<span className={classes.notifications}>{notifications >0 ? notifications:"" }</span>}</Link></li>}
+               {isLoggedIn  && <li><Link to="/Notifications" ><img src={bell} alt=""/>Notifications{<span className={classes.notifications}>{noNotification >0 ? noNotification:"" }</span>}</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>
     </nav>

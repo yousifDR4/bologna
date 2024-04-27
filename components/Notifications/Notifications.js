@@ -3,8 +3,8 @@ import classes from "./Notifications.module.css";
 import uob from "../../Images/UniversityofBaghdad.png";
 import search from "../../Images/search.png";
 import { db, auth } from "../../store/fire";
-import { getDocs, where, collection, query, doc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
-import { useSelector } from "react-redux";
+import { getDocs, where, collection, query, doc, onSnapshot, updateDoc, arrayUnion, and } from "firebase/firestore";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../UI/Loader/Loader";
 import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import Myloader from "../UI/Loader/Myloader";
@@ -12,8 +12,12 @@ import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
 import { useLocation } from "react-router-dom";
 import addIcon from "../../Images/addColored.png";
 import addUser from "../../Images/addU.png"
+import { notifyActions } from "../../store/notify-slice";
 const universities = [];
 const Notifications = () => {
+
+  const dispatchRedux = useDispatch();
+  dispatchRedux(notifyActions.setNotificationsNumber({no:0}))
   const setRef = useRef(true);
   const [university, setUniversity] = useState(universities);
   const notifitcations=useSelector(state=>state.notify.notifications);
@@ -28,14 +32,24 @@ const Notifications = () => {
   const [myload,setmyload]=useState(false);
   const Department_id=profile.Department_id;
   const [seen,setSeen]=useState("");
+
   useEffect(()=>{
 const f=async ()=>{
-  const q=query(collection(db,"reports"),where("Department_id","==",Department_id))
-  const docs=await getDocs(q);
-  const data=docs.docs.map((e)=>({...e.data(),id:e.id}));
-  return data;
+  if(!Department_id)return;
+const k= await getDocs( query(
+  
+    collection(db, "reports"),
+    and(
+      where("Department_id", "==", Department_id),
+      where("studentId", "==", auth.currentUser.uid)
+    )
+  ));
+  console.log(k.docs[0].data());
+
+
 }
-  },[])
+f();
+  },[Department_id])
   useEffect(() => {
     if(notifitcations.length === 0) {
       setLoading(false);

@@ -285,6 +285,16 @@ export const get_students_grade = async (id) => {
   console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
+export const get_students_Attendance = async (module) => {
+  const q = query(
+    collection(db, "attendance"),
+      where("module", "==", module),
+  );
+  const docs = await getDocs(q);
+  console.log(docs.docs[0].data());
+  return docs ? docs :[];
+};
+
 export const get_assesments_grade = async (ids) => {
   let idsArr=[];
   ids.map((as)=>idsArr.push(as.id));
@@ -302,6 +312,17 @@ export const get_module_assesments = async (id) => {
   const q = query(
     collection(db, "Assesment"),
       where("module", "==", id),
+  );
+  const docs = await getDocs(q);
+  console.log(docs.docs[0].data());
+  return docs ? docs :[];
+};
+export const get_students_grade = async (id) => {
+
+  const q = query(
+    collection(db, "grades"),
+      where("assessmentId", "==", id),
+
   );
   const docs = await getDocs(q);
   console.log(docs.docs[0].data());
@@ -346,6 +367,7 @@ export const get_All_professor_assesments= async(professorsoid)=>{
   }));
   return data ? data :[];
 }
+
 const rand=()=>(Math.floor(26*Math.random()))
 export const gen=()=>{
   let capitalLetters = [
@@ -546,7 +568,9 @@ export const get_prof_daily_schedule= async(Department_id,day,module)=>{
   }));
   return data || [];
 }
+
 export const get_prof_schedule=(Department_id,day,module)=>{
+  console.log(Department_id,day,module);
   const q = query(
     collection(db, "schedulemodule"),
     and(

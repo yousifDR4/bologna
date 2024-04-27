@@ -16,6 +16,7 @@ const notifySlice = createSlice({
         state.noNotification=payload;
       },
       AddonNotify(state, action) {
+
         state.noNotification=state.noNotification+1;
       },
     },

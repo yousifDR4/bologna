@@ -56,6 +56,7 @@ const ModulesRegisteration=()=>{
     let registerdCore=0;
     let registeredSupp=0;
     let registeredElec=0;
+
  
 
     const isRegisterationValid={
