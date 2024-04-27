@@ -173,7 +173,7 @@ const location=useLocation();
       seen:[],
 
     } 
-    await Promise.all ([setreport(reportinfo,Department_id),update])
+    await addDoc(collection(db, "reports"), reportinfo)
     setUploading(false);
   }
   catch(e){

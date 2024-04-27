@@ -65,6 +65,7 @@ const Navbar = () => {
   const isDepartmentAccount = isLoggedIn ? accountType === "Department" : false;
   const isProfessorAccount = isLoggedIn ? accountType === "Professor" : false;
   const isStudentAccount = isLoggedIn ? accountType === "student" : false;
+  const noNotification=useSelector((state)=>state.notify.noNotification);
 
   const dispatch = useDispatch();
   const showAsideListHandler = () => {
@@ -167,12 +168,9 @@ const Navbar = () => {
         ) {
           console.log(change.doc.data().seen);
           console.log(notifications);
-          setNotifications((prev) => {
-            return prev + 1;
-          });
-          console.log("notfacation", notifications);
-          console.log("lol");
-          count =notifications;
+          dispatchRedux(notifyActions.AddonNotify())
+        
+    
         }
       });
 
@@ -305,7 +303,7 @@ const Navbar = () => {
              <li><Link to="/Grades"><GradingOutlined sx={{verticalAlign:"middle",padding:"0 !important",margin:"0 !important"}}/> Grades</Link></li>
                </>}
                </div>}
-               {isLoggedIn  && <li><Link to="/Notifications" ><img src={bell} alt=""/>Notifications{<span className={classes.notifications}>{notifications >0 ? notifications:"" }</span>}</Link></li>}
+               {isLoggedIn  && <li><Link to="/Notifications" ><img src={bell} alt=""/>Notifications{<span className={classes.notifications}>{noNotification >0 ? noNotification:"" }</span>}</Link></li>}
                 { isLoggedIn && <li><button onClick={logoutHandler}>Logout</button></li>}
         </ul></div>
     </nav>
