@@ -161,12 +161,22 @@ export const listnerq = (accountType, Department_id) => {
         where("uid", "!=", auth.currentUser.uid)
       )
     );
-  } else {
+  } else if(accountType==="College"){
     return query(
       collection(db, "reports"),
       and(
         where("Department_id", "in", Department_id),
         where("uid", "!=", auth.currentUser.uid)
+      )
+    );
+  }
+  else if(accountType==="student"){
+    console.log(accountType,Department_id,"notifcations logg");
+    return query(
+      collection(db, "reports"),
+      and(
+        where("Department_id", "==", Department_id),
+        where("studentId", "==", auth.currentUser.uid)
       )
     );
   }

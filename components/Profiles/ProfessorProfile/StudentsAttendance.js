@@ -184,6 +184,19 @@ if(newRow?.attendedId){
       professor:auth.currentUser.uid,
       attended:newRow.attended,
     })
+    const reportinfo={
+      type:"add",
+      module:selectedModules,
+      studentId:newRow.id,
+      professor:auth.currentUser.uid,
+      name:profile.name,
+      describtion:"attendance change",
+      Department_id:Department_id,
+      seen:[],
+
+    } 
+    await addDoc(collection(db, "reports"), reportinfo)
+    console.log("work2");
     await refetch3();
   }
   catch(e){
@@ -201,7 +214,22 @@ else{
         professor:auth.currentUser.uid,
         attended:newRow.attended,
       })
+      const reportinfo={
+        type:"add",
+        module:selectedModules,
+        studentId:newRow.id,
+        professor:auth.currentUser.uid,
+        name:profile.name,
+        describtion:"attendance change",
+        Department_id:Department_id,
+        seen:[],
+  
+      } 
+      await addDoc(collection(db, "reports"), reportinfo)
+      console.log("work");
       await refetch3();
+   
+      
     }
     catch(e){
       console.log(e);

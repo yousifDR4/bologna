@@ -66,7 +66,7 @@ const Navbar = () => {
   const isProfessorAccount = isLoggedIn ? accountType === "Professor" : false;
   const isStudentAccount = isLoggedIn ? accountType === "student" : false;
   const noNotification=useSelector((state)=>state.notify.noNotification);
-
+console.log(isProfessorAccount);
   const dispatch = useDispatch();
   const showAsideListHandler = () => {
     setShowAsideList((state) => !state);
@@ -142,7 +142,7 @@ const Navbar = () => {
     setNotifications(0);
   }
   useEffect(() => {
-    if (!profile.name) return;
+   
     if (!accountType) return;
     if(isProfessorAccount) return;
     // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
