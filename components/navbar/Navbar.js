@@ -137,6 +137,7 @@ const Navbar = () => {
   useEffect(() => {
     if (!profile.name) return;
     if (!accountType) return;
+    if(isProfessorAccount) return;
     // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
     // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
     const q = listnerq(accountType, profile.Department_id);

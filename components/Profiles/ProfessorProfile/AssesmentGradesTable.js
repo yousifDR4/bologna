@@ -93,6 +93,7 @@ export function StudentsTable(probs) {
     const [rows, setRows] = useState([{id:"1",name:"snow",grade:"10"}]);
     const [Students,setStudents]=useState(rows);
     const [rowModesModel, setRowModesModel] = useState({});
+    let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
 
     const handleRowEditStop = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {

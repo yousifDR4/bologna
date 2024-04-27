@@ -47,6 +47,7 @@ const ModulesRegisteration=()=>{
     const profile = useSelector((state) => state.profile.profile);
     const Department_id = profile.Department_id;
     const [edit,setEdit]=useState(false);
+    const [numbers,setNumbers]=useState({ECTS:0,core:0,supp:0,elec:0});
     const [viewInstructions,setViewInstruction]=useState(true);
     let registeredECTS=0;
     let registerdCore=0;
