@@ -113,20 +113,17 @@ background-color: #fff;
 
 }
 .mainInfo button{
-    background-color: var(--backGround);
-    color: #060640;
-    height: 2.5rem;
-    border: none;
-    border-radius: 8%;
-    margin-top: 1rem;
-    width: 8rem;
-    margin-right: 4rem;
-    font-family: GraphikLight;
-    font-size: 1.07rem;
-}
-.mainInfo button:hover{
-    border: 1px solid var(--styling1);
-}
+    border-color: #060640;
+     color: #060640;
+     height: 2.5rem;
+     margin-top: 1rem;
+     margin-right: 4rem;
+     font-family: GraphikLight;
+     font-size: 1.07rem;
+ }
+ .mainInfo button:hover{
+     border: 1px solid var(--styling1);
+ }
 .mainInfo button img{
     width: 1rem;
     height: 1rem;
@@ -284,7 +281,8 @@ margin-right: 0.2rem;
 display: flex;
 background: #fff;
 padding: 0.5rem;
-align-items:flex-start;
+align-items:center;
+justify-content: flex-start;
 border-radius: 20px;
 width: 80%;
 max-width: 1600px;
@@ -309,11 +307,20 @@ min-height: 4rem;
     margin-right: 1rem;
     margin-left: 2rem;
 }
+.depts div{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    height: 100%;
+    gap: 0.2rem;
+    flex: 1;
+}
 .depts p, .colleges span{
     font-family: Graphik;
-    margin-top: 1.3rem;
     display: inline-block;
 }
+
 .depts span{
     color: #6B6C6D;
     margin-left: 6px;
@@ -339,6 +346,9 @@ min-height: 4rem;
         padding: 0;
         margin: 0;
     }
+    .mainInfo div h2{
+        margin-bottom: 0.5rem;
+    }
     .mainInfo button{
         margin: 0;
         margin-bottom: 1rem;
@@ -354,6 +364,10 @@ min-height: 4rem;
     padding: 0;
   
     }
+    .navigators li{
+        font-size: 1.2rem;
+        padding: 0.5rem 0.7rem;
+     }
     .depts{
         gap: 1rem;
         margin-bottom: 1rem;

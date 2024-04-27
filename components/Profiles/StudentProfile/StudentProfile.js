@@ -54,7 +54,7 @@ function StudentProfile() {
         <Box sx={{width:"100%",display:"grid",justifyItems:"center",paddingTop:"0.6rem"}}>
     <Box sx={{width:"100%",height:"fit-content",maxWidth:"1200px",display:"flex",flexDirection:"column",borderRadius:"10px",boxShadow:"2"}}>
         <Card sx={{borderRadius:"0",boxShadow:"none",}}>
-            <CardHeader    title={profile.firstname + profile.lastname} action={<IconButton aria-label="Edit Profile" title="Edit Profile" onClick={handleEdit}><Edit/></IconButton>}
+            <CardHeader    title={profile.firstname +" "+ profile.lastname} action={<IconButton aria-label="Edit Profile" title="Edit Profile" onClick={handleEdit}><Edit/></IconButton>}
         subheader={`@${profile.username}`}/>
             <CardContent sx={{display:"flex",width:"100%",justifyContent:isSmallScreen?"center":"flex-start",flexDirection:"row",flexWrap:"wrap"}}>
                 <CardMedia     sx={{width:isSmallScreen?"100%":"32%",minWidth:"250px",minHeight:"250px",backgroundSize:"contain"}} image={profile.profilePicture ? profile.profilePicture : profilePicture}/>
@@ -96,7 +96,7 @@ function StudentProfile() {
                         <ListItemText primary="Current Semester" secondary={"First"}/>
                     </ListItem>
                     <ListItem>
-                        <ListItemText primary="Number of Modules" secondary={profile.registedModules || "-"}/>
+                        <ListItemText primary="Number of Modules" secondary={profile.registerdModules.length || "-"}/>
                     </ListItem>
                     <ListItem>
                         <ListItemText primary="Modules by Exam only" secondary={"-"}/>
@@ -106,7 +106,7 @@ function StudentProfile() {
         </Card>
         <List subheader={<ListSubheader>Registered Modules</ListSubheader>} sx={{width:"49%",borderRadius:"8px",boxShadow:"none",minWidth:"320px",border:"1px solid rgba(0, 0, 0, 0.1)"}}>
        {modules.length === "0" && <Typography textAlign="center" color="text.secondary"> No modules were found!</Typography>}
-        {modules.map((mod)=>(<ListItem >
+        {modules.filter((mod)=>profile.registerdModules.includes(mod.id)).map((mod)=>(<ListItem key={mod.id}>
                 <BookRounded sx={{width:"2.8rem",height:"2.8rem",color:"rgba(0, 0, 0, 0.5)",background:"rgba(0, 0, 0, 0.03)",borderRadius:"50%",padding:"0.4rem",marginRight:"0.5rem"}}/>
             
             <ListItemText primary="Module Name" secondary={mod.name}/>

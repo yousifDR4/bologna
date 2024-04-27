@@ -112,13 +112,10 @@ background-color: #fff;
 
 }
 .mainInfo button{
-    background-color: var(--backGround);
+   border-color: #060640;
     color: #060640;
     height: 2.5rem;
-    border: none;
-    border-radius: 8%;
     margin-top: 1rem;
-    width: 8rem;
     margin-right: 4rem;
     font-family: GraphikLight;
     font-size: 1.07rem;
@@ -372,6 +369,7 @@ min-height: 4rem;
     .deptsContainer{
 
     }
+
     .upperBanner img{
         height: 25vh;
     }
@@ -392,10 +390,17 @@ min-height: 4rem;
     .mainInfo .profilePicture{
         margin-right: 0;
     }
+    .mainInfo div h2{
+        margin-bottom: 0.3rem;
+    }
     .info .navigators{
         justify-content: center;
     padding: 0;
   
+    }
+    .navigators li{
+       font-size: 1.2rem;
+       padding: 0.5rem 0.7rem;
     }
     .depts li{
         width: 95%;

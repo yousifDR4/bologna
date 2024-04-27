@@ -8,8 +8,8 @@ import {
   count,
   deleteDoc,
   doc,
-  getCountFromServer,
   getAggregateFromServer,
+  getCountFromServer,
   getDoc,
   getDocs,
   orderBy,
@@ -20,6 +20,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "./fire";
+import { PortableWifiOff } from "@mui/icons-material";
 export const setId = async (info) => {
   const { universities_id, Colleges_id, accountType } = info;
   console.log(info, "info");
@@ -134,6 +135,7 @@ export const get_progs = async (Deprartment_id) => {
  
 
 };
+
 export const get_sp = async (Department_id, levels) => {
   const q = query(
     collection(db, "speciality"),
@@ -192,6 +194,27 @@ export const get_active_modules = async (Deprartment_id,program,level) => {
   console.log(data);
   return data ? data :[];
 };
+export const get_active_completed_modules = async (Deprartment_id,program,level) => {
+  console.log(Deprartment_id,program,level);
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("level", "==", level),
+      where("type","==",program),
+    
+
+    ),
+  );
+  const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({
+    ...doc.data(),
+    value: doc.data().name,
+    id: doc.id,
+  }));
+  console.log(data);
+  return data ? data :[];
+};
 export const get_professor_modules = async (Deprartment_id,Professor_id) => {
   console.log(Deprartment_id,Professor_id);
   const q = query(
@@ -212,6 +235,19 @@ export const get_professor_modules = async (Deprartment_id,Professor_id) => {
   console.log(data);
   return data ? data :[];
 };
+export const get_students_count= async(Department_id,modules)=>{
+  console.log(Department_id,modules);
+  const q = query(
+    collection(db, "users"),
+    and(
+      where("Department_id", "==", Department_id),
+      where("registerdModules","array-contains-any",modules),
+    ),
+  );
+  const snapshot = await getCountFromServer(q);
+  
+  return snapshot.data().count || 0;
+}
 export const get_professor_assesments = async (Deprartment_id,Professor_id,module) => {
   console.log(Deprartment_id,Professor_id,module);
   const q = query(
@@ -343,7 +379,6 @@ export const get_progs_as_college = async (Deprartment_id) => {
   );
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-
   return data;
 };
 export const usernameprofile=async(id)=>{
@@ -357,7 +392,8 @@ const info={password:password,username:username}
 console.log(info);
 return info;
 }
-export const get_prog_promise=(Deprartment_id,levels)=>{
+export const get_prog_promise=(Deprartment_id,levels,s="")=>{
+  console.log(Deprartment_id,levels,s);
   const q = query(
     collection(db, "programs"),
     and(
@@ -367,10 +403,57 @@ export const get_prog_promise=(Deprartment_id,levels)=>{
   );
   return getDocs(q);
 }
+export const get_control = async (Deprartment_id,program) => {
+  console.log(Deprartment_id,program);
+  const q = query(
+    collection(db, "Control"),
+    where("Department_id", "==", Deprartment_id),
+    where("program","==",program)
+  );
+
+return getDocs(q);
+
+ 
+
+};
+export const get_students_promise = async (Deprartment_id,program,level) => {
+  console.log(Deprartment_id,level,program);
+  const q = query(
+    collection(db, "users"),
+    where("Department_id", "==", Deprartment_id),
+    where("program","==",program),
+    where("level","==",+level)
+  );
+
+return getDocs(q);
+
+ 
+
+};
+export const get_active_modules_promise = async (Deprartment_id,program,level) => {
+  console.log(Deprartment_id,program,level);
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("level", "==", level),
+      where("type","==",program)
+
+    ),
+  );
+  return getDocs(q);
+};
 export const get_progs_promise=(Deprartment_id)=>{
   const q = query(
     collection(db, "programs"),
       where("Deprartment_id", "==", Deprartment_id)
+    );
+  return getDocs(q);
+}
+export const get_posts_promise=(Deprartment_id)=>{
+  const q = query(
+    collection(db, "Posts"),
+      where("user", "==", Deprartment_id)
     );
   return getDocs(q);
 }
@@ -446,46 +529,6 @@ export const get_Schedule_Adv=(program,levels,study,division)=>{
   );
   return getDocs(q);
 }
-export const get_students_count= async(Department_id,modules)=>{
-  console.log(Department_id,modules);
-  const q = query(
-    collection(db, "users"),
-    and(
-      where("Department_id", "==", Department_id),
-      where("registerdModules","array-contains-any",modules),
-    ),
-  );
-  const snapshot = await getCountFromServer(q);
-
-  return snapshot.data().count || 0;
-}
-export const get_students_promise = async (Deprartment_id,program,level) => {
-  console.log(Deprartment_id,level,program);
-  const q = query(
-    collection(db, "users"),
-    where("Department_id", "==", Deprartment_id),
-    where("program","==",program),
-    where("level","==",+level)
-  );
-
-return getDocs(q);
-
-
-
-};
-export const get_active_modules_promise = async (Deprartment_id,program,level) => {
-  console.log(Deprartment_id,program,level);
-  const q = query(
-    collection(db, "activemodule"),
-    and(
-      where("Deprartment_id", "==", Deprartment_id),
-      where("level", "==", level),
-      where("type","==",program)
-
-    ),
-  );
-  return getDocs(q);
-};
 export const get_prof_daily_schedule= async(Department_id,day,module)=>{
   const q = query(
     collection(db, "schedulemodule"),

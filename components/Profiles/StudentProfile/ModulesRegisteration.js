@@ -13,7 +13,7 @@ import CardContent from '@mui/material/CardContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { auth, db } from "../../../store/fire";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { get_Subjects, get_active_modules, get_progs } from "../../../store/getandset";
 import Loader from "../../UI/Loader/Loader";
 import ViewModule from "./Modules/ViewModule";
@@ -27,6 +27,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { doc, setDoc } from "firebase/firestore";
+import { displayMessage } from "../../../store/message-slice";
+import { profileActions } from "../../../store/profile-slice";
 function arrayEquals(a, b) {
   return Array.isArray(a) &&
       Array.isArray(b) &&
@@ -40,6 +42,7 @@ const ModulesRegisteration=()=>{
     const [registerdModules,setRegisteredModules]=useState([]);
     const [initialRegMod,setInitialRegMod]=useState([]);
     const theme = useTheme();
+    const dispatch=useDispatch();
     const [loading, setLoading] = useState(true);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -47,35 +50,17 @@ const ModulesRegisteration=()=>{
     const profile = useSelector((state) => state.profile.profile);
     const Department_id = profile.Department_id;
     const [edit,setEdit]=useState(false);
-    const [numbers,setNumbers]=useState({ECTS:0,core:0,supp:0,elec:0});
     const [viewInstructions,setViewInstruction]=useState(true);
+    const [numbers,setNumbers]=useState({ECTS:0,core:0,supp:0,elec:0});
     let registeredECTS=0;
     let registerdCore=0;
     let registeredSupp=0;
     let registeredElec=0;
-
-
-useEffect(() => {
-  for(let i=0;i<registerdModules.length ;i++){
-    registeredECTS+= +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS ? +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS:0;
-  }
-
-  let locStudentReg=studentModules.filter((mod)=>profile.registerdModules.includes(mod.id));
-  console.log(locStudentReg);
-  let locMod= modules.filter((mod)=>locStudentReg.some((m)=>m.module===mod.id));
-  console.log(locMod);
-  console.log(locMod);
-    registerdCore = locMod.filter((m)=>m.type === "core").length ;
-    registeredSupp = locMod.filter((m)=>m.type === "support").length ;
-    registeredElec = locMod.filter((m)=>m.type === "elective").length ;
-    setNumbers({ECTS:registeredECTS,core:registerdCore,supp:registeredSupp,elec:registeredElec});
-}, [registerdModules,profile]);
  
 
-
     const isRegisterationValid={
-      "ECTS":+registeredECTS === 30,
-      "Core": +registerdCore === studentModules.filter((mod)=>mod.type === "core").length,
+      "ECTS":+numbers.ECTS === 30,
+      "Core": +numbers.core === studentModules.filter((mod)=>mod.type === "core").length,
       }
     const handleClick=(actionName)=>{
       switch (actionName) {
@@ -105,8 +90,8 @@ useEffect(() => {
       if (!auth.currentUser) return;
       const f = async () => {
         try {
-          setInitialRegMod([]);
-          setRegisteredModules([]);
+          setInitialRegMod(profile.registerdModules);
+          setRegisteredModules(profile.registerdModules);
           console.log(profile);
           setLoading(true);
           let Lprograms= await get_progs(Department_id);
@@ -118,10 +103,11 @@ useEffect(() => {
           const p2 = get_Subjects(Department_id);
           // Access data for each document snapshot in the array
           const [modules,Sujects] = await Promise.all([p1,p2]);
-          setModules(Sujects);
-          console.log(modules);
-          setStudentModules(modules.filter((mod)=>mod.progress === 100));
-          console.log(Sujects);
+          let filterdMod=modules.filter((mod)=>mod.progress === 100);
+          let filterdSubjects=Sujects.filter((mod)=> filterdMod.some((m)=>m.module === mod.id));
+          console.log(filterdMod,filterdSubjects);
+          setModules(filterdSubjects);
+          setStudentModules(filterdMod);
         } catch (e) {
           console.log(e); 
         } finally {
@@ -161,8 +147,17 @@ useEffect(() => {
     const regesterstionhandler=
     async()=>
     {
+      try{
     setDoc(doc(db,"users",auth.currentUser.uid),{registerdModules:registerdModules},
-    {merge:true})
+    {merge:true});
+    setInitialRegMod(registerdModules);
+    setEdit(false);
+    dispatch(displayMessage("Modules were registered successfully!"),"success");
+    dispatch(profileActions.setProfileValue({type:"registerdModules",value:registerdModules}));
+      }
+      catch(e){
+        dispatch(displayMessage("An Error Occurred!"),"error");
+      }
     }
     return(
         <>
@@ -180,16 +175,16 @@ useEffect(() => {
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
           <Grid container sx={{width:"100%", gridTemplateColumns:"1fr 1fr 1fr 1fr",display:"grid"}} gridTemplateColumns={{xs:"1fr",sm:"1fr 1fr",lg:"1fr 1fr 1fr",xl:"1fr 1fr 1fr 1fr"}} spacing={{xs:1,sm:2,lg:3,xl:8}}>
             <Grid item >
-            <CustomCard valid={isRegisterationValid.ECTS} title="ECTS" subtitle="Number of ECTS points." value={`${registeredECTS}/30`}/>
+            <CustomCard valid={isRegisterationValid.ECTS} title="ECTS" subtitle="Number of ECTS points." value={`${numbers.ECTS}/30`}/>
             </Grid>
             <Grid item>
-            <CustomCard valid={isRegisterationValid.Core} title="Core" subtitle="Number of Core type modules." value={`${registerdCore}/${studentModules.filter((mod)=>mod.type === "core").length}`}/>
+            <CustomCard valid={isRegisterationValid.Core} title="Core" subtitle="Number of Core type modules." value={`${numbers.core}/${modules.filter((mod)=>mod.type === "core").length}`}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Support" subtitle="Number of Support type modules." value={`${registeredSupp}/${studentModules.filter((mod)=>mod.type === "support").length}`}/>
+            <CustomCard title="Support" subtitle="Number of Support type modules." value={`${numbers.supp}/${modules.filter((mod)=>mod.type === "support").length}`}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Elective" subtitle="Number of Elective type modules." value={`${registeredElec}/${studentModules.filter((mod)=>mod.type === "elective").length}`}/>
+            <CustomCard title="Elective" subtitle="Number of Elective type modules." value={`${numbers.elec}/${modules.filter((mod)=>mod.type === "elective").length}`}/>
             </Grid>
           </Grid>
         <List sx={{display:"flex",marginTop:"1rem",gap:"0.5rem",padding:"1rem 0"}}>
