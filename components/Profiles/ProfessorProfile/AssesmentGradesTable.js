@@ -133,12 +133,9 @@ namedStudents=namedStudents.map((s)=>{
         }
       };
     namedStudents=namedStudents.map((s)=>{
-      let sg=grades.filter((g)=>g.studentId===s.id);
-      let msg={}
-      if(sg.length>0){
-      msg={Department_id:sg[0].Department_id,assessmentId:sg[0].assessmentId,gradeDoc:sg[0].id,fullmark:sg[0].fullmark,grade:sg[0].grade,level:sg[0].level,professorId:sg[0].professorId,program:sg[0].program,studentId:sg[0].studentId}
-      }
-      return{...s,...msg};
+      let sg=grade.filter((g)=>g.studentId===s.id);
+
+      return{...s,...sg[0]};   
     })
       const handleEditClick = (id) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
