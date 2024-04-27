@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer, cloneElement } from "react";
 import { auth, creatuser, db } from "../../../../store/fire";
 import classes from "./AddClass.module.css";
 import { getIdToken } from "firebase/auth";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   addDoc,
   arrayUnion,
@@ -11,7 +11,6 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { displayMessage } from "../../../../store/message-slice";
 
 const intilistate = {
   name: "",
@@ -44,28 +43,18 @@ function reducer(state, action) {
 
 const AddClass = (probs) => {
 
-  const { classroom,edit,open } = probs;
+  const { classroom,edit } = probs;
   console.log(classroom,edit);
   const profile = useSelector((state) => state.profile.profile);
   const Department_id= profile.Department_id;
   const [state, dispatch] = useReducer(reducer, intilistate);
   const [uploading,setUploading]=useState(false);
-  const dispatchRedux=useDispatch();
   const inputsValid = {
     name: state.name.trim() !== "",
     place: state.place.trim() !== "",
   };
-useEffect(() => {
-  if(!edit){
-    const action={
-      type:"reset"
-    };
-    dispatch(action);
-  }
-}, [edit]);
-
-
   const [formIsValid, setFormIsValid] = useState(false);
+  
   useEffect(() => {
     if (inputsValid.place && inputsValid.name) {
       setFormIsValid(true);
@@ -129,12 +118,11 @@ useEffect(() => {
       };
       const userRef=doc(db,"users",Department_id)
       const ref=await addDoc(collection(userRef,"classRooms"),info)
-        dispatchRedux(displayMessage("Class Added Successfully","success"))
+        
         setUploading(false);
     }
   catch(e){
     setUploading(false);
-    dispatchRedux(displayMessage("Failed To Add Class","error"))
     console.log(e);
   }
   probs.showAdd(false);
@@ -193,7 +181,7 @@ useEffect(() => {
         <div className={classes.button}>
           {" "}
           <button onClick={submitHandler} disabled={!formIsValid || uploading}>
-          {uploading? "Uploading..." :"Add"}
+            Add
           </button>
           </div>
         </div>

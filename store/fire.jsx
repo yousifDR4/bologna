@@ -116,6 +116,25 @@ export const creatuser = async (info) => {
     return 500;
   }
 };
+
+export const createprofessor = async (info) => {
+  console.log(JSON.stringify(info));
+  try {
+    const res = await fetch("http://localhost:4000/createprofessor", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(info),
+    });
+    console.log(res.status);
+    const k = await res.json();
+    console.log(k);
+    return k;
+  } catch (e) {
+    return 500;
+  }
+};
 export const getprofile = async () => {
   const q = query(
     collection(db, "users"),

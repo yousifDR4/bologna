@@ -13,12 +13,12 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../../../store/fire";
 import { useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { get_active_modules } from "../../../../store/getandset";
 export default function AddScheduling(probs) {
   const [open, setOpen] = React.useState(false);
   let {
     initialValues,
     edit,
+    modules,
     classes,
     disabled,
     study,
@@ -27,15 +27,12 @@ export default function AddScheduling(probs) {
     selectedProgram,
     selectedSpeciality,
     handlerefetch,
-    programs,
-    modulesSch,
-    activeMod=[]
   } = probs;
   const [selectedModule, setSelectedModule] = React.useState(
-    edit ? initialValues["module"] || "" : ""
+    edit ? initialValues["moduleId"] || "" : ""
   ); //editing parameters to ignore just set edit to false
   const [selectedClass, setSelectedClass] = React.useState(
-    edit ? initialValues["class"] || "" : ""
+    edit ? initialValues["classroomId"] || "" : ""
   );
   const [selectedType, setSelectedType] = React.useState(
     edit ? initialValues["type"] || "" : ""
@@ -60,10 +57,10 @@ export default function AddScheduling(probs) {
   const Department_id = profile.Department_id;
   const [selectedDay, setSelectedDay] = React.useState(
     edit
-      ?  initialValues["day"] || ""
+      ? { value: initialValues["day"], label: initialValues["day"] } || ""
       : ""
   );
-  
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -80,6 +77,9 @@ setSelectedDay(event.target.value)
   const handleClose = () => {
     setOpen(false);
   };
+
+
+
 
   return (
     <React.Fragment>
@@ -107,7 +107,6 @@ setSelectedDay(event.target.value)
         }
         title="Add a Schedule"
         onClick={handleClickOpen}
-        
       >
         {edit ? "Edit" : "Add"}
       </Button>
@@ -121,7 +120,6 @@ setSelectedDay(event.target.value)
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
             const x = formJson;
-            let code= selectedModule !== "" ?activeMod.filter((a)=>a.id === selectedModule)[0].name+selectedDay+selectedStartingTime.value+selectedEndingTime.value:"";
             const filteredObject = Object.entries(x).reduce(
               (acc, [key, value]) => {
                 if (value !== "") {
@@ -132,6 +130,7 @@ setSelectedDay(event.target.value)
               {}
             );
 
+            console.log(filteredObject);
             const id = await addDoc(collection(db, "schedulemodule"), {
               ...x[0],
               ...filteredObject,
@@ -144,8 +143,7 @@ setSelectedDay(event.target.value)
               program: selectedProgram,
               endingTime: selectedEndingTime.label,
               startingTime: selectedStartingTime.label,
-              day:+filteredObject.day,
-              code:code
+              day:+filteredObject.day
             });
             handlerefetch();
 
@@ -187,7 +185,7 @@ setSelectedDay(event.target.value)
                 },
               }}
             >
-              {activeMod.map((mod) => (
+              {modules.map((mod) => (
                 <MenuItem value={mod.id}>{mod.name}</MenuItem>
               ))}
             </Select>
@@ -281,13 +279,13 @@ setSelectedDay(event.target.value)
                 },
               }}
             >
-              <MenuItem value={0}>Sunday</MenuItem>
-              <MenuItem value={1}>Monday</MenuItem>
-              <MenuItem value={2}>Tuesday</MenuItem>
-              <MenuItem value={3}>Wednesday</MenuItem>
-              <MenuItem value={4}>Thursday</MenuItem>
-              <MenuItem value={5}>Friday</MenuItem>
-              <MenuItem value={6}>Saturday</MenuItem>
+              <MenuItem value="1">Sunday</MenuItem>
+              <MenuItem value="2">Monday</MenuItem>
+              <MenuItem value="3">Tuesday</MenuItem>
+              <MenuItem value="4">Wednesday</MenuItem>
+              <MenuItem value="5">Thursday</MenuItem>
+              <MenuItem value="6">Friday</MenuItem>
+              <MenuItem value="7">Saturday</MenuItem>
             </Select>
           </FormControl>
           <Box
@@ -299,27 +297,25 @@ setSelectedDay(event.target.value)
           >
             <ReactSelect
               hideSelectedOptions
-              isDisabled={selectedDay === ""}
               value={selectedStartingTime}
               onChange={(e) => {
                 setSelectedStartingTime(e);
               }}
               options={
                 study === "morning"
-                  ? generateTimeArrayInRange(510, 900, 5,modulesSch,selectedDay)
-                  : generateTimeArrayInRange(720, 1170, 5,modulesSch,selectedDay)
+                  ? generateTimeArrayInRange(480, 900, 5)
+                  : generateTimeArrayInRange(720, 1170, 5)
               }
               placeholder="Starting Time"
             ></ReactSelect>
             <ReactSelect
               hideSelectedOptions
-              isDisabled={selectedDay === ""}
               value={selectedEndingTime}
               onChange={(e) => setSelectedEndingTime(e)}
               options={
                 study === "morning"
-                  ? generateTimeArrayInRange(510, 900, 5,modulesSch,selectedDay)
-                  : generateTimeArrayInRange(720, 1170, 5,modulesSch,selectedDay)
+                  ? generateTimeArrayInRange(480, 900, 5)
+                  : generateTimeArrayInRange(720, 1170, 5)
               }
               placeholder="Ending Time"
             ></ReactSelect>
@@ -335,9 +331,8 @@ setSelectedDay(event.target.value)
   );
 }
 
-function generateTimeArrayInRange(startValue, endValue, stepSize,modulesSch,selectedDay) {
-  console.log(modulesSch);
-  let timeArray = [];
+function generateTimeArrayInRange(startValue, endValue, stepSize) {
+  const timeArray = [];
   // Using a for loop to generate the array
   for (let value = startValue; value <= endValue; value += stepSize) {
     // Calculating hours and minutes
@@ -352,29 +347,9 @@ function generateTimeArrayInRange(startValue, endValue, stepSize,modulesSch,sele
     // Adding the formatted time to the array
     timeArray.push({
       label: formattedTime,
-      value: hours * 60 + minutes,
+      value: hours * 100 + minutes,
       id: formattedTime,
     });
-  
   }
-  modulesSch.map((mod)=>{
-    const [startHours, startMinutes] = mod.startingTime.split(':').map(Number);
- const [endHours,endMinutes]=mod.endingTime.split(':').map(Number);
- let day=mod.day;
- console.log(day,selectedDay);
- if(+selectedDay === +day){
-  console.log(mod.startingTime,mod.endingTime);
-  console.log((startHours * 60)+startMinutes);
-  console.log((endHours * 60)+endMinutes);
-  console.log(timeArray);
- timeArray= timeArray.filter((t)=>{
-    if(((t.value >= ((startHours * 60)+startMinutes)) && (t.value < (endHours * 60)+endMinutes)  )){
-      console.log(t.value);
-    }
-    return !(t.value >= ((startHours * 60)+startMinutes) && (t.value < (endHours * 60)+endMinutes)  );
-  })
- }
-  })
-  
   return timeArray;
 }

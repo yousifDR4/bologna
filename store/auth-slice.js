@@ -26,7 +26,7 @@ const authSlice = createSlice({
 });
 export const onLogin = (profile) => {
   console.log(profile.accountType, 111111111);
-  if (profile.accountType === "University" ) {
+  if (profile.accountType === "University") {
     const {
       name,
       accountType,
@@ -107,7 +107,7 @@ export const onLogin = (profile) => {
       );
     };
   }
-  if (profile.accountType === "Department" && !profile?.role ) {
+  if (profile.accountType === "Department") {
     const {
       name,
       accountType,
@@ -172,7 +172,7 @@ export const onLogin = (profile) => {
       username,
       role,
       profilePicture,
-      Country
+      country
     } = profile;
     return async (dispatch) => {
       dispatch(authSlice.actions.logIn({ accountType:role, uid }));
@@ -190,7 +190,7 @@ export const onLogin = (profile) => {
           role:role?role:"",
           Degree:Degree ? Degree:"",
           sex:sex?sex:"",
-          Country:Country?Country:"",
+          country:country?country:"",
 
         })
       );
@@ -211,7 +211,6 @@ export const onLogin = (profile) => {
       University_id,
       College_id,
       Department_id,
-      registerdModules,
       sex,
       program,
     } = profile;
@@ -232,8 +231,7 @@ export const onLogin = (profile) => {
           level:  level?  +level:"",
           Department_id:Department_id?Department_id:uid,
           sex:sex?sex:"",
-          program:program?program:"",
-          registerdModules:registerdModules ? registerdModules:[]
+          program:program?program:""
         })
       );
     };

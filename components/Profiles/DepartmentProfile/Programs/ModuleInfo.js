@@ -1,17 +1,9 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
-import { auth, creatuser, db } from "../../../../../store/fire";
+import { auth, creatuser, db } from "../../../../store/fire";
 import Select from "react-select";
 import classes from "./ModuleInfo.module.css";
 import { getIdToken } from "firebase/auth";
 import { useSelector } from "react-redux";
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import {
   addDoc,
   arrayUnion,
@@ -23,7 +15,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { get_Subjects, get_Sujects, get_classRooms, get_prof, get_prog, get_progs } from "../../../../../store/getandset";
+import { get_Subjects, get_Sujects, get_classRooms, get_prof, get_prog, get_progs } from "../../../../store/getandset";
 let modul = [
   { value: "physics", label: "Physics" },
   { value: "mathII", label: "MathII" },
@@ -58,20 +50,14 @@ function reducer(state, action) {
 
 const ModuleInfo = (probs) => {
   let { form, setForm, setFormIsValid } = probs;
-  const [modules, setModules] = useState([]);
+  const [modules, setModules] = useState(modul);
   const [programs, setPrograms] = useState([]);
   const [speciality, setSpeciality] = useState([]);
   const [professors, setProfessors] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
-  const [selectedProgLevels, setSelectedProgLevels] = useState('');
+  const [selectedProgLevels, setSelectedProgLevels] = useState(0);
   const [spYear, setSpYear] = useState(100);
   const [state, dispatch] = useReducer(reducer, intilistate);
-  let selectedModule;
-  if(modules.length > 0){ //find the selected module from all modules
-    console.log(form.module);
-selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
-  console.log(selectedModule);
-  };
   const inputsValid = {
     program: form.program.trim() !== "",
     module: form.module.trim() !== "",
@@ -100,12 +86,12 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
       inputsValid.acceptanceDate &&
       inputsValid.lab &&
       inputsValid.theory &&
-      
+      inputsValid.online &&
       inputsValid.exercises
     ) {
-      setFormIsValid((prev)=> {return{...prev ,"MInfo":true}});
+      setFormIsValid(true);
     } else {
-      setFormIsValid((prev)=> {return{...prev ,"MInfo":false}});
+      setFormIsValid(false);
     }
   }, [inputsValid]);
 
@@ -113,16 +99,17 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
     if (e.target.name === "program") {
       setSelectedProgLevels(() => {
         let x = [];
+        console.log(e.target.value);
         let p = programs.filter((p) => p.type == e.target.value);
         setSpYear(p[0].specialtyYear);
         for (let i = 1; i <= e.target.value; i++) {
           x.push(<option value={i}>{i}</option>);
         }
-        console.log(x);
         return x;
       });
     }
     setForm((prev) => {
+      console.log(prev);
       return { ...prev, [e.target.name]: e.target.value };
     });
   }
@@ -140,15 +127,16 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
   const [Sujects,professors,classRooms,progs]=await Promise.all([p1,p2,p3,p4])
       setModules(Sujects); 
       console.log(Sujects);
-      console.log(progs);
+      console.log(probs);
       probs.setm(Sujects);
+      console.log(professors);
       setProfessors(professors);
       setClassrooms(classRooms);
+      console.log(classRooms);
       setPrograms(progs);
     };
     f();
   }, [auth.currentUser]);
-  console.log(form);
   return (
     <div className={`${classes.container}`}>
       <form action="" className=" form">
@@ -213,33 +201,10 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
               <option value={""} disabled hidden>
                 select...
               </option>
-              {form.program !== "" && 
-              [...Array(+form.program)].map((_, index) => (
-                <option key={index} value={index+1}>{index+1}</option>
-              ))
-              }
+              {selectedProgLevels}
             </select>
           </span>
-    <List sx={{ width: '100%', bgcolor: '#F1F1F3', display:"flex",flexWrap:"wrap"}} className={classes.selectedModule}>
-      <ListItem>
-        <ListItemText primary="Module Name" secondary={selectedModule ? selectedModule.name:"-"} />
-      </ListItem>
-      <ListItem>
-        <ListItemText primary="Proposed ECTS" secondary={selectedModule ? selectedModule.ECTS:"-"} />
-      </ListItem>
-      <ListItem>
-        <ListItemText primary="Module Code" secondary={selectedModule ? selectedModule.code:"-"} />
-      </ListItem>
-      <ListItem>
-        <ListItemText primary="Language" secondary={selectedModule ? selectedModule.language:"-"} />
-      </ListItem>
-      <ListItem>
-        <ListItemText primary="Type" secondary={selectedModule ? selectedModule.type:"-"} />
-      </ListItem>
-      <ListItem>
-        <ListItemText primary="Final Exam Hours" secondary={selectedModule ? selectedModule.endTermHours:"-"} />
-      </ListItem>
-    </List>  
+
           {+form.level >= +spYear && (
             <span>
               <label className="text">
@@ -275,7 +240,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
                 select...
               </option>
               {professors.map((p) => {
-                return <option value={p.id}>{p.username}</option>;
+                return <option value={p.id}>{p.name}</option>;
               })}
             </select>
           </span>
@@ -293,7 +258,7 @@ selectedModule=modules.filter((mod)=>mod.id === form.module)[0];
                 select...
               </option>
               {professors.map((p) => {
-                return <option value={p.id}>{p.username}</option>;
+                return <option value={p.id}>{p.name}</option>;
               })}
             </select>
           </span>

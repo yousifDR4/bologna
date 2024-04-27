@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, cloneElement } from "react";
-import { auth, creatuser, db } from "../../../../store/fire";
+import { auth, createprofessor, creatuser, db } from "../../../../store/fire";
 import person from "../../../../Images/user.png";
 import Select from "react-select";
 
@@ -20,7 +20,6 @@ import {
 import { setreport } from "../../../../store/getandset";
 import { useLocation } from "react-router-dom";
 import { profileActions } from "../../../../store/profile-slice";
-import { displayMessage } from "../../../../store/message-slice";
 
 const intilistate = {
   name: "",
@@ -33,7 +32,7 @@ const intilistate = {
   city: "",
   citytouched: false,
   Degree: "",
-  sex: "male",
+  sex: "",
   password: "",
   passwordtouched: false,
   email: "",
@@ -64,7 +63,7 @@ function reducer(state, action) {
         citytouched: false,
         codetouched: false,
 
-        sex: "male",
+        sex: "",
         Degree: "",
 
       };
@@ -145,6 +144,7 @@ console.log(formIsValid);
     // course is variable indicating course number with values 1 or 2
     setUploading(true);
     const IdToken=await getIdToken(auth.currentUser);
+  console.log(state.email);
     try {
       const info = {
         IdToken:IdToken,
@@ -167,7 +167,7 @@ console.log(formIsValid);
       };
       
       console.log(info);
-      const res=await creatuser(info);
+      const res=await createprofessor(info);
 if (!res.uid) {
         console.log("error");
       }
@@ -183,21 +183,19 @@ if (!res.uid) {
           Department_id:Department_id,
           seen:[]
         }
-        dispatchRedux(displayMessage("Account was created succesfully!","success"));
-       await setreport(reportinfo,Department_id);
-        const action = {
-      type: "reset",
-       };
-    dispatch(action);
+        
+       await setreport(reportinfo,Department_id)
       }
+      // setUploading(false);
+      // const action={
+      //   type:"reset"
+      // };
+      // dispatch(action);
     } catch (e) {
       console.log(e);
       setUploading(false);
-      dispatchRedux(displayMessage("An error occurred!","error"));
     }
-   finally{
     setUploading(false);
-   }
 
  
 

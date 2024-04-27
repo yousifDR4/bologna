@@ -16,9 +16,7 @@
 }
 .container form{
     background-color: white;
-    box-shadow: 0 0px 8px 0.5px rgba(141, 135, 135, 0.25);
   width: 100%;
-  max-width: 80rem;
   border-radius: 20px;
 }
 .container form > div{
@@ -49,16 +47,9 @@
 
 .container form > .fields{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
-    grid-template-areas: 
-    "first first first  second second second"
-    "third third third fourth fourth fourth"
-    "fifth fifth fifth sixth sixth sixth"
-    " seventh seventh seventh eighth eighth eighth"
-    "tenth tenth tenth elevth elevth elevth"
-    ". . . . . ninth"
-    ;
+
     gap: 1rem;
     column-gap: 2rem;
 }
@@ -76,39 +67,7 @@ color:#6B6C6D;
 .container form select{
     padding-left: 0;
 }
-.container form span:first-of-type{
-    grid-area: first;
-}
-.container form span:nth-of-type(2){
-    grid-area: second;
-}
-.container form span:nth-of-type(3){
-    grid-area: third;
-}
-.container form span:nth-of-type(4){
-    grid-area: fourth;
-}
-.container form span:nth-of-type(5){
-    grid-area: fifth;
-}
-.container form span:nth-of-type(6){
-    grid-area: sixth;
-}
-.container form span:nth-of-type(7){
-    grid-area: seventh;
-}
-.container form span:nth-of-type(8){
-    grid-area: eighth;
-}
-.container form span:nth-of-type(9){
-    grid-area: tenth;
-}
-.container form span:nth-of-type(10){
-    grid-area: elevth;
-}
-.container form .fields div{
-    grid-area: ninth;
-}
+
 .container form select{
     font-size: 100%;
 }
@@ -182,22 +141,7 @@ cursor: pointer;
       box-shadow: none;
       cursor: not-allowed;
     }
-@media (max-width:900px) {
-        .container form > .fields{
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: auto;
-            grid-template-areas: 
-            "first first first  second second second"
-            "third third third fourth fourth fourth"
-            "fifth fifth fifth sixth sixth sixth"
-            "seventh seventh seventh eighth eighth eighth  "
-            "tenth tenth tenth elevth elevth elevth"
-            ". . . . . ninth"
-            ;
-            gap: 1rem;
-            column-gap: 2rem;
-        } }
+
 @media (max-width:650px) or (max-height:650px){
     .container{
         padding-top: 0;
@@ -211,21 +155,8 @@ cursor: pointer;
     }
     .container form > .fields{
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr;
         grid-template-rows: auto;
-        grid-template-areas: 
-        "first first first first first first"
-        "second second second second second second "
-        "third third third third third third"
-        "fourth fourth fourth fourth fourth fourth"
-        "fifth fifth fifth fifth fifth fifth"
-        "sixth sixth sixth  sixth sixth sixth "
-        "seventh seventh seventh seventh seventh seventh"
-        "eighth eighth eighth eighth eighth eighth"
-        "tenth tenth tenth tenth tenth tenth "
-        "elevth elevth elevth elevth elevth elevth"
-        ". . . . . ninth"
-        ;
         gap: 1rem;
         column-gap: 2rem;
     }

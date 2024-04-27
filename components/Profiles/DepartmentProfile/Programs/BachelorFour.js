@@ -40,7 +40,7 @@ const BachelorFour = ({
             <div className={classes.message}>
               {" "}
               <h2>
-                This Program is not activated yet! Press on activate program
+                This Prbhbogram is not activated yet! Press on activate program
                 button below!
               </h2>
             </div>
