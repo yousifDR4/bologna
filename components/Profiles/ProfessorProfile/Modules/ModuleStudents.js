@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Box, Card, CardContent, List, ListItem, ListItemText, Tab, Tabs, Typography } from "@mui/material";
 import { Grade, GroupOutlined } from "@mui/icons-material";
 import { useQueries, useQuery } from "react-query";
-import { get_module_students } from "../../../../store/getandset";
+import { get_module_students, get_students_grade } from "../../../../store/getandset";
 import { useSelector } from "react-redux";
 import { TableLoader } from "../../DepartmentProfile/Programs/ProgramModules/ProgramModulesTable";
 export default function ModuleStudents(probs) {
@@ -44,6 +44,7 @@ export default function ModuleStudents(probs) {
         }
       }
       );
+
     return (
         <>
           <Button startIcon={<GroupOutlined/>}  variant="outlined" onClick={handleClickOpen} sx={{width:"48%"}}>

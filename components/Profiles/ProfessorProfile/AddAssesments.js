@@ -157,7 +157,7 @@ export default function AddAssesment(probs) {
                 ? selectedModuleObj.AssesmentOnline.activated && (
                     <MenuItem key="aso" value="AssesmentOnline">
                       {" "}
-                      Online Assesment
+                      Online Assignment Assesment
                     </MenuItem>
                   )
                 : ""}
@@ -165,7 +165,7 @@ export default function AddAssesment(probs) {
                 ? selectedModuleObj.AssesmentOnsight.activated && (
                     <MenuItem key="asos" value="AssesmentOnsight">
                       {" "}
-                      Onsight Assesment
+                      Onsight Assignment Assesment
                     </MenuItem>
                   )
                 : ""}

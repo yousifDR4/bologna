@@ -49,6 +49,7 @@ let x = true;
 let count = 0;
 const Navbar = () => {
   const [notifications, setNotifications] = useState(count);
+  const noNotification=useSelector((state)=>state.notify.noNotification);
   const [loading, setLoading] = useState(true);
   const [activatedList, setActivatedList] = useState([]);
   const dispatchRedux = useDispatch();
@@ -167,6 +168,7 @@ const Navbar = () => {
         ) {
           console.log(change.doc.data().seen);
           console.log(notifications);
+          dispatchRedux(notifyActions.setNotificationsNumber({no:noNotification+1}))
           setNotifications((prev) => {
             return prev + 1;
           });
@@ -188,6 +190,7 @@ const Navbar = () => {
     count =notifications;
     console.log("useeff",count);
     },[notifications])
+    let profileLink=isUniversityAccount?"/UniversityProfile":isCollegeAccount?"/CollegeProfile":isDepartmentAccount?"/DepartmentProfile":isProfessorAccount?"/ProfessorProfile":"/StudentProfile";
   return (
     <>
       <div className={backdrop} onClick={showAsideListHandler} />
@@ -200,12 +203,28 @@ const Navbar = () => {
             </li>
           </div>
           <div>
+          {!isLoggedIn && (
             <li>
               <Link to="/">what's APS</Link>
             </li>
+             )}
+              { (isProfessorAccount||isStudentAccount) && (
             <li>
+              <Link to={isProfessorAccount?"/ProfessorHome":"/Home"}>Home</Link>
+            </li>
+             )}
+              {isLoggedIn && (
+            <li>
+              <Link to={profileLink}>Profile</Link>
+            </li>
+             )}
+    
+                 {!isLoggedIn && (
+            <li>
+             
               <Link to="/">How it works</Link>
             </li>
+                 )}
             <li>
               <Link to="/Universities">Universities using it</Link>
             </li>

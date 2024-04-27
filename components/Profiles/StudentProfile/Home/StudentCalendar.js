@@ -2,22 +2,35 @@ import * as React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { Avatar, Badge, Card, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Avatar, Badge, Card, List, ListItem, ListItemAvatar, ListItemIcon, ListItemText, ListSubheader, Popover, Typography } from '@mui/material';
 import { PickersDay } from '@mui/x-date-pickers';
 import { Assignment, QuestionAnswer, Quiz } from '@mui/icons-material';
 import styled from '@emotion/styled';
 
 export default function StudentCalendar(probs) {
-let {quizes=[],assesments=[],professorModules=[],modules=[]}=probs;
+let {quizes=[],assesments=[],loading,professorModules=[],modules=[]}=probs;
 const today= new AdapterDayjs;
 const [todayActivities,setTodayActivities]=React.useState([]);
 const [value,setValue]=React.useState(today.date());
-
-console.log(value,value.$D,value.$M);
+const [anchorEl, setAnchorEl] =React.useState(null);
+const [anchorMenu, setAnchorMenu] = React.useState(null);
+const openMenu = Boolean(anchorMenu);
+const handleMenuClose = () => {
+setAnchorMenu(null);
+};
+const handlePopoverOpen = (event) => {
+  setAnchorEl(event.currentTarget);
+};
+const handlePopoverClose = () => {
+  setAnchorEl(null);
+};
+const open = Boolean(anchorEl);
+console.log(todayActivities);
   return (
     <>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateCalendar 
+      loading={loading.assesments}
       sx={{bgcolor:"#fff",boxShadow:"1"}}
       value={value}
        slots={{
@@ -36,15 +49,62 @@ console.log(value,value.$D,value.$M);
       }
       {
         todayActivities.filter((act)=>act.D === value.$D && act.M == value.$M).map(act=>(
-          <ListItem key={act.title} sx={{width:"60%",minWidth:"250px",bgcolor:"#fff", borderRadius:"5px",boxShadow:"1"}}>
+          <>
+          <ListItem 
+          key={act.title} 
+          aria-owns={open ? 'mouse-over-popover' : undefined}
+          aria-haspopup="true"
+          onMouseEnter={!openMenu ? handlePopoverOpen:()=>{}}
+          onMouseLeave={handlePopoverClose}
+          sx={{width:"60%",
+          minWidth:"250px",
+          bgcolor:"#fff", 
+          borderRadius:"5px",
+          boxShadow:"1"}}>
               <ListItemAvatar >
                 <Avatar sx={{bgcolor:"#CCE4FB"}}>
-                 {act.type === "assignment" ? <Assignment sx={{color:"var(--styling1)"}}/>: act.type==="quiz" ? <Quiz sx={{color:"var(--styling1)"}}/> :<QuestionAnswer sx={{color:"var(--styling1)"}}/>}
+                 {act.type === "AssesmentOnsight" || act.type === "AssesmentOnline"  ? <Assignment sx={{color:"var(--styling1)"}}/>: act.type==="AssesmentQuizes" ? <Quiz sx={{color:"var(--styling1)"}}/> :<QuestionAnswer sx={{color:"var(--styling1)"}}/>}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary={act.title} secondary={modules.filter((mod)=>professorModules.filter((m)=>(m.id === act.module))[0].module===mod.id)[0].name}/>
-        
           </ListItem>
+          <Popover
+          id="mouse-over-popover"
+          sx={{
+            pointerEvents: 'none',
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          onClose={handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Typography >
+            <List sx={{padding:"0",margin:"0"}}  subheader={
+        <ListSubheader component="div" id="nested-list-subheader" sx={{margin:"0 !important",paddingBottom:"0"}}>
+          {}
+        </ListSubheader>
+      } >
+                <ListItem sx={{paddingTop:"0",margin:"0"}}>
+                    <ListItemText primary="mark" secondary={act.grades}/>
+                </ListItem>
+                <ListItem sx={{paddingTop:"0",margin:"0"}}>
+                    <ListItemText primary="Type" secondary={act.type}/>
+                </ListItem>
+                <ListItem sx={{paddingTop:"0",margin:"0"}}>
+                    <ListItemText primary="notes" secondary={act.notes}/>
+                </ListItem>
+            </List>
+          </Typography>
+        </Popover>
+      </>
         ))
       }
     </List>
@@ -62,9 +122,8 @@ function specialDay(props) {
       return;
     }
     else{
-    setTodayActivities((prev)=>([...prev,{title:assign.title,id:assign.id,D:assign.D,M:assign.M,module:assign.module,type:"assignment"}]));
+    setTodayActivities((prev)=>([...prev,{...assign}]));
   
-    console.log(counter);
     return true;
   }
 }

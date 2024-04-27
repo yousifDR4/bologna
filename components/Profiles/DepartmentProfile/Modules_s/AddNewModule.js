@@ -181,10 +181,10 @@ const location=useLocation();
     console.log(e);
   }
  
-  const action={
-    type:"reset"
-  };
-  dispatch(action);
+  // const action={
+  //   type:"reset"
+  // };
+  // dispatch(action);
   };
 
 useEffect(()=>{
