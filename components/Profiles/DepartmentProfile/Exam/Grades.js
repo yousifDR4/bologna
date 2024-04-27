@@ -93,6 +93,7 @@ export default function Grades() {
 
   const handleSaveClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    console.log((rowModesModel[id]));
   };
 
   const handleDeleteClick = (id) => () => {
@@ -113,6 +114,7 @@ export default function Grades() {
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
+    console.log(newRow);
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };

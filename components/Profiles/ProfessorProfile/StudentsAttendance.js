@@ -18,6 +18,7 @@ import Select from '@mui/material/Select';
 import { auth, db } from "../../../store/fire";
 import Loader from "../../UI/Loader/Loader";
 import { useSelector } from "react-redux";
+
 import { get_active_modules, get_Subjects, get_progs, get_professor_modules, get_prof_schedule, get_module_students, get_students_Attendance  } from '../../../store/getandset';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { Avatar, Grid, List } from "@mui/material";
@@ -28,6 +29,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import { Group } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { TableLoader } from '../DepartmentProfile/Programs/ProgramModules/ProgramModulesTable';
+
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 
 
@@ -62,7 +64,7 @@ export default function StudentsAttendance() {
       refetchOnWindowFocus:false,
     
       select:(data)=>{
-       
+
           return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
           
       }
@@ -80,6 +82,7 @@ export default function StudentsAttendance() {
       refetchOnWindowFocus:false,
     
       select:(data)=>{
+
         
           return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
           
@@ -104,6 +107,7 @@ export default function StudentsAttendance() {
       }
     }
     );
+
     let rows= moduleStudents.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
    console.log(rows);
    console.log(attendances,"att");
@@ -120,6 +124,7 @@ if (attendances===0) {
       }
    })
    console.log(rows);
+
     React.useEffect(()=>{
       const loadModules=async ()=>{
           setLoading(true);

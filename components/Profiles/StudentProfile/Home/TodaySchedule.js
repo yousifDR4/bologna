@@ -2,7 +2,7 @@ import { Calculate, Class, Laptop, LaptopOutlined, MoreVertRounded, Science } fr
 import { Box, Button, List, ListItem, ListItemText, ListSubheader, Menu, MenuItem, Popover, Typography } from "@mui/material";
 import { useState } from "react";
 const TodaySchedule=(probs)=>{
-    const {modules,timeStart,timeEnd,classRooms,modulesList}=probs;
+    const {modules,timeStart,timeEnd,classRooms,modulesList,professorModules=[]}=probs;
  const [startHours, startMinutes] = timeStart.split(':').map(Number);
  const [endHours,endMinutes]=timeEnd.split(':').map(Number);
  let numberOfRows=((endHours*60 + endMinutes)-(startHours*60 + startMinutes))/5 +6;
@@ -20,8 +20,9 @@ const TodaySchedule=(probs)=>{
  }
  const now = new Date();
 const day = now.getDay();
+console.log(day);
 let todayClasses=modules.filter((classSch)=>{
-        return (classSch.day === day +1);
+        return (classSch.day === day-1);
         });
  return(
     <Box sx={{boxSizing:"border-box",borderRadius:"10px",display:"grid",gridTemplateColumns:"10% 1fr",gridTemplateRows:`repeat(${numberOfRows},11px)`,bgcolor:"#fff",fontFamily:"GraphikLight",padding:"0.8rem",boxShadow:"1",maxWidth:"25rem",minWidth:"30rem"}}>
@@ -32,7 +33,7 @@ let todayClasses=modules.filter((classSch)=>{
             todayClasses.map((mod)=>{
                 const [modstartHours, modstartMinutes] = mod.startingTime.split(':').map(Number);
                 const [modendHours,modendMinutes]=mod.endingTime.split(':').map(Number);
-                return <Box sx={{gridRow:calculateRow(modstartHours,modstartMinutes,modendHours,modendMinutes,false),gridColumn:"2"}}><ModuleContainer module={mod} classrooms={classRooms} modules={modulesList}/></Box>
+                return <Box sx={{gridRow:calculateRow(modstartHours,modstartMinutes,modendHours,modendMinutes,false),gridColumn:"2"}}><ModuleContainer module={mod} professorModules={professorModules} classrooms={classRooms} modules={modulesList}/></Box>
             })
         }
      
@@ -41,7 +42,8 @@ let todayClasses=modules.filter((classSch)=>{
 }
 export default TodaySchedule;
 export const ModuleContainer=(probs)=>{
-    let {module,modules,classrooms}=probs;
+    let {module,modules,classrooms,professorModules}=probs;
+    console.log(modules," nsjnkjnjcsnknjC");
     const [anchorEl, setAnchorEl] =useState(null);
     const [anchorMenu, setAnchorMenu] = useState(null);
   const openMenu = Boolean(anchorMenu);
@@ -55,7 +57,12 @@ export const ModuleContainer=(probs)=>{
       setAnchorEl(null);
     };
     const open = Boolean(anchorEl);
+    console.log(professorModules,modules);
+    let pModule=professorModules.filter((mod)=>(mod.id === module.module)).length >0 ?professorModules.filter((mod)=>(mod.id === module.module))[0]:[];
+    let moduleName= pModule?.id ? modules.filter((m)=>m.id===pModule.module).length>0 ?modules.filter((m)=>m.id===pModule.module)[0].name:"-":"-";
+
     const bgColor=module.type === "Lab" ? "#F9F2F390": module.type === "Online" ? "#F9F4EB90":"#E8F2FB80";
+    console.log(moduleName,pModule);
     const borderColor=module.type === "Lab" ? "#FE627495": module.type === "Online" ? "#FAB541":"#5983E8";
     const icon=module.type === "Lab" ? <Science sx={{color:"#FE627495",bgcolor:"#F7EAEB",width:"2rem",height:"2rem",borderRadius:"50%",padding:"0.18rem"}}/>: module.type === "Online" ? <Laptop sx={{color:"#FAB541",bgcolor:"#F9EEDB",width:"2rem",height:"2rem",borderRadius:"50%",padding:"0.18rem"}}/>:<Class sx={{color:"#5983E8",bgcolor:"#EAEEF8",width:"2rem",height:"2rem",borderRadius:"50%",padding:"0.2rem"}}/>;
     return (
@@ -68,7 +75,7 @@ export const ModuleContainer=(probs)=>{
         >
           <Typography  sx={{display:"flex",flexWrap:"wrap",paddingTop:"0.5rem"}}>
             <Typography component="span" sx={{width:"80%"}}>
-         <Typography variant="body1"> {modules.filter((mod)=>(mod.id === module.moduleId)).length > 0 ? modules.filter((mod)=>(mod.id === module.moduleId))[0].name || "-":"-"}</Typography>
+         <Typography variant="body1"> {moduleName}</Typography>
          <Typography component="span" sx={{flex:"1",color:borderColor}}>{module.startingTime + " - " + module.endingTime}</Typography>
          </Typography>
         {icon}
@@ -95,11 +102,11 @@ export const ModuleContainer=(probs)=>{
           <Typography >
             <List sx={{padding:"0",margin:"0"}}  subheader={
         <ListSubheader component="div" id="nested-list-subheader" sx={{margin:"0 !important",paddingBottom:"0"}}>
-          {modules.filter((mod)=>(mod.id === module.moduleId)).length > 0 ? modules.filter((mod)=>(mod.id === module.moduleId))[0].name || "-":"-"}
+          {moduleName}
         </ListSubheader>
       } >
                 <ListItem sx={{paddingTop:"0",margin:"0"}}>
-                    <ListItemText primary="classroom" secondary={classrooms.filter((c)=>c.id === module.classroomId)[0].name}/>
+                    <ListItemText primary="classroom" secondary={classrooms.filter((c)=>c.id === module.class)[0]?.name? classrooms.filter((c)=>c.id === module.class)[0]?.name:"-"}/>
                 </ListItem>
                 <ListItem sx={{paddingTop:"0",margin:"0"}}>
                     <ListItemText primary="Type" secondary={module.type}/>
