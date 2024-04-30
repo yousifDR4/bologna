@@ -14,7 +14,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { auth } from "../../../../store/fire";
 import { useSelector } from "react-redux";
-import { get_Subjects, get_active_modules, get_progs } from "../../../../store/getandset";
+import { get_Subjects, get_active_modules, get_progs, get_student_active_modules } from "../../../../store/getandset";
 import Loader from "../../../UI/Loader/Loader";
 import ViewModule from "./ViewModule";
 import ViewGrade from "./ViewGrade";
@@ -36,15 +36,11 @@ const StudentModules=()=>{
         try {
           console.log(profile);
           setLoading(true);
-          let Lprograms= await get_progs(Department_id);
-          console.log(Lprograms);
-          setPrograms(Lprograms);
-          let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
-          console.log(progType,Department_id,profile.level);
-          const p1 = get_active_modules(Department_id,progType,profile.level);
+          const p1 = get_student_active_modules(profile.registerdModules);
           const p2 = get_Subjects(Department_id);
           // Access data for each document snapshot in the array
           const [modules,Sujects] = await Promise.all([p1,p2]);
+          console.log(modules);
           setModules(Sujects);
           setStudentModules(modules);
           console.log(Sujects);
@@ -60,7 +56,8 @@ const StudentModules=()=>{
     }, [profile, Department_id]);
     if(loading){
       return <Loader/>
-    }
+    };
+    let locMod= modules.filter((mod)=>studentModules.some((m)=>m.module===mod.id));
     return(
         <>
          <Box sx={{ width:"100%",display:"flex",flexDirection:"column",margin:"0.6rem 0.6rem 0rem 0.6rem",padding:"0 0.8rem"}}>
@@ -74,16 +71,16 @@ const StudentModules=()=>{
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
           <Grid  container sx={{width:"100%", gridTemplateColumns:"1fr 1fr 1fr 1fr",display:"grid"}} gridTemplateColumns={{xs:"1fr",sm:"1fr 1fr",lg:"1fr 1fr 1fr",xl:"1fr 1fr 1fr 1fr"}} spacing={{xs:1,sm:2,lg:3,xl:8}}>
             <Grid item>
-            <CustomCard title="Modules" subtitle="Number of registered modules." value="0"/>
+            <CustomCard title="Modules" subtitle="Number of registered modules." value={locMod.length}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Core" subtitle="Number of Core type modules." value="0"/>
+            <CustomCard title="Core" subtitle="Number of Core type modules." value={locMod.filter((mod)=>mod.type === "core").length}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Support" subtitle="Number of Support type modules." value="0"/>
+            <CustomCard title="Support" subtitle="Number of Support type modules." value={locMod.filter((mod)=>mod.type === "support").length}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Elective" subtitle="Number of Elective type modules." value="0"/>
+            <CustomCard title="Elective" subtitle="Number of Elective type modules." value={locMod.filter((mod)=>mod.type === "elective").length}/>
             </Grid>
           </Grid>
         <List sx={{display:"flex",marginTop:"1rem",gap:"0.5rem",padding:"1rem 0"}}>
@@ -107,7 +104,7 @@ const StudentModules=()=>{
     </List>  
     <Box sx={{display:"flex",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
       <ViewModule moduleProb={mod} name={modules.filter((modu)=>modu.id===mod.module)[0].name}/>
-      <ViewGrade  grades={[]} name={modules.filter((modu)=>modu.id===mod.module)[0].name}/>
+      <ViewGrade  module={mod} name={modules.filter((modu)=>modu.id===mod.module)[0].name}/>
         </Box>
             </ListItem>
                 )

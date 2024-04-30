@@ -12,20 +12,21 @@ let {quizes=[],assesments=[],loading,professorModules=[],modules=[]}=probs;
 const today= new AdapterDayjs;
 const [todayActivities,setTodayActivities]=React.useState([]);
 const [value,setValue]=React.useState(today.date());
-const [anchorEl, setAnchorEl] =React.useState(null);
-const [anchorMenu, setAnchorMenu] = React.useState(null);
-const openMenu = Boolean(anchorMenu);
-const handleMenuClose = () => {
-setAnchorMenu(null);
+const [anchorEls, setAnchorEls] = React.useState(Array(todayActivities.filter((act) => act.D === value.$D && act.M == value.$M).length).fill(null));
+console.log(anchorEls);
+const handlePopoverOpen = (event, index) => {
+  const newAnchorEls = Array(todayActivities.filter((act) => act.D === value.$D && act.M == value.$M).length).fill(null);
+  newAnchorEls[index] = event.currentTarget;
+  setAnchorEls(newAnchorEls);
 };
-const handlePopoverOpen = (event) => {
-  setAnchorEl(event.currentTarget);
+React.useEffect(()=>{
+  setAnchorEls(Array(todayActivities.filter((act) => act.D === value.$D && act.M == value.$M).length).fill(null));
+},[todayActivities]);
+const handlePopoverClose = (index) => {
+  const newAnchorEls = [...anchorEls];
+  newAnchorEls[index] = null;
+  setAnchorEls(newAnchorEls);
 };
-const handlePopoverClose = () => {
-  setAnchorEl(null);
-};
-const open = Boolean(anchorEl);
-console.log(todayActivities);
   return (
     <>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -43,70 +44,68 @@ console.log(todayActivities);
       }}
       />
     </LocalizationProvider>
-    <List sx={{maxWidth:"100%",overflow:"auto",scrollbarColor:"transparent",display:"flex",flexDirection:"row",gap:"0.4rem"}}>
-      {
-        todayActivities.filter((act)=>act.D === value.$D && act.M == value.$M).length === 0 ? <Typography color="text.secondary" textAlign="center" width="100%">No Activities</Typography>:""
-      }
-      {
-        todayActivities.filter((act)=>act.D === value.$D && act.M == value.$M).map(act=>(
-          <>
-          <ListItem 
-          key={act.title} 
-          aria-owns={open ? 'mouse-over-popover' : undefined}
-          aria-haspopup="true"
-          onMouseEnter={!openMenu ? handlePopoverOpen:()=>{}}
-          onMouseLeave={handlePopoverClose}
-          sx={{width:"60%",
-          minWidth:"250px",
-          bgcolor:"#fff", 
-          borderRadius:"5px",
-          boxShadow:"1"}}>
-              <ListItemAvatar >
-                <Avatar sx={{bgcolor:"#CCE4FB"}}>
-                 {act.type === "AssesmentOnsight" || act.type === "AssesmentOnline"  ? <Assignment sx={{color:"var(--styling1)"}}/>: act.type==="AssesmentQuizes" ? <Quiz sx={{color:"var(--styling1)"}}/> :<QuestionAnswer sx={{color:"var(--styling1)"}}/>}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={act.title} secondary={modules.filter((mod)=>professorModules.filter((m)=>(m.id === act.module))[0].module===mod.id)[0].name}/>
+    <List sx={{ maxWidth: "100%", overflow: "auto", scrollbarColor: "transparent", display: "flex", flexDirection: "row", gap: "0.4rem" }}>
+      {todayActivities.filter((act) => act.D === value.$D && act.M == value.$M).length === 0 ? <Typography color="text.secondary" textAlign="center" width="100%">No Activities</Typography> : ""}
+      {todayActivities.filter((act) => act.D === value.$D && act.M == value.$M).map((act, index) => (
+        <>
+          <ListItem
+            key={act.title}
+            aria-owns={anchorEls[index] ? 'mouse-over-popover' : undefined}
+            aria-haspopup="true"
+            onMouseEnter={(event) => handlePopoverOpen(event, index)}
+            onMouseLeave={() => handlePopoverClose(index)}
+            sx={{
+              width: "60%",
+              minWidth: "250px",
+              bgcolor: "#fff",
+              borderRadius: "5px",
+              boxShadow: "1"
+            }}>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: "#CCE4FB" }}>
+                {act.type === "AssesmentOnsight" || act.type === "AssesmentOnline" ? <Assignment sx={{ color: "var(--styling1)" }} /> : act.type === "AssesmentQuizes" ? <Quiz sx={{ color: "var(--styling1)" }} /> : <QuestionAnswer sx={{ color: "var(--styling1)" }} />}
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={act.title} secondary={modules.filter((mod) => professorModules.filter((m) => (m.id === act.module))[0].module === mod.id)[0].name} />
           </ListItem>
           <Popover
-          id="mouse-over-popover"
-          sx={{
-            pointerEvents: 'none',
-          }}
-          open={open}
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          onClose={handlePopoverClose}
-          disableRestoreFocus
-        >
-          <Typography >
-            <List sx={{padding:"0",margin:"0"}}  subheader={
-        <ListSubheader component="div" id="nested-list-subheader" sx={{margin:"0 !important",paddingBottom:"0"}}>
-          {}
-        </ListSubheader>
-      } >
-                <ListItem sx={{paddingTop:"0",margin:"0"}}>
-                    <ListItemText primary="mark" secondary={act.grades}/>
+            id="mouse-over-popover"
+            sx={{
+              pointerEvents: 'none',
+            }}
+            open={anchorEls[index]?anchorEls[index] !== null:false}
+            anchorEl={anchorEls[index]}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            onClose={() => handlePopoverClose(index)}
+            disableRestoreFocus
+          >
+            <Typography>
+              <List sx={{ padding: "0", margin: "0" }} subheader={
+                <ListSubheader component="div" id="nested-list-subheader" sx={{ margin: "0 !important", paddingBottom: "0" }}>
+                  {}
+                </ListSubheader>
+              } >
+                <ListItem sx={{ paddingTop: "0", margin: "0" }}>
+                  <ListItemText primary="mark" secondary={act.grades} />
                 </ListItem>
-                <ListItem sx={{paddingTop:"0",margin:"0"}}>
-                    <ListItemText primary="Type" secondary={act.type}/>
+                <ListItem sx={{ paddingTop: "0", margin: "0" }}>
+                  <ListItemText primary="Type" secondary={act.type} />
                 </ListItem>
-                <ListItem sx={{paddingTop:"0",margin:"0"}}>
-                    <ListItemText primary="notes" secondary={act.notes}/>
+                <ListItem sx={{ paddingTop: "0", margin: "0" }}>
+                  <ListItemText primary="notes" secondary={act.notes} />
                 </ListItem>
-            </List>
-          </Typography>
-        </Popover>
-      </>
-        ))
-      }
+              </List>
+            </Typography>
+          </Popover>
+        </>
+      ))}
     </List>
     </>
   );
@@ -118,7 +117,6 @@ function specialDay(props) {
     assesments.map(assign => {
     if(assign.D === day.$D && assign.M == day.$M){
     if(todayActivities.some((act)=>act.id === assign.id)){
-      console.log("mojood");
       return;
     }
     else{

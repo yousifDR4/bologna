@@ -77,6 +77,7 @@ const ProfessorHome=()=>{
         const fetchSchedule= async(pfm)=>{
 
             const p4= await get_prof_daily_schedule(Department_id,today.getDay()-1,pfm);
+            setLoading((prev)=>({...prev,schedule:false}));
             setSchedule(p4);
             console.log(p4,today.getDay());
         }
@@ -94,7 +95,7 @@ const ProfessorHome=()=>{
             <Box sx={{display:"flex",maxWidth:"100vw",boxSizing:"border-box",justifyContent:"center",flexWrap:"wrap",padding:"0.8rem 0.5rem",columnGap:"2rem",rowGap:"0.8rem"}}>
             <Box sx={{display:"flex",flexWrap:"wrap",width:"100%",maxWidth:1100,height:"fit-content",rowGap:"2rem",columnGap:"1rem"}}>
             <ProfessorInfoCards loading={loading} assesments={assements} attendancePercentage={attendancePercentage} lstWeekAttendPer={lstWeekAttendPer} students={noStudents} noModules={professorModules.length}/>
-            <UpcomingClasses  schedule={schedule} classrooms={classrooms} professorModules={professorModules}  modules={modules} />
+            <UpcomingClasses loading={loading} schedule={schedule} classrooms={classrooms} professorModules={professorModules}  modules={modules} />
            <Box sx={{maxWidth: 350,}}>
            <StudentCalendar loading={loading} assesments={assements} professorModules={professorModules} classrooms={classrooms} modules={modules}/>
            </Box>
@@ -103,7 +104,7 @@ const ProfessorHome=()=>{
            </Box>
             </Box>
             <Box sx={{overflow:"auto",width:isLargeScreen?"fit-content":"100%",display:"flex",flexDirection:"column",maxWidth:isLargeScreen?"100%":1100,boxSizing:"border-box"}}> 
-            <TodaySchedule professorModules={professorModules} modules={schedule} modulesList={modules} classRooms={classrooms} timeStart="8:30" timeEnd="14:30"/>
+            <TodaySchedule loading={loading} professorModules={professorModules} modules={schedule} modulesList={modules} classRooms={classrooms} timeStart="8:30" timeEnd="14:30"/>
             </Box>
             </Box>
         </Box>

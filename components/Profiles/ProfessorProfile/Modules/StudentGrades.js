@@ -155,7 +155,7 @@ const columns = [
   {
     field: "quizes",
     headerName: "Quizes",
-    width:130,
+    width:100,
     type:"number"
   },
   {
@@ -173,28 +173,29 @@ const rows = [
 export function GradesTable(probs) {
     const [Grades,setGrades]=useState(rows);
     const {isLoading,assesmentsGrades=[], moduleAssesments=[], students=[]}=probs;
+    console.log(students,assesmentsGrades);
     let modRows=students.map((s)=>{
       let midterm=0,labs=0,onlineAssignments=0,project=0,onsightAssignments=0,quizes=0,reports=0;
       moduleAssesments.filter((m)=>m.type === "AssesmentOnline").map((as)=>{
-        assesmentsGrades.filter((asg)=>asg.assessmentId=== as.id).map((asgm)=>onlineAssignments+=asgm.grade);
+        assesmentsGrades.filter((asg)=>((asg.assessmentId=== as.id) && (asg.studentId === s.id))).map((asgm)=>onlineAssignments+=asgm.grade);
       });
       moduleAssesments.filter((m)=>m.type === "AssesmentMidTerm").map((as)=>{
-        assesmentsGrades.filter((asg)=>asg.assessmentId=== as.id).map((asgm)=>midterm+=asgm.grade);
+        assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>midterm+=asgm.grade);
       });
       moduleAssesments.filter((m)=>m.type === "AssesmentLab").map((as)=>{
-        assesmentsGrades.filter((asg)=>asg.assessmentId=== as.id).map((asgm)=>labs+=asgm.grade);
+        assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>labs+=asgm.grade);
       });
       moduleAssesments.filter((m)=>m.type === "AssesmentOnsight").map((as)=>{
-        assesmentsGrades.filter((asg)=>asg.assessmentId=== as.id).map((asgm)=>onsightAssignments+=asgm.grade);
+        assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>onsightAssignments+=asgm.grade);
       });
       moduleAssesments.filter((m)=>m.type === "AssesmentProject").map((as)=>{
-        assesmentsGrades.filter((asg)=>asg.assessmentId=== as.id).map((asgm)=>project+=asgm.grade);
+        assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>project+=asgm.grade);
       });
       moduleAssesments.filter((m)=>m.type === "AssesmentQuizes").map((as)=>{
-        assesmentsGrades.filter((asg)=>asg.assessmentId=== as.id).map((asgm)=>quizes+=asgm.grade);
+        assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>quizes+=asgm.grade);
       });
       moduleAssesments.filter((m)=>m.type === "AssesmentReports").map((as)=>{
-        assesmentsGrades.filter((asg)=>asg.assessmentId=== as.id).map((asgm)=>reports+=asgm.grade);
+        assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>reports+=asgm.grade);
       });
       const checks={
         onlineAssignments:onlineAssignments>0?onlineAssignments:"",

@@ -4,11 +4,6 @@ import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
   {
-    field: 'name',
-    headerName: 'Module Name',
-    width: 150,
-  },
-  {
     field: 'type',
     headerName: 'Lecture Type',
     width: 200,
@@ -17,6 +12,7 @@ const columns = [
     field: 'date',
     headerName: 'Lecture Date',
     width: 130,
+    type:"date"
   },
   {
     field: 'startingTime',
@@ -29,29 +25,38 @@ const columns = [
     width: 130,
   },
   {
-    field: 'noHours',
+    field: 'fullhours',
     headerName: 'Number of Hours',
     width: 100,
   },
   {
-    field: 'presence',
-    headerName: 'Presence State',
+    field: 'attendedHours',
+    headerName: 'Attended Hours',
+    width: 100,
+  },
+  {
+    field: 'attended',
+    headerName: 'Attended',
     type:"boolean",
     width: 130,
   },
 ];
 
 const rows = [
-{id:"01",name :"English",type:"in class",date:"2024:01:12",startingTime:"08:00",endingTime:"10:00",noHours:"2",presence:true}
+{id:"01",name :"English",type:"in class",startingTime:"08:00",endingTime:"10:00",noHours:"2",presence:true}
 ];
 
 export default function PresenceTable(probs) {
-    const [Lectures,setLectures]=React.useState(rows);
+  const {attendance,lectures}=probs;
+    let rows=attendance.map((at)=>{
+      let attLect=lectures.filter((l)=>l.id===at.lecture)[0];
+      return {...attLect,...at,date:new Date(at.y,at.M,at.D)};
+    })
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid 
       sx={{ height: "400", bgcolor:"#fff",width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}
-        rows={Lectures}
+        rows={rows}
         columns={columns}
         initialState={{
           pagination: {

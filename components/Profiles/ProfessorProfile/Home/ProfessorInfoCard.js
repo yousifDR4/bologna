@@ -22,7 +22,7 @@ const ProfessorInfoCards=(probs)=>{
  let attendanceComment=attendancePercentage >= lstWeekAttendPer ? `${attendancePercentage-lstWeekAttendPer}% higher than last week` : `${attendancePercentage-lstWeekAttendPer}% lower than last week`
     return(
         <Box sx={{width:"100%",maxWidth:"100%",height:"fit-content",display:"grid",gridTemplateColumns:isLargeScreen ? "1fr 1fr 1fr" : isSmallScreen ? "1fr ":"1fr 1fr",gap:"1rem"}}>
-      <Card sx={{ width:"100%",minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#CCE4FB",fontFamily:"GraphikLight" }}>
+      {loading.assesments ? <Skeleton animation="pulse" sx={{ width:"100%",minWidth: 275,height:"160px",WebkitTransform:"none"}} />  :  <Card sx={{ width:"100%",minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#CCE4FB",fontFamily:"GraphikLight" }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 ,fontFamily:"GraphikLight"}}  gutterBottom>
             Assesments
@@ -35,6 +35,7 @@ const ProfessorInfoCards=(probs)=>{
           </Typography>
         </CardContent>
       </Card>
+}
       {loading.students ? <Skeleton animation="pulse" sx={{ width:"100%",minWidth: 275,height:"160px",WebkitTransform:"none"}} />  :<Card sx={{ width:"100%",minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#CCE4FB" }}>
         <CardContent>
           <Typography fontFamily="GraphikLight" sx={{ fontSize: 14 }}  gutterBottom>

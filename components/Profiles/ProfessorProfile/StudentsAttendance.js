@@ -3,7 +3,11 @@ import {   GridRowModes,
   DataGrid,
   GridToolbarContainer,
   GridActionsCellItem,
-  GridRowEditStopReasons, } from '@mui/x-data-grid';
+  GridRowEditStopReasons,
+  useGridApiContext,
+  GridEditSingleSelectCell,
+  GridEditInputCell,
+  GridEditBooleanCell, } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
@@ -17,7 +21,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { auth, db } from "../../../store/fire";
 import Loader from "../../UI/Loader/Loader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { get_active_modules, get_Subjects, get_progs, get_professor_modules, get_prof_schedule, get_module_students, get_students_Attendance  } from '../../../store/getandset';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -31,6 +35,7 @@ import { useQuery } from 'react-query';
 import { TableLoader } from '../DepartmentProfile/Programs/ProgramModules/ProgramModulesTable';
 
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { displayMessage } from '../../../store/message-slice';
 
 
 export default function StudentsAttendance() {
@@ -47,6 +52,7 @@ export default function StudentsAttendance() {
   const [selectedStudent,setSelectedStudents]=React.useState([]);
   const profile = useSelector((state) => state.profile.profile);
     const Department_id = profile.Department_id;
+    const dispatch=useDispatch();
     const functionMap = {  //store functions refrences
    setSelectedDate,
    setSelectedModule,
@@ -89,14 +95,14 @@ export default function StudentsAttendance() {
       }
     }
     );
-    const promise3=()=> get_students_Attendance(selectedModules);
+    const promise3=()=> get_students_Attendance(selectedModules,selectedDate.$D,selectedDate.$M);
     const {
       data: attendances = [],
       isLoading:isLoading3,
       isError:error3,
     isFetching:isFetching3, 
     refetch:refetch3 
-    } = useQuery(`module:${selectedModules}`, promise3, {
+    } = useQuery(`module:${selectedModules}day:${selectedDate.$D}month:${selectedDate.$M}`, promise3, {
      enabled: ((!!Department_id) && (selectedModules !== "")), 
       refetchOnWindowFocus:false,
     
@@ -107,7 +113,14 @@ export default function StudentsAttendance() {
       }
     }
     );
-
+    console.log(attendances);
+    const stT=selectedLectureCode !== ""? todayLectures.filter((t)=>t.id===selectedLectureCode)[0].startingTime:"";
+    const enT=selectedLectureCode !== ""? todayLectures.filter((t)=>t.id===selectedLectureCode)[0].endingTime:"";
+    const [startHours=0, startMinutes=0] = stT.split(':').map(Number);
+    const [endHours=0,endMinutes=0]=enT.split(':').map(Number);
+    let minutesDifference=((endHours*60)+endMinutes)-((startHours*60)+startMinutes);
+    const hours = minutesDifference / 60;
+var roundedHours = Math.round(hours * 10) / 10;
     let rows= moduleStudents.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
    console.log(rows);
    console.log(attendances,"att");
@@ -163,7 +176,6 @@ if (attendances===0) {
 
   const handleDeleteClick = (id) => () => {
   };
-
   const handleCancelClick = (id) => () => {
     setRowModesModel({
       ...rowModesModel,
@@ -174,10 +186,16 @@ if (attendances===0) {
     if (editedRow.isNew) {
     }
   };
-
+  const handleProcessRowUpdateError = React.useCallback((error) => {
+    dispatch(displayMessage("Value must be valid","error"));
+  })
   const processRowUpdate = async(newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-
+    if(newRow.attendedHours === null || newRow.attended === null){
+      console.log("dwadhawdhahhdw");
+      new Error('Error while saving user: name cannot be empty.');
+      return;
+    }
 if(newRow?.attendedId){
   try{
     console.log(newRow);
@@ -188,6 +206,11 @@ if(newRow?.attendedId){
       module:selectedModules,
       professor:auth.currentUser.uid,
       attended:newRow.attended,
+      lecture:selectedLectureCode,
+      D:selectedDate.$D,
+      M:selectedDate.$M,
+      y:selectedDate.$y,
+      fullhours:roundedHours
     })
     const reportinfo={
       type:"add",
@@ -198,14 +221,20 @@ if(newRow?.attendedId){
       describtion:"attendance change",
       Department_id:Department_id,
       seen:[],
-
+      lecture:selectedLectureCode,
+      D:selectedDate.$D,
+      M:selectedDate.$M,
+      y:selectedDate.$y,
+      fullhours:roundedHours
     } 
     await addDoc(collection(db, "reports"), reportinfo)
     console.log("work2");
+    dispatch(displayMessage("Attendance was Added","success"));
     await refetch3();
   }
   catch(e){
     console.log(e);
+    dispatch(displayMessage("An error occured!","error"));
   }
 }
 else{
@@ -218,6 +247,11 @@ else{
         module:selectedModules,
         professor:auth.currentUser.uid,
         attended:newRow.attended,
+        lecture:selectedLectureCode,
+        D:selectedDate.$D,
+        M:selectedDate.$M,
+        y:selectedDate.$y,
+        fullhours:roundedHours
       })
       const reportinfo={
         type:"add",
@@ -228,16 +262,20 @@ else{
         describtion:"attendance change",
         Department_id:Department_id,
         seen:[],
-  
+        lecture:selectedLectureCode,
+        D:selectedDate.$D,
+        M:selectedDate.$M,
+        y:selectedDate.$y,
+        fullhours:roundedHours
       } 
       await addDoc(collection(db, "reports"), reportinfo)
       console.log("work");
-      await refetch3();
-   
-      
+      dispatch(displayMessage("Attendance was Added","success"));
+      await refetch3(); 
     }
     catch(e){
       console.log(e);
+      dispatch(displayMessage("An error occured!","error"));
     }
   }
     return updatedRow;
@@ -246,30 +284,78 @@ else{
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
+  function CustomTypeEditComponent(props) {
+    const apiRef = useGridApiContext();
+  console.log(props);
+    const handleValueChange = async (p) => {
+      console.log(p);
+      if(p.target.value >0){
+      await apiRef.current.setEditCellValue({
+        id: props.id,
+        field: 'attended',
+        value: true,
+      });
+    }
+    else{
+      await apiRef.current.setEditCellValue({
+        id: props.id,
+        field: 'attended',
+        value: false,
+      });
+    }
+    };
+    return <GridEditInputCell onValueChange={handleValueChange} {...props} />;
+  }
+  function CustomCheckTypeEditComponent(props) {
+    const apiRef = useGridApiContext();
+  console.log(props);
+    const handleValueChange = async (p) => {
+      console.log(p);
+      if(p.target.checked){
+      await apiRef.current.setEditCellValue({
+        id: props.id,
+        field: 'attendedHours',
+        value: roundedHours,
+      });
+    }
+    else{
+      await apiRef.current.setEditCellValue({
+        id: props.id,
+        field: 'attendedHours',
+        value: 0,
+      });
+    }
+    };
+    return <GridEditBooleanCell onValueChange={handleValueChange} {...props} />;
+  }
   const columns = [
     { field: 'name', headerName: 'Name', width: 200 },
     {
       field: 'attended',
       headerName: 'Attended',
       type: 'boolean',
+      editable:true,
       width: 130,
-      editable: true,
-
+      renderEditCell: (params) => <CustomCheckTypeEditComponent {...params} />,
       
     },
     {
       field: 'attendedHours',
-      headerName: `Attended Hours /${3} ` ,
+      headerName: `Attended Hours /${roundedHours} ` ,
       type: 'number',
       width: 130,
       editable: true,
       preProcessEditCellProps: (params) => {
-        const hasError = params.props.value < 0 || params.props.value > 3;
+        console.log(params.props.value,roundedHours);
+        const hasError = params.props.value < 0 || params.props.value > roundedHours ;
         if(hasError){
-          
+          if(params.props.value < 0 || params.props.value > roundedHours ){
+            dispatch(displayMessage("Value must be valid","error"));
+          }
         }
         return { ...params.props, error: hasError };
       },
+      renderEditCell: (params) => <CustomTypeEditComponent {...params} />,
     },
     {
       field: 'actions',
@@ -304,7 +390,7 @@ else{
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
-            disabled={false}
+            disabled={selectedLectureCode === ""}
             className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
@@ -316,11 +402,17 @@ else{
   
   const handleChange = (event) => {
     console.log(event);
+    if(event.target.name==="Module"){
+      setSelectedLectureCode("");
+    }
 let funcName='setSelected'+event.target.name;
 console.log(funcName);
 functionMap[funcName](event.target.value);
 
  };
+ const fullyAttended=selectedLectureCode !==""?rows.filter((r)=>+r.attendedHours===+roundedHours).length:0;
+ const partiallyAttended=selectedLectureCode !==""?rows.filter((r)=>+r.attendedHours<+roundedHours && +r.attendedHours > 0).length:0;
+ const absent=selectedLectureCode !==""?rows.filter((r)=>(+r.attendedHours===0 && r.attendedHours !== null)).length:0;
  if(loading){
   return <Loader/>
 }
@@ -330,7 +422,7 @@ functionMap[funcName](event.target.value);
       <Toolbar sx={{paddingLeft:"0!important",display:"flex",flexWrap:"wrap",gap:"0.9rem",width:"100%"}}>
         <Typography component="span" sx={{flexGrow: 1}}>
         <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.8rem"}} >
-          Students Attendance (make it by lecture id)
+          Students Attendance 
         </Typography>
         </Typography>
         <Typography component="span" sx={{width:"100%",display:"flex",flexWrap:"wrap",gap:"0.5rem"}}>
@@ -344,7 +436,7 @@ functionMap[funcName](event.target.value);
                 name="Date"
                 label="Date"
                 labelId="date"
-                onChange={(e)=>setSelectedDate(e)}
+                onChange={(e)=>{setSelectedDate(e);setSelectedLectureCode("");}}
                 value={selectedDate}
                  sx={{
                   bgcolor:"#fff",
@@ -430,7 +522,7 @@ variant="outlined"
             <Group sx={{color:"var(--styling1)","& .MuiAvatar-root":{bgcolor:"#fff"}}} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText sx={{color:"var(--styling1)"}} primary="Students That fully attended lecture" secondary="0" />
+        <ListItemText sx={{color:"var(--styling1)"}} primary="Students That fully attended lecture" secondary={fullyAttended} />
       </ListItem>
       </List>
            </Grid>
@@ -442,7 +534,7 @@ variant="outlined"
             <Group sx={{color:"var(--styling1)","& .MuiAvatar-root":{bgcolor:"#fff"}}} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText sx={{color:"var(--styling1)"}} primary="Students That partially attended lecture" secondary="0"/>
+        <ListItemText sx={{color:"var(--styling1)"}} primary="Students That partially attended lecture" secondary={partiallyAttended}/>
       </ListItem>
       </List>
            </Grid>
@@ -454,7 +546,7 @@ variant="outlined"
             <Group sx={{color:"var(--styling1)","& .MuiAvatar-root":{bgcolor:"#fff"}}} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText sx={{color:"var(--styling1)"}} primary="Absent students" secondary="0" />
+        <ListItemText sx={{color:"var(--styling1)"}} primary="Absent students" secondary={absent} />
       </ListItem>
       </List>
            </Grid>
@@ -462,12 +554,12 @@ variant="outlined"
       </Toolbar>
     </AppBar>
     <Box sx={{ height: "600px", width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}>
-    {isLoading2 ? <TableLoader/>:
+    {(isLoading2 || isLoading3 || isLoading) ? <TableLoader/>:
       <DataGrid
         rows={rows}
         columns={columns}
         editMode="row"
-
+        onProcessRowUpdateError={handleProcessRowUpdateError}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
