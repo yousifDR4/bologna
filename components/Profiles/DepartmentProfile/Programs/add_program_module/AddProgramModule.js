@@ -183,7 +183,38 @@ const submithandler =async()=>{
       setUploading(false);
       dispatch(messageActions.setMessage({messageContent:"The Module was added succesfully!",severity:"success"}))
       setForm(initialValue);
+      if (form.books.length>0){
+        console.log(id.id);
+        const promise=form.books.map(async (Book)=>{
+          const storegRef = ref(
+            storage,
+            `${"modulebooks"}/${id.id}/${Book.name}`
+          );
+          console.log(Book.file);
+          const uploadtask = uploadBytesResumable(storegRef, Book.file);
+          uploadtask.on(
+            "state_changed",
+            (Snapshot) => {
+              console.log(Snapshot.bytesTransferred / Snapshot.totalBytes);
+            },
+            (e) => {},
+            () => {
+              getDownloadURL(uploadtask.snapshot.ref).then((res) => {
+                  console.log("B");
+                console.log(res);
+                 setDoc(
+                  doc(db, "activemodule", id.id),
+                  
+                  { books:arrayUnion( {url:res ,name:Book.name,available:Book.available})},
+                  { merge: true }
+                ).then();
+              });
+            }
+          );
+        })
+        await Promise.all(promise);
     }
+  }
       catch(e){
         console.log(e);
         setUploading(false);
