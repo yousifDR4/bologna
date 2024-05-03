@@ -15,6 +15,7 @@ import Posts from "./Posts";
 import { auth } from "../../../../store/fire";
 import { Subject } from "@mui/icons-material";
 let initValue=[{title:"The end of Semester",user:"University of Baghdad",describtion:"The Popup is a utility component for creating various kinds of popups. It relies on the third-party Floating UI library for positioning"},{title:"Something to remember",user:"University of Baghdad",describtion:"The Popup is a utility component for creating various kinds of popups. It relies on the third-party Floating UI library for positioning"}]
+let initialState={modules:[],grades:[{},{}]}
 const Home=()=>{
     let modulesSch=[{
         startingTime:"8:30",
@@ -77,9 +78,9 @@ const Home=()=>{
     const [assements, setassements] = useState([]);
     const [quizes,setQuizes]=useState([{date:today,module:"2xlqUWREDJlWYKvAcIXt",title:"quiz1"}]);
     const [midTerms,setMidTerms]=useState([{date:today,module:"2xlqUWREDJlWYKvAcIXt",title:"Physics"}]);
-    const [formativeAsses,setFormativeAsses]=useState({modules:["physics","Math","Algorithms"],grades:[{type:"bar",label:"Your grades",data:[10,25,30]},{type:"bar",label:"Average class grade",data:[15,10,12]}]});
+    const [formativeAsses,setFormativeAsses]=useState(initialState);
     const [notices,setNotices]=useState(initValue);
-    const [loading,setLoading]=useState({noModules:true,schedule:true,assesments:true,notices:true});
+    const [loading,setLoading]=useState({noModules:true,schedule:true,assesments:true,notices:true,bars:true});
     const [intLoading,setintLoading]=useState(false);
     const profile = useSelector((state) => state.profile.profile);
     const Department_id = profile.Department_id;
@@ -150,6 +151,7 @@ const Home=()=>{
                 n.push(value); 
               });
               setFormativeAsses({modules:s,grades:[{type:"bar",label:"Your grades",data:n}]});
+              setLoading((prev)=>({...prev,bars:false}));
               console.log(s,n);
         }
         const fetchSchedule= async(pfm)=>{
@@ -179,13 +181,13 @@ const Home=()=>{
         <Box sx={{width:"100%",display:"grid",justifyItems:"center",boxSizing:"border-box"}}>
             <Box sx={{display:"flex",maxWidth:"100vw",boxSizing:"border-box",justifyContent:"center",flexWrap:"wrap",padding:"0.8rem 0.5rem",columnGap:"2rem",rowGap:"0.8rem"}}>
             <Box sx={{display:"flex",flexWrap:"wrap",width:"100%",maxWidth:1100,height:"fit-content",rowGap:"2rem",columnGap:"1rem"}}>
-            <InfoCards attendancePercentage={attendancePercentage} lstWeekAttendPer={lstWeekAttendPer} assginments={assginments} noModules={studentModule.length}/>
+            <InfoCards loading={loading} attendancePercentage={attendancePercentage} lstWeekAttendPer={lstWeekAttendPer} assginments={assginments} noModules={studentModule.length}/>
             <UpcomingClasses  loading={loading} schedule={schedule} classrooms={classrooms} professorModules={studentModule}  modules={modules}/>
             <Box sx={{flex:"1",minWidth:300,boxShadow:"1"}} >
             <ResponsiveChartContainer  height={300} title="some" sx={{bgcolor:"#fff",borderRadius:"0.5rem"}}  xAxis={[{ scaleType: 'band', data:formativeAsses.modules,id:"x-axis-id" }]}
       series={formativeAsses.grades} text tooltip={{ trigger: 'axis' }}  desc="ggg"> 
-            <BarPlot/>
-            <ChartsText text="Grades" shapeRendering={true}/>
+            <BarPlot />
+            <ChartsText  text="Grades" shapeRendering={true}/>
             <ChartsTooltip/>
             <ChartsXAxis label="Modules" position="bottom" axisId="x-axis-id" />
             <ChartsYAxis position="left" label="Grades"/>

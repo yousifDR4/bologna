@@ -364,7 +364,7 @@ export const get_student_assesments_grade = async (ids,studentId) => {
   return docs ? docs :[];
 };
 export const get_module_assesments = async (id) => {
-
+  console.log(id);
   const q = query(
     collection(db, "Assesment"),
       where("module", "==", id),

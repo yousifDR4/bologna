@@ -7,9 +7,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { Skeleton } from '@mui/material';
 
 const InfoCards=(probs)=>{
- let {attendancePercentage,lstWeekAttendPer,assginments,noModules}=probs;
+ let {attendancePercentage,loading,lstWeekAttendPer,assginments,noModules}=probs;
  const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('md', 'lg'));
@@ -30,7 +31,7 @@ const InfoCards=(probs)=>{
           </Typography>
         </CardContent>
       </Card>
-      <Card sx={{ width:"100%",minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#CCE4FB" }}>
+      {loading.assesments ? <Skeleton animation="pulse" sx={{ width:"100%",minWidth: 275,height:"160px",WebkitTransform:"none"}} />  :  <Card sx={{ width:"100%",minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#CCE4FB" }}>
         <CardContent>
           <Typography fontFamily="GraphikLight" sx={{ fontSize: 14 }}  gutterBottom>
             Assginments
@@ -43,7 +44,9 @@ const InfoCards=(probs)=>{
           </Typography>
         </CardContent>
       </Card>
-      <Card sx={{width:"100%", minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#CCE4FB" }}>
+}
+      {loading.noModules ? <Skeleton animation="pulse" sx={{ width:"100%",minWidth: 275,height:"160px",WebkitTransform:"none"}} />  :
+          <Card sx={{width:"100%", minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#CCE4FB" }}>
         <CardContent>
           <Typography fontFamily="GraphikLight" sx={{ fontSize: 14 }}  gutterBottom>
             Modules
@@ -56,6 +59,7 @@ const InfoCards=(probs)=>{
           </Typography>
         </CardContent>
       </Card>
+      }
       </Box>
     )
 }

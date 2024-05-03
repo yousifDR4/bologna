@@ -25,7 +25,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 
 const EditProgramModule=(probs)=>{
-    const {moduleProb=[],progress=0,completion}=probs;
+    const {moduleProb=[],refetch,setOpen,progress=0,completion}=probs;
     let initialValue={
         program: moduleProb.program || "",
     module: moduleProb.module || "",
@@ -221,8 +221,9 @@ const submithandler =async()=>{
       setreport(reportinfo,Department_id) 
       //form contains all the values to be uploaded
       setUploading(false);
-      dispatch(messageActions.setMessage({messageContent:"The Module was added succesfully!",severity:"success"}))
-      setForm(initialValue);
+      setOpen(false);
+      refetch();
+      dispatch(messageActions.setMessage({messageContent:"The Module was Edited succesfully!",severity:"success"}))
     }
       catch(e){
         console.log(e);
