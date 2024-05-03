@@ -38,7 +38,7 @@ import {
 import { useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import Exams from "./Exams";
-import { addDoc, collection, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 let initexams = [
   {
     id: "01",
@@ -344,15 +344,16 @@ export default function Grades() {
       totalGrade: checks.total,
     };
   });
-  console.log(examsGrade,"mmmmm");
+
   modRows=modRows.map((row)=>{
-    if(examsGrade.length===0) return;
+    if(examsGrade.length===0) return {...row};
     let m= examsGrade.filter((exam)=>exam.studentId===row.uid)[0];
-    console.log(m,"lllllllllllllllllllllllllllll");
-    return {...row,endTerm:m?.grade? m.grade:null}
+
+    return {...row,endTerm:m?.grade? m.grade:null,
+      docid:m?m.docid:null
+    }
   })
-  console.log(modRows
-  );
+  console.log(modRows);
   const handleEditClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
@@ -382,6 +383,25 @@ export default function Grades() {
     const updatedRow = { ...newRow, isNew: false };
     console.log(newRow,"new row");
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+
+    if (newRow?.endTerm){
+     
+      try{
+    
+        await setDoc(doc(db,"grades",newRow.docid),{
+          examId:selectedExam,
+          fullmark:50,
+          module:exams.filter((e)=>e.id===selectedExam)[0].module,
+          studentId:newRow.uid,
+          grade:newRow.endTerm,
+        })
+      }
+      catch(e){
+        console.log(e);
+      }
+
+    }
+    else{
     try{
     await addDoc(collection(db,"grades"),{
       examId:selectedExam,
@@ -389,11 +409,28 @@ export default function Grades() {
       module:exams.filter((e)=>e.id===selectedExam)[0].module,
       studentId:newRow.uid,
       grade:newRow.endTerm,
+
     })
   }
   catch(e){
     console.log(e);
   }
+}
+// await refetch4();
+
+if(!!newRow.endTerm &&!!newRow.totalGrade){
+  console.log("worksssssssssssssssssssssssssssssss");
+  if((newRow.endTerm+newRow.totalGrade)>=50){
+    try{
+  await setDoc(doc(db,"users",newRow.uid),{
+level:newRow.level+1
+  },{merge:true})
+}
+catch(e){
+  console.log(e);
+}
+}
+}
     return updatedRow;
   };
 
