@@ -218,7 +218,7 @@ const submithandler =async()=>{
       dispatch(messageActions.setMessage({messageContent:"The Module was added succesfully!",severity:"success"}))
 
     }
-  }
+  
       catch(e){
         console.log(e);
         setUploading(false);

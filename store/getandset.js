@@ -350,6 +350,14 @@ export const get_assesments_grade = async (ids) => {
   console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
+export const get_exams_grade = async (id) => {
+  const q = query(
+    collection(db, "grades"),
+      where("examId", "==", id),
+  );
+  const docs =  getDocs(q);
+  return docs
+};
 export const get_student_assesments_grade = async (ids,studentId) => {
   let idsArr=[];
   ids.map((as)=>idsArr.push(as.id));
