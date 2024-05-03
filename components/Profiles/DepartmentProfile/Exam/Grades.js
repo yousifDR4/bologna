@@ -18,9 +18,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { auth } from "../../../../store/fire";
-import { get_Subjects, get_classRooms, get_progs } from "../../../../store/getandset";
+import { get_Subjects, get_active_modules, get_classRooms, get_exams_promise, get_progs } from "../../../../store/getandset";
 import Loader from "../../../UI/Loader/Loader";
+import { get_assesments_grade, get_module_assesments, get_module_students, get_students_grade } from "../../../../store/getandset";
 import { useSelector } from "react-redux";
+import { useQuery } from 'react-query';
+import Exams from './Exams';
 let initexams=[
   {
      id:"01",
@@ -41,8 +44,7 @@ export default function Grades() {
   const [programs,setPrograms]=React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
   const [rows, setRows] = React.useState(data);
-
-  const [exams,setExams]=React.useState([]);
+  const [subjects, setsubjects] = React.useState([]);
   const [selectedProgram,setSelectedProgram]=React.useState("");
   const [selectedLevel,setSelectedLevel]=React.useState("");
   const [selectedExam,setSelectedExam]=React.useState("");
@@ -63,10 +65,11 @@ export default function Grades() {
           const p1=get_progs(Department_id);
           // Access data for each document snapshot in the array
           // fetch exams 
-           const [progs]=await Promise.all([p1])
+          const p2 = get_Subjects(Department_id);
+           const [progs,sub]=await Promise.all([p1,p2]);
+           setsubjects(sub);
            console.log(progs);
           setPrograms(progs ? progs : []); 
-          setExams(initexams);
           setLoading(false);
           }
           catch(e){
@@ -86,7 +89,124 @@ export default function Grades() {
       event.defaultMuiPrevented = true;
     }
   };
-
+  const promise3=()=> get_exams_promise(Department_id,selectedProgram);
+  const {
+    data: exams=[],
+    isLoading:isLoading3,
+    error:iserrorExam,
+  isFetching:isFetchingExam, 
+   
+  } = useQuery(`exams:${selectedProgram}department:${Department_id}`, promise3, {
+   enabled:(!!selectedProgram),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
+  const promise=()=> get_active_modules(Department_id,selectedProgram !== "" ?   programs.filter((p) => p.id === selectedProgram)[0].type :"",+selectedLevel);
+  const {
+    data: activeMod,
+    isLoading,
+    error,
+  isFetchingPrograms, 
+  refetch:refetchPrograms 
+  } = useQuery(`Deprartment_id:${Department_id}program:${selectedProgram !== "" ?   programs.filter((p) => p.id === selectedProgram)[0].type :""}level:${+selectedLevel}`, promise, {
+   enabled:selectedProgram!=="" && selectedLevel !== "", 
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+      console.log(data);
+        return data ? data :[]
+        
+    }
+  }
+  );
+  const studentPromise=()=>get_module_students(Department_id,selectedExam !== ""?exams.filter((e)=>e.id===selectedExam)[0].module:"");
+  const {
+    data: students=[],
+    isLoading:isLoadingStudents,
+    error:iserror,
+  isFetching:isFetching, 
+   refetch
+  } = useQuery(`department:${Department_id}module:${selectedExam !== ""?exams.filter((e)=>e.id===selectedExam)[0].module:""}`, studentPromise, {
+   enabled:(!!Department_id && selectedExam !== "" ),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
+  const moduleAssesmentPromise=()=>get_module_assesments(selectedExam !== ""?exams.filter((e)=>e.id===selectedExam)[0].module:"");
+  const {
+    data: moduleAssesments=[],
+    isLoading:isLoadingAssesments,
+    error:iserror3,
+  isFetching:isFetching3, 
+   refetch:refetch3
+  } = useQuery(`module:${selectedExam !== ""?exams.filter((e)=>e.id===selectedExam)[0].module:""}`, moduleAssesmentPromise, {
+   enabled:(!!Department_id && selectedExam !== ""),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
+  const gradepromise=()=>get_assesments_grade(moduleAssesments);
+  const {
+    data:assesmentsGrades=[],
+    isLoading:isLoadingGrades,
+    error:iserror2,
+  isFetching:isFetching2, 
+   refetch:refetch2
+  } = useQuery(`module:${moduleAssesments}`, gradepromise, {
+   enabled:( moduleAssesments.length > 0 && selectedExam !== ""),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),docid:doc.id})) :[]
+    }
+  })
+  let modRows=students.map((s)=>{
+    let midterm=0,labs=0,onlineAssignments=0,project=0,onsightAssignments=0,quizes=0,reports=0;
+    moduleAssesments.filter((m)=>m.type === "AssesmentOnline").map((as)=>{
+      assesmentsGrades.filter((asg)=>((asg.assessmentId=== as.id) && (asg.studentId === s.id))).map((asgm)=>onlineAssignments+=asgm.grade);
+    });
+    moduleAssesments.filter((m)=>m.type === "AssesmentMidTerm").map((as)=>{
+      assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>midterm+=asgm.grade);
+    });
+    moduleAssesments.filter((m)=>m.type === "AssesmentLab").map((as)=>{
+      assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>labs+=asgm.grade);
+    });
+    moduleAssesments.filter((m)=>m.type === "AssesmentOnsight").map((as)=>{
+      assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>onsightAssignments+=asgm.grade);
+    });
+    moduleAssesments.filter((m)=>m.type === "AssesmentProject").map((as)=>{
+      assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>project+=asgm.grade);
+    });
+    moduleAssesments.filter((m)=>m.type === "AssesmentQuizes").map((as)=>{
+      assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>quizes+=asgm.grade);
+    });
+    moduleAssesments.filter((m)=>m.type === "AssesmentReports").map((as)=>{
+      assesmentsGrades.filter((asg)=>(asg.assessmentId=== as.id && asg.studentId === s.id)).map((asgm)=>reports+=asgm.grade);
+    });
+    const checks={
+      onlineAssignments:onlineAssignments>0?onlineAssignments:"",
+      midterm:midterm>0?midterm:"",
+      labs:labs>0?labs:"",
+      onsightAssignments:onsightAssignments>0?onsightAssignments:"",
+      project:project>0?project:"",
+      quizes:quizes>0?quizes:"",
+      reports:reports>0?reports:"",
+      total:onlineAssignments+midterm+labs+onsightAssignments+project+quizes+reports,
+    };
+    console.log(checks);
+    return {...s,name:s.firstname+" "+s.lastname,...checks,totalGrade:checks.total}
+  });
+  console.log(assesmentsGrades,students,moduleAssesments);
   const handleEditClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
@@ -125,17 +245,11 @@ export default function Grades() {
   const columns = [
     { field: 'name', headerName: 'Name', width: 130 },
     {
-      field: 'formativeAssesment',
-      headerName: 'Formative Assesment',
+      field: 'totalGrade',
+      headerName: 'formativeAssesment+Midterm',
       type: 'number',
-      width: 150,
+      width: 250,
       
-    },
-    {
-      field: 'midTerm',
-      headerName: 'Midterm',
-      type: 'number',
-      width: 130,
     },
     {
       field: 'endTerm',
@@ -220,7 +334,9 @@ export default function Grades() {
       },
     },
   ];
-  
+//  let modExam=(exams.length >0 && subjects.length >0 && activeMod.length >0 )? exams.map((e)=>{
+//     return{...e,name:subjects.filter(s=>s.id===activeMod.filter((e)=>e.id ===e.module)[0].module)[0].name}
+//   }):[];
   const handleChange = (event) => {
     console.log(event);
 let funcName='setSelected'+event.target.name;
@@ -319,16 +435,16 @@ variant="outlined"
     variant="outlined"
         >
             { exams.map((exam, index) => (
-    <MenuItem key={index} value={exam.id}>{exam.name}</MenuItem>
+    <MenuItem key={index} value={exam.id}>{exam.id}</MenuItem>
   ))
             }
         </Select></FormControl>
         </Typography>
       </Toolbar>
     </AppBar>
-    <Box sx={{ height: "400", width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}>
+    <Box sx={{ height: "400px", width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}>
       <DataGrid
-        rows={data}
+        rows={modRows}
         columns={columns}
         editMode="row"
         initialState={{

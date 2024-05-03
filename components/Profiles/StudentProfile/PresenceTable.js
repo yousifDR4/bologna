@@ -65,7 +65,7 @@ export default function PresenceTable(probs) {
             },
           },
         }}
-        pageSizeOptions={[5]}
+        pageSizeOptions={[2, 4, 5]}
         disableRowSelectionOnClick
       />
     </Box>

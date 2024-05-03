@@ -129,7 +129,7 @@ const promise=()=> get_active_modules(Department_id,selectedProgram !== "" ?   p
   getActions: ({ id }) => {
     console.log(id);
     return [
-      <EditProgramModuleDialogue moduleProp={activeMod.filter((mod)=>mod.id===id)[0]} modules={modules}/>,
+      <EditProgramModuleDialogue refetch={refetch} moduleProp={activeMod.filter((mod)=>mod.id===id)[0]} modules={modules}/>,
       <GridActionsCellItem
       icon={<Delete />}
       label="Delete"
@@ -283,7 +283,7 @@ export const TableLoader=()=>{
   )
 }
 export  function EditProgramModuleDialogue(probs) {
-    let {moduleProp,modules}=probs;
+    let {moduleProp,refetch,modules}=probs;
     console.log(moduleProp);
     const [open, setOpen] = useState(false);
     const [value,setValue]=useState("1");
@@ -317,7 +317,7 @@ export  function EditProgramModuleDialogue(probs) {
                 minHeight:"15rem !important"
             }}>
             <Box sx={{ width: '100%',minWidth:"25rem" }}>
-                <EditProgramModule moduleProb={moduleProp} progress={moduleProp.progress} completion={moduleProp.completedSections}/>
+                <EditProgramModule refetch={refetch} setOpen={setOpen} moduleProb={moduleProp} progress={moduleProp.progress} completion={moduleProp.completedSections}/>
     </Box>
 
             </DialogContent>

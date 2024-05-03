@@ -25,6 +25,7 @@ export default function AssesmentGradesTable(probs) {
   const uid = useSelector((state) => state.auth.uid);
   const Department_id = profile.Department_id;
     let {module,assesment}=probs;
+    console.log(module);
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -47,7 +48,6 @@ export default function AssesmentGradesTable(probs) {
             return data ? data.docs.length > 0?data.docs.map((doc)=>({...doc.data(),docid:doc.id})):[] :[]
         }
       })
-      console.log(gradeRow,assesment);
       const studentPromise=()=>get_module_students(Department_id,module);
       const {
         data: students=[],
@@ -189,8 +189,9 @@ namedStudents=namedStudents.map((s)=>{
           program:newRow.program,
           fullmark:assesment.grades,
           grade:newRow.grade,
-          module:module.id,
+          module:module,
           assessmentId:assesment.id}
+          console.log(info);
         await addDoc(collection(db,"grades"),info)
         dispatch(displayMessage("Grade was Added!","success"));
         await refetch();
@@ -209,7 +210,7 @@ namedStudents=namedStudents.map((s)=>{
             program:newRow.program,
             fullmark:assesment.grades,
             grade:newRow.grade,
-            module:module.id,
+            module:module,
             assessmentId:assesment.id}
             console.log(newRow);
           await setDoc(doc(db,"grades",newRow.docid),info)
