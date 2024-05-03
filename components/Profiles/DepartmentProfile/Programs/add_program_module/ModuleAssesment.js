@@ -34,7 +34,6 @@ const ModuleAssesment=(probs)=>{
       }
     });
     const [totalAssesmentDegree,setTotalAssesmentDegree] = useState(0); //find the total degree
-
     useEffect(()=>{
       setTotalAssesmentDegree(0);
     Object.keys(myObject).forEach(outerKey => {
@@ -51,7 +50,7 @@ const ModuleAssesment=(probs)=>{
     },[form]);
 
     const [assesmentsActivaed,setAssesmentsActivated]=useState(initialActivatedAssesments); //find no of assesments activated
-
+    console.log(assesmentsActivaed);
     const initialTouchedFields = {}; //set the touch logic for inputs
     Object.keys(myObject).forEach(outerKey => {
       initialTouchedFields[outerKey] = {};

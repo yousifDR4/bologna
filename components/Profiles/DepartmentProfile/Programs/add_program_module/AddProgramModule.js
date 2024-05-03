@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import classes from "./AddProgramModule.module.css";
 import { useState,useContext } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, setDoc } from "firebase/firestore";
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
-import { auth, db } from "../../../../../store/fire";
+import { auth, db, storage } from "../../../../../store/fire";
 import { useLocation } from "react-router-dom";
 import { setreport } from "../../../../../store/getandset";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,7 @@ import { Button } from "@mui/material";
 import ModuleInfo from "./ModuleInfo";
 import { Add, Save, Upload } from "@mui/icons-material";
 import { messageActions } from "../../../../../store/message-slice";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 let initialValue={
     program:"",
     module:"",
@@ -167,6 +168,7 @@ const submithandler =async()=>{
         completedSections:completeForm,
         type: +filteredObject.program,
         level: +filteredObject.level,
+        books:[],
         ECTS:+filteredObject.ECTS});
       const reportinfo={
         page:location.pathname,
@@ -178,11 +180,42 @@ const submithandler =async()=>{
         Department_id:Department_id,
         seen:[],
       }
-      setreport(reportinfo,Department_id) 
+      setreport(reportinfo,Department_id); 
       //form contains all the values to be uploaded
+      setForm(initialValue);
+      if (form.books.length>0){
+        console.log(id.id);
+        const promise=form.books.map(async (Book)=>{
+          const storegRef = ref(
+            storage,
+            `${"modulebooks"}/${id.id}/${Book.name}`
+          );
+          console.log(Book.file);
+          const uploadtask = uploadBytesResumable(storegRef, Book.file);
+          uploadtask.on(
+            "state_changed",
+            (Snapshot) => {
+              console.log(Snapshot.bytesTransferred / Snapshot.totalBytes);
+            },
+            (e) => {},
+            () => {
+              getDownloadURL(uploadtask.snapshot.ref).then((res) => {
+                  console.log("B");
+                console.log(res);
+                 setDoc(
+                  doc(db, "activemodule", id.id),
+                  
+                  { books:arrayUnion( {url:res ,name:Book.name,available:Book.available})},
+                  { merge: true }
+                ).then();
+              });
+            }
+          );
+        })
+        await Promise.all(promise);
+      }
       setUploading(false);
       dispatch(messageActions.setMessage({messageContent:"The Module was added succesfully!",severity:"success"}))
-      setForm(initialValue);
     }
       catch(e){
         console.log(e);

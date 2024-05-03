@@ -34,7 +34,7 @@ const ModuleSources=(probs)=>{
                             <ListItemText primary="Source Name" secondary={book.name}/>
                          </ListItem>
                          <ListItem>
-                            <ListItemText primary="Book File" secondary={book.file ?book.file.name:""}/>
+                            <ListItemText primary="Book File" secondary={book.url ?<a href={book.url}>File</a>:"-"}/>
                          </ListItem>
                          <ListItem>
                             <ListItemText
