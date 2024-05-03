@@ -56,21 +56,7 @@ const ModulesRegisteration=()=>{
     let registerdCore=0;
     let registeredSupp=0;
     let registeredElec=0;
-useEffect(() => {
-  for(let i=0;i<registerdModules.length ;i++){
-    registeredECTS+= +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS ? +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS:0;
-  }
 
-  let locStudentReg=studentModules.filter((mod)=>profile.registerdModules.includes(mod.id));
-  console.log(locStudentReg);
-  let locMod= modules.filter((mod)=>locStudentReg.some((m)=>m.module===mod.id));
-  console.log(locMod);
-  console.log(locMod);
-    registerdCore = locMod.filter((m)=>m.type === "core").length ;
-    registeredSupp = locMod.filter((m)=>m.type === "support").length ;
-    registeredElec = locMod.filter((m)=>m.type === "elective").length ;
-    setNumbers({ECTS:registeredECTS,core:registerdCore,supp:registeredSupp,elec:registeredElec});
-}, [registerdModules,profile]);
  
 
     const isRegisterationValid={
@@ -133,6 +119,25 @@ useEffect(() => {
         f();
       }
     }, [profile, Department_id]);
+    useEffect(() => {
+      let count=()=>{
+      for(let i=0;i<registerdModules.length ;i++){
+        registeredECTS+= +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS ? +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS:0;
+      }
+      console.log(studentModules);
+      let locStudentReg=studentModules.filter((mod)=>profile.registerdModules.includes(mod.id));
+      console.log(locStudentReg);
+      let locMod= modules.filter((mod)=>locStudentReg.some((m)=>m.module===mod.id));
+      console.log(locMod);
+        registerdCore = locMod.filter((m)=>m.type === "core").length ;
+        registeredSupp = locMod.filter((m)=>m.type === "support").length ;
+        registeredElec = locMod.filter((m)=>m.type === "elective").length ;
+        setNumbers({ECTS:registeredECTS,core:registerdCore,supp:registeredSupp,elec:registeredElec});
+    }
+        if(registerdModules.length >0){
+          count();
+        }
+    }, [registerdModules,initialRegMod,profile,Department_id]);
     if(loading){
       return <Loader/>
     }

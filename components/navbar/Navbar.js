@@ -49,6 +49,7 @@ let x = true;
 let count = 0;
 const Navbar = () => {
   const [notifications, setNotifications] = useState(count);
+  const noNotification=useSelector((state)=>state.notify.noNotification);
   const [loading, setLoading] = useState(true);
   const [activatedList, setActivatedList] = useState([]);
   const dispatchRedux = useDispatch();
@@ -65,7 +66,6 @@ const Navbar = () => {
   const isDepartmentAccount = isLoggedIn ? accountType === "Department" : false;
   const isProfessorAccount = isLoggedIn ? accountType === "Professor" : false;
   const isStudentAccount = isLoggedIn ? accountType === "student" : false;
-  const noNotification=useSelector((state)=>state.notify.noNotification);
 console.log(isProfessorAccount);
   const dispatch = useDispatch();
   const showAsideListHandler = () => {
@@ -168,6 +168,7 @@ console.log(isProfessorAccount);
         ) {
           console.log(change.doc.data().seen);
           console.log(notifications);
+
           dispatchRedux(notifyActions.AddonNotify())
         
     
@@ -186,6 +187,8 @@ console.log(isProfessorAccount);
     count =notifications;
     console.log("useeff",count);
     },[notifications])
+    let profileLink=isUniversityAccount?"/UniversityProfile":isCollegeAccount?"/CollegeProfile":isDepartmentAccount?"/DepartmentProfile":isProfessorAccount?"/ProfessorProfile":"/StudentProfile";
+
   return (
     <>
       <div className={backdrop} onClick={showAsideListHandler} />
@@ -198,12 +201,28 @@ console.log(isProfessorAccount);
             </li>
           </div>
           <div>
+          {!isLoggedIn && (
             <li>
               <Link to="/">what's APS</Link>
             </li>
+             )}
+              { (isProfessorAccount||isStudentAccount) && (
             <li>
+              <Link to={isProfessorAccount?"/ProfessorHome":"/Home"}>Home</Link>
+            </li>
+             )}
+              {isLoggedIn && (
+            <li>
+              <Link to={profileLink}>Profile</Link>
+            </li>
+             )}
+    
+                 {!isLoggedIn && (
+            <li>
+             
               <Link to="/">How it works</Link>
             </li>
+                 )}
             <li>
               <Link to="/Universities">Universities using it</Link>
             </li>

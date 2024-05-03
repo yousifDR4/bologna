@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {   GridRowModes,
     DataGrid,
     GridToolbarContainer,
@@ -13,11 +13,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Box, Card, CardContent, List, ListItem, ListItemText, Tab, Tabs, Typography } from "@mui/material";
 import { Cancel, Edit, Grade, Group, GroupOutlined, RateReview, Save, StarRounded } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { messageActions } from "../../../store/message-slice";
+import { displayMessage, messageActions } from "../../../store/message-slice";
 import { get_module_students, get_students_grade } from "../../../store/getandset";
 import { useQueries, useQuery } from "react-query";
 import { auth, db } from "../../../store/fire";
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { TableLoader } from "../DepartmentProfile/StudentsModuleRegisteration";
 export default function AssesmentGradesTable(probs) {
 
   const profile = useSelector((state) => state.profile.profile);
@@ -38,15 +39,15 @@ export default function AssesmentGradesTable(probs) {
         error:iserror2,
       isFetching:isFetching2, 
        refetch:refetch2
-      } = useQuery(`module:${module}`, gradepromise, {
-       enabled:( open ),
+      } = useQuery(`assesment:${assesment.id}`, gradepromise, {
+       enabled:( !!assesment && open ),
         refetchOnWindowFocus:false,
       
         select:(data)=>{
-            return data ? data.docs.map((doc)=>({...doc.data(),docid:doc.id})) :[]
+            return data ? data.docs.length > 0?data.docs.map((doc)=>({...doc.data(),docid:doc.id})):[] :[]
         }
       })
-
+      console.log(gradeRow,assesment);
       const studentPromise=()=>get_module_students(Department_id,module);
       const {
         data: students=[],
@@ -86,7 +87,8 @@ export default function AssesmentGradesTable(probs) {
                 minHeight:"15rem !important"
             }}>
             <Box sx={{ width: '100%',minWidth:"25rem" }}>
-                <StudentsTable refetch={refetch2}  grade={gradeRow}students={students} assesment={assesment} module={module}/>
+
+                <StudentsTable isLoading={isLoading || isLoadingStudents} refetch={refetch2}  grade={gradeRow}students={students} assesment={assesment} module={module}/>
     </Box>
     
             </DialogContent>
@@ -105,14 +107,17 @@ export default function AssesmentGradesTable(probs) {
 
 
 export function StudentsTable(probs) {
+const dispathc=useDispatch();
   const profile = useSelector((state) => state.profile.profile);
   const uid = useSelector((state) => state.auth.uid);
   const Department_id = profile.Department_id;
-    const {assesment,students,module,grade,refetch}=probs;
+    const {assesment,students,module,grade,refetch,isLoading}=probs;
+
     const dispatch=useDispatch();
     const [rows, setRows] = useState([{id:"1",name:"snow",grade:"10"}]);
     const [rowModesModel, setRowModesModel] = useState({});
 let namedStudents=students.map((s)=>({...s,name:s.firstname+" "+s.lastname}));
+
 namedStudents=namedStudents.map((s)=>{
   let sg=grade.filter((g)=>g.studentId===s.id);
 
@@ -128,15 +133,19 @@ namedStudents=namedStudents.map((s)=>{
           event.defaultMuiPrevented = true;
         }
       };
-    
+    namedStudents=namedStudents.map((s)=>{
+      let sg=grade.filter((g)=>g.studentId===s.id);
+
+      return{...s,...sg[0]};   
+    })
       const handleEditClick = (id) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
       };
     
+
       const handleSaveClick = (id) => async() => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
 
-        
 
       };
     
@@ -151,15 +160,25 @@ namedStudents=namedStudents.map((s)=>{
         });
     
         const editedRow = rows.find((row) => row.id === id);
+        if(editedRow?.isNew)
         if (editedRow.isNew) {
           setRows(rows.filter((row) => row.id !== id));
         }
       };
-    
+      const handleProcessRowUpdateError = useCallback((error) => {
+        dispatch(displayMessage("Value must be valid","error"));
+      })
       const processRowUpdate = async(newRow) => {
         const updatedRow = { ...newRow, isNew: false };
+        console.log(newRow,newRow?.grade);
+        if(newRow.grade === undefined || newRow.grade === null){
+          console.log("dwadhawdhahhdw");
+          new Error('Error while saving user: name cannot be empty.');
+          return;
+        }
         setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
         console.log(newRow);
+        console.log(namedStudents.filter((st)=>st.id===newRow.id)[0].grade);
         let edit= namedStudents.filter((st)=>st.id===newRow.id)[0]?.grade ? true :false;
         if(!edit){
           try{
@@ -170,11 +189,15 @@ namedStudents=namedStudents.map((s)=>{
           program:newRow.program,
           fullmark:assesment.grades,
           grade:newRow.grade,
+          module:module.id,
           assessmentId:assesment.id}
         await addDoc(collection(db,"grades"),info)
+        dispatch(displayMessage("Grade was Added!","success"));
+        await refetch();
           }
           catch(e){
             console.log(e);
+            dispatch(displayMessage("An error occurred!","error"));
           }
         }
         else{
@@ -186,16 +209,20 @@ namedStudents=namedStudents.map((s)=>{
             program:newRow.program,
             fullmark:assesment.grades,
             grade:newRow.grade,
+            module:module.id,
             assessmentId:assesment.id}
             console.log(newRow);
           await setDoc(doc(db,"grades",newRow.docid),info)
+          dispatch(displayMessage("Grade was Added!","success"));
           await refetch();
           
           }
           catch(e){
             console.log(e);
+            dispatch(displayMessage("An error occurred!","error"));
           }
         }
+
         return updatedRow;
       };
     
@@ -220,7 +247,8 @@ namedStudents=namedStudents.map((s)=>{
           type:"number",
           editable: true,
       preProcessEditCellProps: (params) => {
-        const hasError = params.props.value < 0 || params.props.value > assesment.grades;
+        console.log(params.props.value );
+        const hasError = params.props.value < 0 || params.props.value > assesment.grades || params.props.value === null;
         
         if(hasError){
             dispatch(messageActions.setMessage({messageContent:"Grade value is not valid!",severity:"error"}))
@@ -272,6 +300,7 @@ namedStudents=namedStudents.map((s)=>{
       ];
   return (
     <Box sx={{ height: 400, width: '100%' }}>
+        {isLoading? <TableLoader/>:
       <DataGrid 
       sx={{ height: "400", bgcolor:"#fff",width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}
         rows={namedStudents}
@@ -285,13 +314,14 @@ namedStudents=namedStudents.map((s)=>{
         }}
         pageSizeOptions={[5]}
         editMode="row"
-        
+        onProcessRowUpdateError={handleProcessRowUpdateError}
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
         
       />
+}
     </Box>
   );
 }

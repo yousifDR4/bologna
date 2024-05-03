@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box, Card, CardContent, List, ListItem, ListItemText, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Card, CardContent, List, ListItem, ListItemText,Link, Tab, Tabs, Typography } from "@mui/material";
 import { stringifyNumber } from "../../DepartmentProfile/LevelModule";
 import { Info } from "@mui/icons-material";
 let initialValue={
@@ -179,6 +179,7 @@ function ViewModule(probs) {
     {(value === "4" ) && <ModuleTheory moduleProb={module}  />}
     {(value === "5" ) && <ModuleSSH moduleProb={module}  />}
     {(value === "6" ) && <ModuleUSSH moduleProb={module}  />}
+    {(value === "7" ) && <ModuleSources moduleProb={module}  />}
     </Box>
     
             </DialogContent>
@@ -365,4 +366,34 @@ const ModuleUSSH=(probs)=>{
       ))))}
         </List>
     )
+}
+const ModuleSources=(probs)=>{
+  let {moduleProb}=probs;
+  console.log(moduleProb);
+  let initialValue={
+      books:moduleProb.books || [],
+  }
+  return(
+      <List sx={{display:"flex",flexDirection:"row",flexWrap:"wrap"}}>
+          {initialValue.books.map((b)=>
+              <ListItem sx={{minWidth:"200px",width:"30%"}}>
+                  <Card sx={{width:"100%",boxShadow:"3"}}>
+                  <CardContent>
+      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        {b.name}
+      </Typography>
+      <List>
+          <ListItem>
+          <ListItemText primary="Availalbe in Library" secondary={b.available ? "Available":"Not Avaialble"}/>
+          </ListItem>
+          <ListItem>
+          <ListItemText primary="File" secondary={b.url?<Link href={b.url}>Download File</Link> : "-"}/>
+          </ListItem>
+      </List>
+    </CardContent>
+                  </Card>
+              </ListItem>
+    )}
+      </List>
+  )
 }

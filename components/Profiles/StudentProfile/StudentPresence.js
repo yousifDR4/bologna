@@ -11,9 +11,9 @@ import { auth } from "../../../store/fire";
 import {
     get_Schedule_promise,
   get_Subjects,
-  get_active_modules,
-  get_classRooms,
-  get_progs,
+  get_module_schedule_promise,
+  get_student_active_modules,
+  get_student_attendance_for_module_promise,
 } from "../../../store/getandset";
 import Loader from "../../UI/Loader/Loader";
 import { useSelector } from "react-redux";
@@ -45,12 +45,10 @@ const StudentPrecense = () => {
     const f = async () => {
       try {
         setLoading(true);
-        let Lprograms= await get_progs(Department_id);
-          let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
-          console.log(progType,Department_id,profile.level);
-          const p1 = get_active_modules(Department_id,progType,profile.level);
+          const p1 = get_student_active_modules(profile.registerdModules);
           const p2 = get_Subjects(Department_id);
           const [modules,Sujects] = await Promise.all([p1,p2]);
+          console.log(modules);
           setModules(Sujects);
           setStudentModules(modules);
       } catch (e) {
@@ -63,12 +61,57 @@ const StudentPrecense = () => {
       f();
     }
   }, [refitch, profile, Department_id]);
+  const moduleSchedulePromise=()=>get_module_schedule_promise(selectedModule);
+  const {
+    data: moduleSchedule=[],
+    isLoading:isLoadingModuleSchedule,
+    error:iserror,
+  isFetching:isFetching, 
+   refetch:refetch
+  } = useQuery(`module:${selectedModule}`, moduleSchedulePromise, {
+   enabled:(selectedModule !== "" ),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
+  const studentAttendancePromise=
+  ()=>get_student_attendance_for_module_promise(auth.currentUser?.uid?auth.currentUser.uid:"",selectedModule);
+  const {
+    data: studentAttendance=[],
+    isLoading:isLoadingAttendance,
+    error:iserror2,
+  isFetching:isFetching2, 
+   refetch:refetch2
+  } = useQuery(`student:${auth.currentUser?.uid?auth.currentUser.uid:""}module:${selectedModule}`, studentAttendancePromise, {
+   enabled:(selectedModule !== "" ),
+    refetchOnWindowFocus:false,
+  
+    select:(data)=>{
+        return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+    }
+  }
+  );
+  console.log(studentAttendance,moduleSchedule);
   const handleChange = (event) => {
     console.log(event);
     let funcName = "setSelected" + event.target.name;
     console.log(funcName);
     functionMap[funcName](event.target.value);
   };
+  let moduleHours=selectedModule !== ""? studentModules.filter((m)=>m.id === selectedModule)[0].ECTS*25:1;
+  let totalHours=0,presentHours=0,absentHours=0;
+  studentAttendance.map((s)=>{
+    totalHours+=s.fullhours;
+    if(s.attended){
+      presentHours+=s.attendedHours;
+    }
+    else{
+      absentHours+=s.fullhours;
+    }
+  })
   if (!Department_id ||loading) {
     return <Loader />;
   }
@@ -102,7 +145,7 @@ const StudentPrecense = () => {
                 flex: "1",
               }}
             >
-              Presenece
+              Attendance
             </Typography>
           
           </Typography>
@@ -117,7 +160,6 @@ const StudentPrecense = () => {
           >
              <FormControl
               sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
-              size="small"
             >
               <InputLabel
                 id="module"
@@ -148,13 +190,16 @@ const StudentPrecense = () => {
                 {studentModules.map((mod) => {
                   return (
                     <MenuItem value={mod.id} key={mod.id}>
-                      {mod.name}
+                      {modules.filter((m)=>m.id===mod.module).length >0?
+                      modules.filter((m)=>m.id===mod.module)[0].name:
+                      "-"
+                    }
                     </MenuItem>
                   );
                 })}
               </Select>
             </FormControl>
-            <FormControl
+            {/* <FormControl
               sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
               size="small"
             >
@@ -191,7 +236,7 @@ const StudentPrecense = () => {
                  }}
               />
               </LocalizationProvider>
-            </FormControl>
+            </FormControl> */}
           </Typography>
           <Grid  container sx={{width:"100%", gridTemplateColumns:"1fr 1fr 1fr",display:"grid"}} gridTemplateColumns={{xs:"1fr",sm:"1fr 1fr",lg:"1fr 1fr 1fr",xl:"1fr 1fr 1fr "}} spacing={{xs:1,sm:2,lg:3,xl:8}}>
            <Grid item>
@@ -202,7 +247,7 @@ const StudentPrecense = () => {
             <Group sx={{color:"var(--styling1)","& .MuiAvatar-root":{bgcolor:"#fff"}}} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText sx={{color:"var(--styling1)"}} primary="Total Hours" secondary="0/0" />
+        <ListItemText sx={{color:"var(--styling1)"}} primary="Total Hours" secondary={totalHours} />
       </ListItem>
       </List>
            </Grid>
@@ -214,7 +259,12 @@ const StudentPrecense = () => {
             <Group sx={{color:"var(--styling1)","& .MuiAvatar-root":{bgcolor:"#fff"}}} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText sx={{color:"var(--styling1)"}} primary="Present Hours" secondary={<Box sx={{display:"flex",gap:"0.2rem"}}><Typography fontSize="0.875rem"  component="span"> 0/0 </Typography><Typography fontSize="0.875rem" component="span" bgcolor="Background"> 0% </Typography></Box>} />
+        <ListItemText sx={{color:"var(--styling1)"}} primary="Present Hours" secondary={<Box sx={{display:"flex",gap:"0.2rem"}}>
+          <Typography  margin="0 0.3rem" fontSize="0.875rem"  component="span"> {presentHours} </Typography><Typography title="Percentage of total lectures hours" fontSize="0.875rem" component="span" bgcolor="rgb(252 249 220)"> 
+          {selectedModule!==""?(presentHours/totalHours*100):0}% </Typography>
+          <Typography margin="0 0.3rem" title="Percentage of total module hours" fontSize="0.875rem" component="span" bgcolor="rgb(231 231 231)"> 
+          {Math.round(presentHours/moduleHours*100)}%</Typography>
+          </Box>} />
       </ListItem>
       </List>
            </Grid>
@@ -226,7 +276,12 @@ const StudentPrecense = () => {
             <Group sx={{color:"var(--styling1)","& .MuiAvatar-root":{bgcolor:"#fff"}}} />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText sx={{color:"var(--styling1)"}} primary="Total Hours" secondary="0/0" />
+        <ListItemText sx={{color:"var(--styling1)"}} primary="Absense Hours" secondary={<Box sx={{display:"flex",gap:"0.2rem"}}>
+          <Typography  margin="0 0.3rem" fontSize="0.875rem"  component="span"> {absentHours} </Typography><Typography title="Percentage of total lectures hours" fontSize="0.875rem" component="span" bgcolor="rgb(252 249 220)"> 
+          {selectedModule!==""?absentHours/totalHours*100:0}% </Typography>
+          <Typography title="Percentage of total module hours" margin="0 0.3rem" fontSize="0.875rem" component="span" bgcolor="rgb(231 231 231)"> 
+          {Math.round(absentHours/moduleHours*100)}%</Typography>
+          </Box>} />
       </ListItem>
       </List>
            </Grid>
@@ -241,7 +296,7 @@ const StudentPrecense = () => {
           boxSizing: "border-box",
         }}
       >
-        <PresenceTable/>
+        <PresenceTable attendance={studentAttendance} lectures={moduleSchedule}/>
       
       </Box>
     </Box>

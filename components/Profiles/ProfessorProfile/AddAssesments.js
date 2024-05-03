@@ -89,6 +89,7 @@ export default function AddAssesment(probs) {
               M: selectedDate.$M,
               D: selectedDate.$D,
               y: selectedDate.$y,
+              type:selectedType,
               title: formJson["Assesment Title"],
               grades: +formJson["Assesment Grade"],
               notes: formJson["Assesment Notes"],
@@ -156,7 +157,7 @@ export default function AddAssesment(probs) {
                 ? selectedModuleObj.AssesmentOnline.activated && (
                     <MenuItem key="aso" value="AssesmentOnline">
                       {" "}
-                      Online Assesment
+                      Online Assignment Assesment
                     </MenuItem>
                   )
                 : ""}
@@ -164,7 +165,7 @@ export default function AddAssesment(probs) {
                 ? selectedModuleObj.AssesmentOnsight.activated && (
                     <MenuItem key="asos" value="AssesmentOnsight">
                       {" "}
-                      Onsight Assesment
+                      Onsight Assignment Assesment
                     </MenuItem>
                   )
                 : ""}
