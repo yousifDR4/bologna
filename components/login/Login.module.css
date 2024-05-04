@@ -47,6 +47,7 @@ height: 2.3rem;
 padding: 0 0.5rem ;
 margin-bottom: 4px;
 width: 100%;
+font-size: 1.1rem;
 font-family: GraphikThin;
 color:#6B6C6D;
 }
@@ -84,6 +85,7 @@ font-family: GraphikLight;
 width: 45%;
 height: 2.4rem;
 font-family: Graphik;
+cursor: pointer;
 }
 .container form .button button:hover{
     color:#4A8BDF;

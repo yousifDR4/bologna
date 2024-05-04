@@ -1,9 +1,10 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import classes from "./MainPage.module.css";
 import { ReactComponent as Arrow } from "./reshot-icon-right-arrow-UCA8NGYZDJ.svg";
 import x from "./x.png";
 import { useState } from "react";
 import { Facebook, Instagram, X } from "@mui/icons-material";
+import video from "../../Images/video.mp4";
 const MainPage = () => {
   const observer=useRef();
   const [visable,setVisable]=useState(false)
@@ -35,10 +36,13 @@ const MainPage = () => {
               Digital Solutions.
             </h3>
             <button>
-              <p>start</p> <Arrow />
+              <p>START NOW</p> <Arrow />
             </button>
           </div>
-          <div  className={`${classes.video} ${visable?classes.disaper:""}`}>video</div>
+          <div  className={`${classes.video} ${visable?classes.disaper:""}`}>
+            <video loop muted autoPlay  src={video}  type="video/mp4">
+            </video>
+          </div>
         </div>
         <div className={`${classes.features} ${visable?classes.visable:""}`} ref={features}>
           <span>

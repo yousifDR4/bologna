@@ -7,7 +7,7 @@ import { profileActions } from "../../../store/profile-slice";
 import { update_user_profile } from "../../../store/fire";
 import { Menu, MenuItem } from "@mui/material";
 const AboutComponent=(probs)=>{
-    const {icon,value,type,socialType}=probs;
+    const {icon,edit=true,value,type,socialType}=probs;
     const dataType=socialType ? socialType : type;
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -27,7 +27,7 @@ const AboutComponent=(probs)=>{
     }
     return(
     <>
-    {!isValueNotEmpty || showEdit && 
+    {((!isValueNotEmpty || showEdit) && edit )&& 
       <CustomInput type={type} value={value} showFormDefault={showEdit} defaultSelection={socialType} showEdit={setShowEdit}/> 
     }
     {(isValueNotEmpty && !showEdit) &&
@@ -36,6 +36,7 @@ const AboutComponent=(probs)=>{
          {type !== "details" && <a href={value}>{value}</a>}
          {type === "details" && <p>{value}</p>}
          <img src={options} alt="" onClick={handleClick}/>
+         {edit &&
          <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -48,6 +49,7 @@ const AboutComponent=(probs)=>{
         <MenuItem onClick={()=>{setShowEdit(true); handleClose();}}>Edit</MenuItem>
         <MenuItem onClick={deleteHandler}>Delete</MenuItem>
       </Menu>
+}
          {/* <div  className={`${classes.dropDown} ${showDropDown?classes.active:''}`}>
             <span onClick={deleteHandler}>Delete</span>
            <span onClick={()=>{setShowEdit(true); setShowDropDown(false)}}>Edit</span>
