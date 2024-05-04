@@ -53,6 +53,7 @@ const DepartmentProfile = () => {
   const isContactSelected = activatedSection === "contact";
   const [modules, setDepartments] = useState([]);
   console.log(profile); 
+  console.log(auth.currentUser.uid);
   useEffect(()=>{
     if(!Department_id)return;
     const f=async()=>{

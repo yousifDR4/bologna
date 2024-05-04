@@ -62,23 +62,25 @@
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   width: 100%;
   gap: 0px;
-  height: 100vh;
-  min-height: 600px;
+  height: fit-content;
+  flex: 1;
 }
 .video {
   margin: 0;
-  background-color: whitesmoke;
   color: white;
+  background: #fff;
   width: 100%;
   font-size: xx-large;
-  padding-left: 5rem;
-  padding-top: 5rem;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    text-align: center;
+}
+
+.video video{
+  width: 100%;
 }
 .title button {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-  Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -90,14 +92,16 @@
   outline: none;
   border: none;
   color: white;
+  border-radius: 4px;
+  padding: 0.2rem 0.4rem;
+  font-family: Graphik;
 
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.mainPage button svg {
+.headline button svg {
   width: 60px;
   margin-left: 40px;
+  animation: slideOutAndFade 1.3s infinite;
 }
 
 @keyframes slideOutAndFade {
@@ -116,10 +120,14 @@
 
 .title button:hover {
   transition: 600ms ease-in-out;
-  background-color: #2062b6;
+  background-color: transparent;
+  border: 1px solid #4a8bdf;
+  
   cursor: pointer;
-  border: none;
   color: white;
+}
+.title button:hover svg{
+  animation: slideOutAndFade 1.3s alternate;
 }
 .features {
   display: grid;

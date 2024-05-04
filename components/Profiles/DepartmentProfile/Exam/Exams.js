@@ -17,6 +17,7 @@ import {
 import {
   get_Subjects,
   get_Subjects_prog_promise,
+  get_active_Subjects_prog_promise,
   get_commite_exams_promise,
   get_exams_promise,
   get_prof,
@@ -65,6 +66,7 @@ const Exams = () => {
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reLoad, setReLoad] = useState(false);
+  const [subjects, setsubjects] = useState([]);
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   const professorsoid = profile.professors;
@@ -86,7 +88,7 @@ const Exams = () => {
         console.log(progs);
         console.log(sbj);
         setPrograms(progs ? progs : []);
-       
+        setsubjects(sbj);
      
         setLoading(false);
      
@@ -99,7 +101,7 @@ const Exams = () => {
       loadCommittes();
     }
   }, [reLoad, profile]);
-  const promise1 = ()=>get_Subjects_prog_promise(
+  const promise1 = ()=>get_active_Subjects_prog_promise(
     programs.filter((p) => p.id === selectedProgram)[0].type,
     Department_id
   );
@@ -199,6 +201,7 @@ console.log(exams,"exam");
               modules= {modules? modules:[]}
               committes={committes}
               edit={false}
+              subjects={subjects}
               refetch={refetch}
             />
           </Typography>
@@ -243,7 +246,7 @@ console.log(exams,"exam");
          exams.filter((exam)=> exam.program===selectedProgram).length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No exams were found!</Typography>:
             exams.filter((exam)=>exam.program===selectedProgram).map((exam)=>{
                 return(
-     <ListItem key={exam.id} sx={{width: '19%',minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
+     <ListItem key={exam.id} sx={{width: '19%',height:"fit-content",minWidth:"300px",boxShadow:"rgba(0, 0, 0, 0.24) 0px 3px 8px",display:"flex",flexDirection:"column",gap:"0.5rem",bgcolor:"#fff",padding:"1rem"}}>
                 <ArticleIcon sx={{width:"3rem",height:"3rem",color:"var(--styling1)",background:"var(--backGround)",borderRadius:"50%",padding:"0.5rem"}}/>
                 <Accordion sx={{boxShadow:"none",border:"1px solid #d1d7dc",fontFamily:"GraphikLight",width:"95%"}}>
         <AccordionSummary
@@ -269,7 +272,7 @@ console.log(exams,"exam");
     </AccordionDetails>
     </Accordion>
     <Box sx={{display:"flex",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
-    <AddExam refetch={refetch} program={programs.filter((p)=>p.id===selectedProgram)[0]} modules={modules} committes={committes} edit={true} initialValues={exam}/>
+    <AddExam subjects={subjects} refetch={refetch} program={programs.filter((p)=>p.id===selectedProgram)[0]} modules={modules} committes={committes} edit={true} initialValues={exam}/>
           <Button startIcon={<Delete/>} sx={{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",width:"50%",boxShadow:"none"}} variant="contained">Delete</Button>
         </Box>
             </ListItem>

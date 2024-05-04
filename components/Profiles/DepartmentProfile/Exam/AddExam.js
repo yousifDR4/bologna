@@ -16,7 +16,8 @@ export default function AddExam(probs) {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   const [open, setOpen] = React.useState(false);
-  let {modules,committes,program,initialValues,edit,refetch}=probs;
+  let {modules,committes,subjects,program,initialValues,edit,refetch}=probs;
+  console.log(modules);
   const [selectedCommitte,setSelectedCommitte]=React.useState(edit ? initialValues['committe'] ||'':"");
   const [selectedLevel,setSelectedLevel]=React.useState(edit ? initialValues['level'] ||'':"");
   const [selectedModule,setSelectedModule]=React.useState(edit ? initialValues['module'] ||'':"");
@@ -144,7 +145,9 @@ console.log(modules);
         }
     }}
         >
-            {modules.filter((mod)=>mod?.level === selectedLevel).map((fmod)=><MenuItem value={fmod?.id}>{fmod?.name}</MenuItem>)}
+            {modules.filter((mod)=>mod?.level === selectedLevel).map((fmod)=><MenuItem value={fmod.id}>
+              {subjects.filter((sub)=>sub.id===fmod.module).length>0?subjects.filter((sub)=>sub.id===fmod.module)[0].name:"-"}
+            </MenuItem>)}
         </Select>
         </FormControl>
         <FormControl sx={{minWidth:"100%",paddingLeft:"0",margin:"8px 0 4px "}} size="small" >

@@ -42,7 +42,7 @@ const Login=()=>{
     const navigate=useNavigate();
     const inputsValid = {
         emailaddress: state.emailaddress.length > 0,
-        password: state.password.length > 0,
+        password: state.password.length > 7,
     };
     const [loading,setLoading]=useState(false);
     
@@ -184,7 +184,7 @@ else{
           />
          
           {!inputsValid.password && state.passwordtouched && (
-            <p className={ classes.errorText}>Password must not be empty!</p>
+            <p className={ classes.errorText}>Password must be longer than 7 characters!</p>
           )}
           <div className={classes.button}>
             {" "}

@@ -388,6 +388,7 @@ export const get_posts= async(ids)=>{
   return data ? data :[];
 }
 export const get_users= async(ids)=>{
+  console.log(ids);
   const q = query(
     collection(db, "users"),
       where("username", "in", ids)
@@ -699,6 +700,18 @@ export const get_Subjects_prog_promise =  (type,Deprartment_id) => {
     where("Deprartment_id", "==", Deprartment_id),where(
       "type","==",type
     )
+    )
+  );
+  return  getDocs(q);
+};
+export const get_active_Subjects_prog_promise =  (type,Deprartment_id) => {
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+    where("Deprartment_id", "==", Deprartment_id),where(
+      "type","==",type
+    ),
+    where("progress", "==", 100)
     )
   );
   return  getDocs(q);
