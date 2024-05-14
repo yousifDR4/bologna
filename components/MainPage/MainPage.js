@@ -104,11 +104,6 @@ const MainPage = () => {
               <li>
                 <h3>aps</h3>
               </li>
-              <li>product</li>
-              <li>Features</li>
-              <li>about us</li>
-              <li>contact us</li>
-              <li>product</li>
             </ul>       
           </div>
           </div>

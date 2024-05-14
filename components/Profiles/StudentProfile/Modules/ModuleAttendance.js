@@ -99,6 +99,7 @@ export default function StudentsAttendance(probs) {
 
 export function AttendanceTable(probs) {
   const {students,attendances,module,loading}=probs;
+  console.log(attendances,students);
   const selectedAttendance = attendances.reduce((accumulator, currentValue) => {
     // Check if the lecture already exists in the accumulator
     const existingLecture = accumulator.find(item => (item.D === currentValue.D && item.M === currentValue.M));

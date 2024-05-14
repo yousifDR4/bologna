@@ -4,7 +4,7 @@ import Select from 'react-select'
 import { Link, useLocation,useSearchParams } from "react-router-dom";
 import classes from "./AddNewModule.module.css";
 import { getIdToken } from "firebase/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addDoc,
   arrayUnion,
@@ -14,6 +14,8 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { get_Sujects } from "../../../../store/getandset";
+import { displayMessage } from "../../../../store/message-slice";
 let modules=[
   { value: 'physics', label: 'Physics' },
   { value: 'mathII', label: 'MathII' },
@@ -87,6 +89,7 @@ const EditModule = () => {
   const queryParams = new URLSearchParams(location.search);
   const id = (queryParams.get('id') || ''); //getting module id from url
   const [module,setModule]=useState({});
+  const [subjects, setsubjects] = useState([]);
   const [defaultPrerequisite,setDefaultPrerequisite]=useState([]);
   const [defaultCorequisites,setDefaultCorequisites]=useState([]);
   const [state, dispatch] = useReducer(reducer, intilistate);
@@ -107,29 +110,51 @@ const EditModule = () => {
 
   const [formIsValid, setFormIsValid] = useState(false);
   const profile = useSelector((state) => state.profile.profile);
+  const Department_id = profile.Department_id;
+  let dispatchRedux=useDispatch();
   useEffect(()=>{ //load module using module id
-    let module={
-        name: "physics",
-        describtion: "something",
-        ECTS: 35,
-        code:"h3h22",
-        language:"english",
-        lastExamHours:4,
-        midtermHours:2,
-        type:"elective",
-        prerequisite:["mathII","humanrights"],
-  corequisites:["mathII"] 
-    };
+
 
     const f=async()=>{
       console.log("work");
-    const data=await getDoc(doc(collection(db,"subjects"),id));
-      setModule(data.data());
+    const data= getDoc(doc(collection(db,"subjects"),id));
+    const p2= get_Sujects(Department_id);
+    const [Sujects,suData] = await Promise.all([p2,data]);
+    let m=suData.data();
+    console.log(Sujects);
+    console.log(m);
+    setsubjects(Sujects);
+    let modCore=[];
+    if(m.corequisites.length >0)
+    m.corequisites.map((m)=>modCore.push(Sujects.filter((s)=>s.value===m)[0]));
+    let labelCore=[];
+    modCore.map((m)=>labelCore.push(m));
+    let modPre=[];
+    if(m.prerequisite.length >0)
+    m.prerequisite.map((m)=>modPre.push(Sujects.filter((s)=>s.value===m)[0]));
+    let labelPre=[];
+    modPre.map((m)=>labelPre.push(m));
+    let module={
+      name: m?.name?m.name:"",
+      describtion: m?.describtion?m.describtion:"",
+      ECTS: m?.ECTS?m.ECTS:0,
+      code:m?.code?m.code:"",
+      language:m?.language?m.language:"",
+      lastExamHours:m?.endTermHours?m.endTermHours:0,
+      midtermHours:m?.midTermHours?m.midTermHours:0,
+      type:m?.type?m.type:"",
+      prerequisite:labelPre,
+corequisites:labelCore,
+id:id
+  };
+  console.log(module);
+      setModule(module);
       console.log(data);
     }
+    if(Department_id)
     f();
    
-  },[]);
+  },[Department_id,profile]);
   useEffect(() => {
     if (inputsValid.describtion && inputsValid.ECTS && inputsValid.name && inputsValid.code && inputsValid.lastExamHours && inputsValid.midtermHours && inputsValid.type) {
       setFormIsValid(true);
@@ -159,25 +184,7 @@ const EditModule = () => {
       )
     )
     objectMap(module,mapData);
-    if(module.prerequisite){
-        module.prerequisite.map((p)=>{
-            let p_obj={
-                label:p,
-                value:p,
-            }
-            console.log(defaultPrerequisite);
-            setDefaultPrerequisite((prev)=>([...prev,p_obj]))
-        })
-    }
-    if(module.corequisites){
-        module.corequisites.map((p)=>{
-            let p_obj={
-                label:p,
-                value:p,
-            }
-            setDefaultCorequisites((prev)=>([...prev,p_obj]))
-        })
-    }
+
 
 
   },[module]);
@@ -207,19 +214,12 @@ const EditModule = () => {
 
   }
   function onselect(input,obj){
-    let value= state.prerequisite;
-    console.log(value);
-   
-    obj.map((obj)=>{
-      if(!value.includes(obj.value)){
-      value.push(obj.value)}
-    });
+
     const action = {
       type: "input",
       input: input,
-      value: value,
+      value: obj,
     };
-    console.log(action);
     dispatch(action);
     const action2 = {
         type: "touch",
@@ -228,37 +228,46 @@ const EditModule = () => {
       dispatch(action2);
   }
   const submitHandler = async (e) => {
-//     e.preventDefault();
-//     // course is variable indicating course number with values 1 or 2
-//     try{
-//     const info = {
-//       name: state.name,
-//       describtion: state.describtion,
-//       ECTS: state.ECTS,
-//       code: state.code,
-//       language:state.language,
-//       midTermHours:state.midtermHours,
-//       endTermHours:state.lastExamHours,
-//       type:state.type,
-//       Deprartment_id: auth.currentUser.uid,
-//       University_id:profile.University_id,
-//       College_id:profile.College_id,
-//     };
-//     console.log();
-//     const id = await addDoc(collection(db, "subjects"), info);
-//     console.log(id.id);
-//     await updateDoc(doc(db, "users", auth.currentUser.uid), {
-//       subjects_id: arrayUnion(id.id),
-//     });
-//   }
-//   catch(e){
-//     console.log(e);
-//   }
- 
-//   const action={
-//     type:"reset"
-//   };
-//   dispatch(action);
+    e.preventDefault();
+    // course is variable indicating course number with values 1 or 2
+    setUploading(true);
+    try{
+      let p=[];
+      state.prerequisite.map((pr)=>p.push(pr.value));
+      let c=[];
+      state.corequisites.map((cr)=>c.push(cr.value));
+    const info = {
+      name: state.name,
+      describtion: state.describtion,
+      ECTS: state.ECTS,
+      code: state.code,
+      language:state.language,
+      midTermHours:state.midtermHours,
+      endTermHours:state.lastExamHours,
+      type:state.type,
+      prerequisite:p,
+      corequisites:c,
+      Deprartment_id: auth.currentUser.uid,
+      University_id:profile.University_id,
+      College_id:profile.College_id,
+    };
+    console.log(info);
+    await setDoc(doc(db,"subjects",module.id),{
+      ...info,
+    });
+    dispatchRedux(displayMessage("Module was saved succesfully!"))
+  }
+  catch(e){
+    dispatchRedux(displayMessage("An error occurred!"))
+    console.log(e);
+  }
+ finally{
+  setUploading(false);
+ }
+  const action={
+    type:"reset"
+  };
+  dispatch(action);
   };
 
   console.log(!formIsValid  && !(state.ECTStouched || state.nametouched || state.describtiontouched || state.codetouched || state.languagetouched || state.lastExamHourstouched || state.midtermHourstouched || state.typetouched || state.prerequisitetouched || state.corequisitestouched));
@@ -266,7 +275,7 @@ const EditModule = () => {
   return (
     <div className={`${classes.container}`}>
       <form action="" className=" form">
-        <h3>Add Module</h3>
+        <h3>Edit Module</h3>
         <div className={classes.fields}>
           <span>
         <label htmlFor="email">
@@ -401,12 +410,12 @@ const EditModule = () => {
           Corequisites<span className={classes.star}>*</span>
         </label>
         <Select
-        options={modules}
+        options={subjects}
         isMulti
         closeMenuOnSelect={false}
         onChange={(choice)=>onselect("corequisites",choice)}
         name="corequisites"
-        defaultValue={defaultCorequisites || 'Select'}
+        defaultValue={state.corequisites}
         />
         </span>
         <span>
@@ -414,19 +423,19 @@ const EditModule = () => {
           Prerequisite<span className={classes.star}>*</span>
         </label>
         <Select
-        options={modules}
+        options={subjects}
         isMulti
         closeMenuOnSelect={false}
         onChange={(choice)=>onselect("prerequisite",choice)}
         name="prerequisite"
-        defaultValue={defaultPrerequisite|| 'Select'}
+        defaultValue={ state.prerequisite}
         />
         </span></> }
         <div className={classes.button}>
           {" "}
 
-          <button onClick={submitHandler} disabled={!formIsValid  || !(state.ECTStouched || state.nametouched || state.describtiontouched || state.codetouched || state.languagetouched || state.lastExamHourstouched || state.midtermHourstouched || state.typetouched || state.prerequisitetouched || state.corequisitestouched)}>
-           {uploading ? "Uploading" :"Save"}
+          <button onClick={submitHandler} disabled={!formIsValid  || !(state.ECTStouched || state.nametouched || state.describtiontouched || state.codetouched || state.languagetouched || state.lastExamHourstouched || state.midtermHourstouched || state.typetouched || state.prerequisitetouched || state.corequisitestouched) || uploading}>
+           {uploading ? "Uploading..." :"Save"}
 
           </button>
         </div>

@@ -22,8 +22,9 @@ import { TableLoader } from "../StudentsModuleRegisteration";
 import Loader from "../../../UI/Loader/Loader";
 import { Typography } from "@mui/material";
 import BasicMenu from "../../../UI/Menu";
-import { Edit } from "@mui/icons-material";
+import { Edit, MoreHoriz } from "@mui/icons-material";
 import EditProffessor from "./EditProfessor";
+import { useNavigate } from "react-router-dom";
 const key = "Compact Table";
 
 const ProfessorTable = () => {
@@ -33,6 +34,7 @@ const ProfessorTable = () => {
   const [showEdit, setshowEdit] = useState(false);
   const [loading,setLoading]=useState(true);
   const [selectedProfessor, setselectedProfessor] = useState({});
+  const navigate=useNavigate();
   useEffect(() => {
     //fetch
     setModules([]);
@@ -183,7 +185,7 @@ img{
                   <Row key={module.name} item={module}>
                     <Cell>{module.name}</Cell>
                     <Cell>{module.password}</Cell>
-                    <BasicMenu menuItems={[{title:"Delete",handleClick:()=>{}},{title:"Edit",handleClick:()=>{handleClick(module.id)}}]} menuTitle={<Edit/>}/>
+                    <BasicMenu menuItems={[{title:"Delete",handleClick:()=>{}},{title:"Edit",handleClick:()=>{handleClick(module.id)}},{title:"Profile",handleClick:()=>{navigate(`/ViewProfessorProfile?id=${module.id}`)}}]} menuTitle={<MoreHoriz sx={{color:"#000"}}/>}/>
                   </Row>
                 ))}
               </Body>

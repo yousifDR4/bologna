@@ -16,7 +16,7 @@ export default function AddExam(probs) {
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
   const [open, setOpen] = React.useState(false);
-  let {modules,committes,subjects,program,initialValues,edit,refetch}=probs;
+  let {modules,committes=[],subjects,program,initialValues,edit,refetch}=probs;
   console.log(modules);
   const [selectedCommitte,setSelectedCommitte]=React.useState(edit ? initialValues['committe'] ||'':"");
   const [selectedLevel,setSelectedLevel]=React.useState(edit ? initialValues['level'] ||'':"");

@@ -21,6 +21,7 @@ import { usePaginationFetch } from "../../hooks/usePaginationFetch";
 import PlaceHolderLoader from "../UI/Loader/PlaceHolderLoader";
 import { current } from "@reduxjs/toolkit";
 import { useCallback } from "react";
+import { Link } from "react-router-dom";
 
 const UniversityAccounts = () => {
   const setRef = useRef(true);
@@ -200,12 +201,15 @@ const UniversityAccounts = () => {
           
        if(( index+1)===Math.floor((arr.length)/2) &&  (uni.name === "University of Baghdad" || uni.name === "al mustansiriyah university")) {
        return(
+
         <li key={uni.uid} ref={last} >
           <img src={uni.img} alt="" />
           <div>
-            <p>{uni.name}</p> <span></span> <br />
+          <Link to={`/ViewUniversityProfile?id=${uni.uid}`}>
+<p>{uni.name}</p>         </Link><span></span> <br />
           </div>
         </li>
+
       )
        }
       else if ((uni.name === "University of Baghdad" || uni.name === "al mustansiriyah university"))
@@ -213,7 +217,9 @@ const UniversityAccounts = () => {
             <li key={uni.uid} >
               <img src={uni.img} alt="" />
               <div>
-                <p>{uni.name}</p> <span></span> <br />
+              <Link to={`/ViewUniversityProfile?id=${uni.uid}`}>
+  <p>{uni.name}</p>               </Link>
+<span></span> <br />
               </div>
             </li>
           )

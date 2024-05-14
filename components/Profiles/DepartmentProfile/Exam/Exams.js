@@ -19,6 +19,7 @@ import {
   get_Subjects_prog_promise,
   get_active_Subjects_prog_promise,
   get_commite_exams_promise,
+  get_committees,
   get_exams_promise,
   get_prof,
   get_progs,
@@ -101,10 +102,7 @@ const Exams = () => {
       loadCommittes();
     }
   }, [reLoad, profile]);
-  const promise1 = ()=>get_active_Subjects_prog_promise(
-    programs.filter((p) => p.id === selectedProgram)[0].type,
-    Department_id
-  );
+
   const promise3=()=> get_exams_promise(Department_id,selectedProgram);
   const {
     data: exams=[],
@@ -122,9 +120,12 @@ const Exams = () => {
   }
   );
 console.log(exams,"exam");
-
+const promise1 = ()=>get_active_Subjects_prog_promise(
+  programs.filter((p) => p.id === selectedProgram)[0].type,
+  Department_id
+);
   const {
-    data: modules,
+    data: modules=[],
     isLoading:isLoading1,
     error:iserror1,
     isFetching:isFetching1,
@@ -139,10 +140,10 @@ console.log(exams,"exam");
         : [];
     },
   });
-  const promise2=()=> get_commite_exams_promise(Department_id);
+  const promise2=()=> get_committees(Department_id);
 
   const {
-    data: committes,
+    data: committes=[],
     isLoading:isLoading2,
     error:iserror2,
   isFetching:isFetching2, 
@@ -156,10 +157,15 @@ console.log(exams,"exam");
     }
   }
   );
+  console.log(committes);
   const handlerefetch = () => {
     refetch();
   };
-
+  let namedModules=[];
+  if(modules){
+    namedModules=modules.map((m)=>({...m,name:subjects.filter((s)=>s.id===m.module)[0].name || "-"}))
+  }
+  console.log(namedModules);
   if (loading ||isLoading1||isLoading2||isLoading3) {
     return <Loader />;
   }
@@ -255,7 +261,7 @@ console.log(exams,"exam");
           id="panel1-header"
           
         >
-          {modules.filter((mod)=>mod.id===exam.module).length > 0 ? modules.filter((mod)=>mod.id===exam.module)[0].name :"Exam Not Found!"}
+          {modules.filter((mod)=>mod.id===exam.module).length > 0 ? namedModules.filter((mod)=>mod.id===exam.module)[0].name :"Exam Not Found!"}
         </AccordionSummary>
         <AccordionDetails>    
      <List disablePadding sx={{  display:"flex",flexWrap:"wrap"}}>

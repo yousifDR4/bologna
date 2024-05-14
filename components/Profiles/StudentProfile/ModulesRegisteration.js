@@ -14,7 +14,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { auth, db } from "../../../store/fire";
 import { useDispatch, useSelector } from "react-redux";
-import { get_Subjects, get_active_modules, get_progs } from "../../../store/getandset";
+import { get_Subjects, get_active_completed_modules, get_active_modules, get_control, get_previous_active_completed_modules, get_progs } from "../../../store/getandset";
 import Loader from "../../UI/Loader/Loader";
 import ViewModule from "./Modules/ViewModule";
 import SpeedDial from '@mui/material/SpeedDial';
@@ -29,6 +29,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { doc, setDoc } from "firebase/firestore";
 import { displayMessage } from "../../../store/message-slice";
 import { profileActions } from "../../../store/profile-slice";
+import { useQuery } from "react-query";
 function arrayEquals(a, b) {
   return Array.isArray(a) &&
       Array.isArray(b) &&
@@ -50,7 +51,7 @@ const ModulesRegisteration=()=>{
     const profile = useSelector((state) => state.profile.profile);
     const Department_id = profile.Department_id;
     const [edit,setEdit]=useState(false);
-    const [viewInstructions,setViewInstruction]=useState(true);
+    const [viewInstructions,setViewInstruction]=useState(false);
     const [numbers,setNumbers]=useState({ECTS:0,core:0,supp:0,elec:0});
     let registeredECTS=0;
     let registerdCore=0;
@@ -61,7 +62,7 @@ const ModulesRegisteration=()=>{
 
     const isRegisterationValid={
       "ECTS":+numbers.ECTS === 30,
-      "Core": +numbers.core === studentModules.filter((mod)=>mod.type === "core").length,
+      "Core": +numbers.core === modules.filter((mod)=>mod.type === "core").length,
       }
     const handleClick=(actionName)=>{
       switch (actionName) {
@@ -78,7 +79,6 @@ const ModulesRegisteration=()=>{
 
     const handleCheck=(id)=>{
       if(registerdModules.includes(id)){
-        console.log("trueee");
         setRegisteredModules((prev)=>prev.filter((modId)=>modId !== id));
       }
       else{
@@ -87,28 +87,49 @@ const ModulesRegisteration=()=>{
     }
 
     useEffect(() => {
-      console.log("NNNN");
       if (!auth.currentUser) return;
       const f = async () => {
         try {
           setInitialRegMod(profile.registerdModules);
           setRegisteredModules(profile.registerdModules);
-          console.log(profile);
           setLoading(true);
           let Lprograms= await get_progs(Department_id);
-          console.log(Lprograms);
           setPrograms(Lprograms);
           let progType=Lprograms.filter((p)=>profile.program==p.id).length > 0 ? Lprograms.filter((p)=>profile.program==p.id)[0].type:"";
-          console.log(progType,Department_id,profile.level);
-          const p1 = get_active_modules(Department_id,progType,profile.level);
+          const p1 = get_active_completed_modules(Department_id,progType,profile.level);
           const p2 = get_Subjects(Department_id);
+          let p3 = "";
+          if(profile.level >1){
+            p3=get_previous_active_completed_modules(Department_id,progType,profile.level); 
+          }
           // Access data for each document snapshot in the array
-          const [modules,Sujects] = await Promise.all([p1,p2]);
-          let filterdMod=modules.filter((mod)=>mod.progress === 100);
-          let filterdSubjects=Sujects.filter((mod)=> filterdMod.some((m)=>m.module === mod.id));
-          console.log(filterdMod,filterdSubjects);
-          setModules(filterdSubjects);
-          setStudentModules(filterdMod);
+          const [modules,Sujects,previousModules=[]] = await Promise.all([p1,p2,p3]);
+          let failedModules=[],failedSubjects=[];
+          console.log(failedModules,profile.failedModules);
+         if(profile?.failedModules){
+          if(profile.failedModules.length>0){
+           failedModules=previousModules.filter((m)=>profile.failedModules.includes(m.id));
+           console.log(failedModules,profile.failedModules);
+          if(failedModules.some((m)=>!m?.activated)){
+            let notActivated=failedModules.filter((m)=>!m?.activated);
+            let notActivatedSubjects=Sujects.filter((mod)=> notActivated.some((m)=>m.module === mod.id));
+            let activatedPrevious=previousModules.filter((m)=>m?.activated);
+            console.log(activatedPrevious);
+            let activatedSubjects=Sujects.filter((mod)=> activatedPrevious.some((m)=>m.module === mod.id));
+            let sameTypeActivatedSubjects=activatedSubjects.filter((s)=>notActivatedSubjects.some((m)=>m.type===s.type));
+            failedModules=failedModules.filter((m)=>m?.activated);
+            console.log(failedModules);
+            failedModules=[...failedModules,...activatedPrevious.filter((m)=>sameTypeActivatedSubjects.some((s)=>m.module===s.id))];
+          }
+           failedSubjects=failedModules.filter((mod)=> modules.some((m)=>m.module === mod.id));
+         }}
+       
+          let filterdSubjects=Sujects.filter((mod)=> modules.some((m)=>m.module === mod.id));
+          filterdSubjects=[...filterdSubjects,...Sujects.filter((mod)=> failedModules.some((m)=>m.module === mod.id))];
+          console.log(failedModules,filterdSubjects,previousModules);
+          console.log(modules);
+          setModules([...filterdSubjects]);
+          setStudentModules([...modules,...failedModules]);
         } catch (e) {
           console.log(e); 
         } finally {
@@ -119,32 +140,46 @@ const ModulesRegisteration=()=>{
         f();
       }
     }, [profile, Department_id]);
+    const promiseControl=()=> get_control(Department_id,programs.filter((pr)=>pr.id===profile.program).length>0?programs.filter((pr)=>pr.id===profile.program)[0].type:"");
+      const {
+        data: control={},
+        isLoading:isLoadingControl,
+        error:isErrorControl,
+      isFetching:isFetchingControl, 
+      refetch:refetchControl 
+      } = useQuery(`department:${Department_id}program:${programs.filter((pr)=>pr.id===profile.program).length>0?programs.filter((pr)=>pr.id===profile.program)[0].type:"" }`, promiseControl, {
+       enabled:(!!Department_id && programs.length >0 ),
+        refetchOnWindowFocus:false,
+        select:(data)=>{
+            return data ? {...data.docs[0].data(),id:data.docs[0].id} :{}
+        }
+      }
+      );
+      console.log(control);
     useEffect(() => {
       let count=()=>{
-      for(let i=0;i<registerdModules.length ;i++){
-        registeredECTS+= +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS ? +studentModules.filter((m)=>m.id === registerdModules[i])[0]?.ECTS:0;
+      for(let i=0;i<profile.registerdModules.length ;i++){
+        registeredECTS+= +studentModules.filter((m)=>m.id === profile.registerdModules[i])[0]?.ECTS ? +studentModules.filter((m)=>m.id === profile.registerdModules[i])[0].ECTS:0;
       }
-      console.log(studentModules);
       let locStudentReg=studentModules.filter((mod)=>profile.registerdModules.includes(mod.id));
-      console.log(locStudentReg);
       let locMod= modules.filter((mod)=>locStudentReg.some((m)=>m.module===mod.id));
-      console.log(locMod);
         registerdCore = locMod.filter((m)=>m.type === "core").length ;
-        registeredSupp = locMod.filter((m)=>m.type === "support").length ;
+        registeredSupp = locMod.filter((m)=>m.type === "supportive").length ;
         registeredElec = locMod.filter((m)=>m.type === "elective").length ;
         setNumbers({ECTS:registeredECTS,core:registerdCore,supp:registeredSupp,elec:registeredElec});
     }
-        if(registerdModules.length >0){
+    if(profile.registerdModules)
+        if(profile.registerdModules.length >0){
           count();
         }
-    }, [registerdModules,initialRegMod,profile,Department_id]);
+    }, [registerdModules,modules,initialRegMod,profile,Department_id]);
+
+    let obj=control.hasOwnProperty("enabledRegistration")?control.enabledRegistration:{};
+    let enabledRegistration=profile.hasOwnProperty("level") ?obj.hasOwnProperty(+profile.level)?obj[+profile.level]:true:false;
     if(loading){
       return <Loader/>
     }
     studentModules.filter((mod)=>registerdModules.includes(mod.id));
-    console.log(registerdModules);
-    console.log(initialRegMod);
-    console.log(registeredECTS);
     const regesterstionhandler=
     async()=>
     {
@@ -162,8 +197,8 @@ const ModulesRegisteration=()=>{
     }
     return(
         <>
-        <Instructions open={viewInstructions} setOpen={setViewInstruction} />
-        <BasicSpeedDial handleClick={handleClick}/>
+        <Instructions open={viewInstructions}  setOpen={setViewInstruction} />
+        <BasicSpeedDial disabled={!enabledRegistration} handleClick={handleClick}/>
          <Box sx={{ width:"100%",display:"flex",flexDirection:"column",margin:"0.6rem 0.6rem 0rem 0.6rem",padding:"0 0.8rem"}}>
         <AppBar position="static" sx={{width:"100%",borderTopLeftRadius:"10px",borderTopRightRadius:"10px",bgcolor:"transparent",boxShadow:"none",}}>
           <Toolbar sx={{display:"flex",flexWrap:"wrap",paddingLeft:"0!important"}}>
@@ -182,7 +217,7 @@ const ModulesRegisteration=()=>{
             <CustomCard valid={isRegisterationValid.Core} title="Core" subtitle="Number of Core type modules." value={`${numbers.core}/${modules.filter((mod)=>mod.type === "core").length}`}/>
             </Grid>
             <Grid item>
-            <CustomCard title="Support" subtitle="Number of Support type modules." value={`${numbers.supp}/${modules.filter((mod)=>mod.type === "support").length}`}/>
+            <CustomCard title="Support" subtitle="Number of Support type modules." value={`${numbers.supp}/${modules.filter((mod)=>mod.type === "supportive").length}`}/>
             </Grid>
             <Grid item>
             <CustomCard title="Elective" subtitle="Number of Elective type modules." value={`${numbers.elec}/${modules.filter((mod)=>mod.type === "elective").length}`}/>
@@ -260,7 +295,7 @@ const actions = [
 ];
 
 function BasicSpeedDial(probs) {
-  let {handleClick}=probs;
+  let {handleClick,disabled}=probs;
   return (
       <SpeedDial
         ariaLabel="SpeedDial basic example"
@@ -272,6 +307,7 @@ function BasicSpeedDial(probs) {
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
+            disabled={disabled}
             onClick={()=>handleClick(action.name)}
           />
         ))}

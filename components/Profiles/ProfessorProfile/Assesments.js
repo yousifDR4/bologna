@@ -17,7 +17,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Delete } from "@mui/icons-material";
 import ArticleIcon from '@mui/icons-material/Article';
-import { get_active_modules, get_professor_assesments, get_professor_modules, get_progs } from "../../../store/getandset";
+import { get_active_modules, get_control, get_professor_assesments, get_professor_modules, get_progs } from "../../../store/getandset";
 import Loader from "../../UI/Loader/Loader";
 import AddAssesment from "./AddAssesments";
 import { auth } from "../../../store/fire";
@@ -64,6 +64,23 @@ const Assesments=()=>{
         loadCommittes();
         }
       },[reLoad,profile]);
+      let selectedModuleObject=modules.filter((m)=>m.id===selectedModule).length>0?modules.filter((m)=>m.id===selectedModule)[0]:{};
+      const promiseControl=()=> get_control(Department_id,selectedModuleObject ? selectedModuleObject.type : "");
+      const {
+        data: control={},
+        isLoading:isLoadingControl,
+        error:isErrorControl,
+      isFetching:isFetchingControl, 
+      refetch:refetchControl 
+      } = useQuery(`department:${Department_id}program:${selectedModuleObject ? selectedModuleObject.type : ""}`, promiseControl, {
+       enabled:(!!Department_id && selectedModule !== "" ),
+        refetchOnWindowFocus:false,
+        select:(data)=>{
+            return data ? {...data.docs[0].data(),id:data.docs[0].id} :{}
+        }
+      }
+      );
+
       const assesmentPromise=()=>get_professor_assesments(Department_id,uid,selectedModule);
       const {
         data: Assesments=[],
@@ -80,6 +97,11 @@ const Assesments=()=>{
         }
       }
       );
+      console.log(control);
+      console.log(selectedModuleObject);
+      let obj=control.hasOwnProperty("enableAssesments")?control.enableAssesments:{};
+      let enabledAssesment=selectedModule ?obj.hasOwnProperty(+selectedModuleObject.level)?obj[+selectedModuleObject.level]:true:false;
+      console.log(enabledAssesment);
       if(loading){
         return(
             <Loader />
@@ -93,7 +115,7 @@ const Assesments=()=>{
             <Typography variant="h5" component="div" sx={{fontFamily:"Graphik",color:"var(--styling1)",display:"inline",marginRight:"0.4rem",fontSize:isSmallScreen ?"1.3rem":"inherit"}} >
               Assessments List
             </Typography>
-            <AddAssesment refetch={refetch} setAssesments={setAssesments} selectedModule={selectedModule} modules={modules} edit={false}  />
+            <AddAssesment disabled={!enabledAssesment || isLoadingControl} refetch={refetch} setAssesments={setAssesments} selectedModule={selectedModule} modules={modules} edit={false}  />
             </Typography>
             <FormControl sx={{minWidth:"12rem",width:"15%",paddingLeft:"0"}} size="small" >
             <InputLabel id="module" sx={{color:"var(--styling1) !important"}}>Module</InputLabel>
@@ -153,7 +175,7 @@ const Assesments=()=>{
     </AccordionDetails>
     </Accordion>
     <Box sx={{display:"flex",gap:"0.5rem",width:"100%",marginTop:"0.8rem"}}>
-                <AssesmentGradesTable students={[]} modules={modules} module={selectedModule} assesment={as} />
+                <AssesmentGradesTable disabled={!enabledAssesment  || isLoadingControl} students={[]} modules={modules} module={selectedModule} assesment={as} />
           <Button startIcon={<Delete/>} sx={{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",width:"50%",boxShadow:"none"}} variant="contained">Delete</Button>
         </Box>
             </ListItem>

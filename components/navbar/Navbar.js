@@ -40,7 +40,7 @@ import {
 } from "firebase/firestore";
 import { check, gen } from "../../store/getandset";
 import { notifyActions } from "../../store/notify-slice";
-import { AccountCircleOutlined, AppRegistration, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, GroupWork, Groups3Outlined, Home, HomeOutlined, LibraryBooksOutlined, Person, PersonAdd, PersonAddOutlined, PersonOutlined, Schedule } from "@mui/icons-material";
+import { AccountCircleOutlined, AppRegistration, ArticleOutlined, CollectionsBookmarkOutlined, FeaturedPlayListOutlined, GradingOutlined, GroupOutlined, GroupWork, GroupWorkOutlined, GroupWorkTwoTone, Groups2Outlined, Groups3Outlined, Home, HomeOutlined, LibraryBooksOutlined, Person, Person2Outlined, PersonAdd, PersonAddOutlined, PersonOutlined, PresentToAll, Schedule, TableBarOutlined, TableChart, TableChartOutlined, TypeSpecimenOutlined } from "@mui/icons-material";
 import { errorActions } from "../../store/error-slice";
 import { Avatar } from "@mui/material";
 import APS from "../../Images/aps logo-02.png";
@@ -66,6 +66,7 @@ const Navbar = () => {
   const isDepartmentAccount = isLoggedIn ? accountType === "Department" : false;
   const isProfessorAccount = isLoggedIn ? accountType === "Professor" : false;
   const isStudentAccount = isLoggedIn ? accountType === "student" : false;
+  const isCommitteMember= isLoggedIn? profile.hasOwnProperty("role")? (profile.role.includes("checkingCommitte") || profile.role.includes("examCommitte")):false:false;
 console.log(isProfessorAccount);
   const dispatch = useDispatch();
   const showAsideListHandler = () => {
@@ -112,6 +113,7 @@ console.log(isProfessorAccount);
         }
       } else if (reF) {
         setLoading(false);
+        dispatchRedux(profileActions.stopLoading());
         reF = false;
       }
     }
@@ -144,14 +146,13 @@ console.log(isProfessorAccount);
   useEffect(() => {
    
     if (!accountType) return;
-    if(isProfessorAccount) return;
+    if(!isCollegeAccount) return;
     // const DepartmentRef=doc(db,"reports",where("Department_id","==",auth.currentUser.uid));
     // const q=query(collection(DepartmentRef, "Department"),orderBy("name"))
     const q = listnerq(accountType, profile.Department_id);
     const unsubscribe = onSnapshot(q, (snapshot) => {
       let x = [];
       snapshot.docs.forEach((d) => {
-        console.log(d.data());
         if (d.data()) {
           x.push({ ...d.data(), id: d.id });
         }
@@ -226,22 +227,6 @@ console.log(isProfessorAccount);
             <li>
               <Link to="/Universities">Universities using it</Link>
             </li>
-            {isUniversityAccount && (
-              <li>
-                <Link to="/UniversityProfile">University Profile</Link>
-              </li>
-            )}
-
-            {isCollegeAccount && (
-              <li>
-                <Link to="/CollegeProfile">College Profile</Link>
-              </li>
-            )}
-            {isDepartmentAccount && (
-              <li>
-                <Link to="/DepartmentProfile">Department Profile</Link>
-              </li>
-            )}
             {!loading && !isLoggedIn && (
               <li>
                 <Link to="/Login">Login</Link>
@@ -275,11 +260,12 @@ console.log(isProfessorAccount);
                 {isStudentAccount && <li><Link to="/ModuleRegistartion"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules Registartion</Link></li>}
                 {isStudentAccount && <li><Link to="/StudentPresence"><PersonOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Attendance</Link></li>}
                 {isStudentAccount && <li><Link to="/Library"><LibraryBooksOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Library</Link></li>}
+                {isProfessorAccount && <li><Link to="/ProfessorHome"><Home sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Home</Link></li>}
                 {isProfessorAccount && <li><Link to="/ProfessorProfile"><AccountCircleOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Profile</Link></li>}
                 {isProfessorAccount && <li><Link to="/Assesments"><GradingOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Assesments</Link></li>}
                 {isProfessorAccount && <li><Link to="/ProfessorModules"><CollectionsBookmarkOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Modules</Link></li>}
                 {isProfessorAccount && <li><Link to="/StudentsAttendance"><GroupOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students Attendance</Link></li>}
-                {isProfessorAccount && <li><Link to="/ProfessorHome"><Home sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Home</Link></li>}
+                {isCommitteMember && <li><Link to="/ProffesorCommitte"><Groups3Outlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Committee</Link></li>}
                {isUniversityAccount && <li><Link to="/UniversityProfile"><img src={profilePicture} alt=""/>University Profile</Link></li>}
                {isDepartmentAccount && <li><Link to="/Classrooms"><img src={classroom} alt=""/>Classrooms Table</Link></li>}
                {isDepartmentAccount && <li><Link to="/Schedule"><Schedule sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Schedule</Link></li>}
@@ -302,6 +288,17 @@ console.log(isProfessorAccount);
               <>
                <li><Link to="/AddModule"><img src={addModule} alt=""/> Add Module</Link></li>
             <li><Link to="/ModuleTable"><img src={table} alt=""/> Modules Table</Link></li> 
+            </>
+            }  </div> 
+            }
+             { isDepartmentAccount && <div className={classes.container}>
+              <li onClick={()=>collapseHandler('st')} className={activatedList.includes('m')? classes.activeList :""}><Groups2Outlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students  <img src={collapse}/></li>
+              { activatedList.includes('st') &&
+              <>
+              
+               <li><Link to="/DepartmentStudentsAttendance"><Person2Outlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students' Attendance</Link></li>
+            <li><Link to="/DepartmentStudentsGrades"><TableChartOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students' Grades</Link></li> 
+            <li><Link to="/StudentsAdvancment"><TypeSpecimenOutlined sx={{verticalAlign:"bottom",padding:"0 !important",margin:"0 !important"}}/> Students' Advancement</Link></li> 
             </>
             }  </div> 
             }

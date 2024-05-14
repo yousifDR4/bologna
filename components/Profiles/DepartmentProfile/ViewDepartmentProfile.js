@@ -2,7 +2,7 @@ import classes from "./DepartmentProfile.module.css";
 import AddModule from "./AddModule.js";
 import defaultProfilePicture from "../../../Images/profilePicutre.jpg";
 import alkawarizmiPicture from "../../../Images/Alkhawarzimi.jpg";
-import location from "../../../Images/location.png";
+import locationIcon from "../../../Images/location.png";
 import website from "../../../Images/website.png";
 import facebook from "../../../Images/facebook.png";
 import twitter from "../../../Images/twitter.png";
@@ -41,7 +41,6 @@ const ViewDepartmentProfile = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const id = (queryParams.get('id') || ''); //getting module id from url
-    console.log(id,"gfe");
     const [profile, setprofile] = useState({});
   const Department_id=id;
   const [professors,setProfessors]=useState(0);
@@ -57,10 +56,12 @@ const ViewDepartmentProfile = () => {
   const isContactSelected = activatedSection === "contact";
   const [modules, setDepartments] = useState([]);
   const [loading, setloading] = useState(true);
+  console.log(loading,id);
   useEffect(()=>{
     if(!id)return;
     const f=async()=>{
         try{
+          console.log(id);
       const p= await get_users([id]);  
       console.log(p[0]);
       setprofile(p[0]);
@@ -109,7 +110,7 @@ else{
       <div className={classes.firstContainer}>
         <div className={classes.container}>
           <div className={classes.upperBanner}>
-            {profile.bannerPicture ? (
+            {profile?.bannerPicture ? (
               profile.bannerPicture.length > 0 ? (
                 <img
                   className={classes.upperBanner}
@@ -126,7 +127,7 @@ else{
           <div className={classes.mainInfo}>
             <img
               src={
-                profile.profilePicture
+                profile?.profilePicture
                   ? profile.profilePicture.length > 0
                     ? profile.profilePicture
                     : defaultProfilePicture
@@ -136,7 +137,7 @@ else{
               alt=""
             />
             <div>
-              <h2>{profile.name}</h2>
+              <h2>{profile?.name}</h2>
               <p>@{profile.username}</p>
             </div>
             {/* <button onClick={() => setShowEdit((prev) => !prev)}>
@@ -212,7 +213,7 @@ else{
                       <div className={classes.details}>
                         <h3>Details</h3>
                         <div>
-                          {(profile?.details > 0 ? true : false) && (
+                          {(profile?.details  ? true : false) && (
                             <AboutComponent
                               type="details"
                               value={profile.details}
@@ -222,11 +223,11 @@ else{
                         </div>
                       </div>
                       <div className={classes.location}>
-                        {(profile?.location > 0 ? true : false) && (
+                        {(profile?.location ? true : false) && (
                           <AboutComponent
                             type="location"
                             value={profile.location}
-                            icon={location}
+                            icon={locationIcon}
                           />
                         )}
                       </div>
@@ -237,12 +238,12 @@ else{
                       <div className={classes.contact}>
                         <h3>Contact</h3>
                         <span>
-                          <img src={email} alt="" /> <p>example@mail.com</p>
+                          <img src={email} alt="" /> <p>{profile?.email?profile.email:""}</p>
                         </span>
                       </div>
                       <div className={classes.socials}>
                         <h3>Website and Social links</h3>
-                        {(profile?.website > 0 ? true : false) && (
+                        {(profile?.website  ? true : false) && (
                           <AboutComponent
                             type="website"
                             value={profile.website}
@@ -250,7 +251,7 @@ else{
                             edit={false}
                           />
                         )}
-                        {(profile?.instagram > 0 ? true : false) && (
+                        {(profile?.instagram  ? true : false) && (
                           <AboutComponent
                             type="social"
                             value={profile.instagram}
@@ -260,7 +261,7 @@ else{
 
                           />
                         )}
-                        {(profile?.facebook > 0 ? true : false) && (
+                        {(profile?.facebook  ? true : false) && (
                           <AboutComponent
                             type="social"
                             value={profile.facebook}
@@ -270,7 +271,7 @@ else{
 
                           />
                         )}
-                        {(profile?.twitter> 0 ? true : false) && (
+                        {(profile?.twitter ? true : false) && (
                           <AboutComponent
                             type="social"
                             value={profile.twitter}

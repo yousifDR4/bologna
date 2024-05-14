@@ -40,6 +40,7 @@ import { displayMessage } from '../../../store/message-slice';
 
 export default function StudentsAttendance() {
   const [programs,setPrograms]=React.useState([]);
+  const [grows, setRows] = React.useState([]);
   const [modules,setModules]=React.useState([]);
   const [professorModules,setProfessorModules]=React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
@@ -183,7 +184,9 @@ if (attendances===0) {
     });
 
     const editedRow = rows.find((row) => row.id === id);
+    if(editedRow?.isNew)
     if (editedRow.isNew) {
+      setRows(rows.filter((row) => row.id !== id));
     }
   };
   const handleProcessRowUpdateError = React.useCallback((error) => {

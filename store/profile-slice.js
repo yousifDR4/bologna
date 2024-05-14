@@ -18,6 +18,10 @@ const profileSlice=createSlice({
             console.log(state.profile);
 
         },
+        stopLoading(state){
+            state.loaded=true;
+        }
+        ,
         addOnProfileValue(state,action){
             const prevProfile=state.profile;
             console.log(state.profile);

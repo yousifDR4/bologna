@@ -278,15 +278,16 @@ margin-right: 0.2rem;
     padding: 0;
 }
 .colleges li{
-display: flex;
-background: #fff;
-padding: 0.5rem;
-align-items:flex-start;
-border-radius: 20px;
-width: 80%;
-max-width: 1600px;
-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-min-height: 4rem;
+    display: flex;
+    background: #fff;
+    padding: 0.5rem;
+    align-items:center;
+    justify-content: flex-start;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 1600px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    min-height: 4rem;
 }
 .colleges li:first-child{
     background-color:#EFFAFD;
@@ -306,10 +307,22 @@ min-height: 4rem;
     margin-right: 1rem;
     margin-left: 2rem;
 }
+.colleges div{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex-direction: column;
+    height: 100%;
+    gap: 0.2rem;
+    flex: 1;
+}
 .colleges p, .colleges span{
     font-family: Graphik;
-    margin-top: 1.3rem;
     display: inline-block;
+}
+.colleges a{
+    font-style: none;
+    color:#000;
 }
 .colleges span{
     color: #6B6C6D;

@@ -54,6 +54,14 @@ import Library from "./components/Profiles/library/Library.js";
 import StudentsModuleRegisteration from "./components/Profiles/DepartmentProfile/StudentsModuleRegisteration.js";
 import ProfessorProfile from "./components/Profiles/ProfessorProfile/ProfessorProfile.js";
 import ViewDepartmentProfile from "./components/Profiles/DepartmentProfile/ViewDepartmentProfile.js";
+import DepartmentStudentsAttendance from "./components/Profiles/DepartmentProfile/Students/DepatmentStudentsAttendance.js";
+import DepartmentStudentsGrades from "./components/Profiles/DepartmentProfile/Students/DepartmentStudentsGrades.js";
+import ProfessorCommitte from "./components/Profiles/DepartmentProfile/Proffessor/ProfessorCommitte.js";
+import StudentAdvancment from "./components/Profiles/DepartmentProfile/Students/StudentAdvancement.js";
+import ViewCollegeProfile from "./components/Profiles/CollegeProfile/ViewCollegeProfile.js";
+import ViewUniversityProfile from "./components/Profiles/UniversityProfile/ViewUniversityProfile.js";
+import ViewProfessorProfile from "./components/Profiles/ProfessorProfile/ViewProfessorProfile.js";
+import ViewStudentProfile from "./components/Profiles/StudentProfile/ViewStudentProfile.js";
 
 
 
@@ -245,9 +253,38 @@ function App() {
           path:"ViewDepartmentProfile",
           element:<ViewDepartmentProfile/>
         },
-
-
-
+        {
+          path:"DepartmentStudentsAttendance",
+          element:<DepartmentStudentsAttendance/>
+        },
+        {
+          path:"DepartmentStudentsGrades",
+          element:<DepartmentStudentsGrades/>
+        },
+        {
+          path:"ProffesorCommitte",
+          element:<ProfessorCommitte/>
+        },
+        {
+          path:"StudentsAdvancment",
+          element:<StudentAdvancment/>
+        },
+        {
+          path:"ViewCollegeProfile",
+          element:<ViewCollegeProfile/>
+        },
+        {
+          path:"ViewUniversityProfile",
+          element:<ViewUniversityProfile/>
+        },
+        {
+          path:"ViewProfessorProfile",
+          element:<ViewProfessorProfile/>
+        },
+        {
+          path:"ViewStudentProfile",
+          element:<ViewStudentProfile/>
+        },
     ]
    }
 

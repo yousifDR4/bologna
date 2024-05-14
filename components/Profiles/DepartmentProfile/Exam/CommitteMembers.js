@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Box, FormControl, InputLabel, MenuItem, Select, Tab, Tabs, Typography } from '@mui/material';
 import { AddOutlined, DeleteOutline, Edit } from '@mui/icons-material';
 import Confirm from '../../../UI/Confirm/Confirm';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { arrayUnion, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../store/fire';
 import { useDispatch } from 'react-redux';
 import { displayMessage } from '../../../../store/message-slice';
@@ -20,8 +20,9 @@ const fields=[
 "checkENO",
 "notes"]
 export default function CommitteMembers(probs) {
-  let {program,initialValues,edit,professors,semester}=probs;
+  let {program,initialValues,edit,professors,semester,isFetching,refetch}=probs;
   const [changeRecord,setChangeRecord]=React.useState(false);
+  const [Uploading, setUploading] = React.useState();
   const [disable,setDisable]=React.useState(false);
   const [openconfirm,setOpenConfirm]=React.useState(false);
   const [id,setId]=React.useState(0);
@@ -35,7 +36,7 @@ export default function CommitteMembers(probs) {
     const initialExamValuesIWithId=initialValues["examCommitte"]?initialValues["examCommitte"].length > 0 ? initialValues["examCommitte"].map((m)=>{ let currId=id;setId(prev=>{currId=prev;return prev+1});return {id:m.id,level:m.level,memberId:currId}; }):initialValues["examCommitte"]:[];
     setCheckingComitte(initialCheckValuesIWithId);
     setExamComitte(initialExamValuesIWithId);
-  },[]);
+  },[initialValues]);
   const handleResult=(result)=>{
     if(result){
       handleClose();
@@ -100,7 +101,7 @@ export default function CommitteMembers(probs) {
   return (
     <React.Fragment>
       <Confirm message="All of your unsaved progress will be dismissed!" title="Confirm Exit?" handleResult={handleResult} open={openconfirm} setOpen={setOpenConfirm} />
-      <Button  variant={edit ? "contained" : "outlined"}  sx={edit ?{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",boxShadow:"none",color:"#fff",border:"none"}:{}} title='Add an Committe' onClick={handleClickOpen}>
+      <Button  variant={edit ? "contained" : "outlined"} disabled={isFetching}  sx={edit ?{'&:hover':{bgcolor:"#a2d0fb !important",border:"none"},bgcolor:"#add5fb !important",boxShadow:"none",color:"#fff",border:"none"}:{}} title='Add an Committe' onClick={handleClickOpen}>
         Comitte Members
       </Button>
       <Dialog
@@ -112,11 +113,8 @@ export default function CommitteMembers(probs) {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
+            setUploading(true);
             //semester 
-            console.log(examComitte);
-            console.log(checkingCommitte);
-            console.log(initialValues);
-            console.log(initialValues.id,db);
             try{
               await updateDoc(doc(db, "Committe",initialValues.id), {
                 checkingCommitte:checkingCommitte,
@@ -127,6 +125,46 @@ export default function CommitteMembers(probs) {
             catch(e){
               console.log(e);
               dispatch(displayMessage("An Error Ocurred!","error"));
+            }
+            try {
+              let initialCheck=initialValues["checkingCommitte"]?initialValues["checkingCommitte"]:[];
+              let initialExam=initialValues["examCommitte"]?initialValues["examCommitte"]:[];
+              let addIds=[];
+              checkingCommitte.filter((c)=>!initialCheck.some((ic)=>ic.id===c.id) ).map((c)=>addIds.push({id:c.id,role:"checkingCommitte"}));
+              examComitte.filter((c)=>!initialExam.some((ic)=>ic.id===c.id) ).map((c)=>addIds.push({id:c.id,role:"examCommitte"}));
+              let removedIds=[];
+              initialCheck.filter((c)=>!checkingCommitte.some((ic)=>ic.id===c.id) ).map((c)=>removedIds.push(c.id));
+              initialExam.filter((c)=>!examComitte.some((ic)=>ic.id===c.id) ).map((c)=>removedIds.push(c.id));
+              const promises = addIds.map(async (u) => {
+                try {
+                  console.log("Processing for ID:", u.id);
+                  await setDoc(doc(db, "users", u.id), {
+                    role: arrayUnion(u.role),
+                  }, { merge: true });
+                } catch (e) {
+  
+                }
+              });
+              const promises2 = removedIds.map(async (id) => {
+                try {
+                  console.log("Processing for ID:", id);
+                  await setDoc(doc(db, "users", id), {
+                    role:["Professor"],
+                  }, { merge: true });
+                } catch (e) {
+                  // If you want to handle errors for each ID separately, you can throw the error here
+                  // throw e;
+                }
+              });
+              console.log(promises,promises2);
+              await Promise.all([...promises,...promises2]);
+              dispatch(displayMessage("Members were added succesfully!"));
+            } catch (error) {
+              dispatch(displayMessage(`An error occurred while processing members`,"error"))
+            }
+            finally{
+              setUploading(false);
+              refetch();
             }
             handleClose();
             
@@ -152,7 +190,7 @@ export default function CommitteMembers(probs) {
         <Typography sx={{width:"50%"}}>Level</Typography>
         </Box>
         { examComitte.map((committe,outerIndex)=>(
-          <CustomTab type="exam" setDisable={setDisable} initialValues={committe} program={program} professors={professors} examComitte={examComitte} key={outerIndex}  setCommittee={setExamComitte}></CustomTab>
+          <CustomTab type="exam" setDisable={setDisable} checkingCommitte={checkingCommitte} initialValues={committe} program={program} professors={professors} examComitte={examComitte} key={outerIndex}  setCommittee={setExamComitte}></CustomTab>
         ))}
       
         <Button startIcon={<AddOutlined/>} variant='outlined' onClick={()=>addHandler("examCommitte")} sx={{width:"100%"}}>Add Committe Member</Button>
@@ -163,7 +201,7 @@ export default function CommitteMembers(probs) {
         <Typography sx={{width:"50%"}}>Level</Typography>
         </Box>
       { checkingCommitte.map((committe,outerIndex)=>(
-          <CustomTab checkingCommitte={checkingCommitte} type="checking" setDisable={setDisable} initialValues={committe} program={program} professors={professors} key={outerIndex} setCommittee={setCheckingComitte}/>
+          <CustomTab checkingCommitte={checkingCommitte} examComitte={examComitte} type="checking" setDisable={setDisable} initialValues={committe} program={program} professors={professors} key={outerIndex} setCommittee={setCheckingComitte}/>
         ))
         }
         <Button startIcon={<AddOutlined/>} variant='outlined' onClick={()=>addHandler("checkingCommitte")} sx={{width:"100%"}}>Add Committe Member</Button>
@@ -172,7 +210,7 @@ export default function CommitteMembers(probs) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel}>Cancel</Button>
-          <Button disabled={disable} type="submit">{edit? "Save":"Add"}</Button>
+          <Button disabled={disable || Uploading} type="submit">{Uploading?"...Uploading":edit? "Save":"Add"}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
@@ -232,10 +270,10 @@ const CustomTab=(probs)=>{
         }
     }}
         >
-            {type === "exam" && professors.filter((prof)=>examComitte.some(obj=>obj.id === prof.id)).map((pro)=> <MenuItem disabled value={pro.id}>{pro.name}</MenuItem>)}
-            { type === "exam" && professors.filter((prof)=>!examComitte.some(obj=>obj.id === prof.id)).map((pro)=> <MenuItem value={pro.id}>{pro.name}</MenuItem>)}
-            {type === "checking" && professors.filter((prof)=>checkingCommitte.some(obj=>obj.id === prof.id)).map((pro)=> <MenuItem disabled value={pro.id}>{pro.name}</MenuItem>)}
-            { type === "checking" && professors.filter((prof)=>!checkingCommitte.some(obj=>obj.id === prof.id)).map((pro)=> <MenuItem value={pro.id}>{pro.name}</MenuItem>)}
+            {type === "exam" && professors.filter((prof)=>(examComitte.some(obj=>obj.id === prof.id) || checkingCommitte.some(obj=>obj.id === prof.id))).map((pro)=> <MenuItem disabled value={pro.id}>{pro.name || pro.username}</MenuItem>)}
+            { type === "exam" && professors.filter((prof)=>(!examComitte.some(obj=>obj.id === prof.id ) && !checkingCommitte.some(obj=>obj.id === prof.id))).map((pro)=> <MenuItem value={pro.id}>{pro.name || pro.username}</MenuItem>)}
+            {type === "checking" && professors.filter((prof)=>(checkingCommitte.some(obj=>obj.id === prof.id) || examComitte.some(obj=>obj.id === prof.id))).map((pro)=> <MenuItem disabled value={pro.id}>{pro.name || pro.username}</MenuItem>)}
+            { type === "checking" && professors.filter((prof)=>(!checkingCommitte.some(obj=>obj.id === prof.id) && !examComitte.some(obj=>obj.id === prof.id))).map((pro)=> <MenuItem value={pro.id}>{pro.name || pro.username}</MenuItem>)}
         </Select>
         </FormControl>
         <FormControl sx={{minWidth:"45%",paddingLeft:"0",margin:"8px 0 4px "}} size="small" >
