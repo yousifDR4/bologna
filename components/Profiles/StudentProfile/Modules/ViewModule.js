@@ -8,6 +8,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Box, Card, CardContent, List, ListItem, ListItemText,Link, Tab, Tabs, Typography } from "@mui/material";
 import { stringifyNumber } from "../../DepartmentProfile/LevelModule";
 import { Info } from "@mui/icons-material";
+import { get_classRooms, get_classRooms_promise } from "../../../../store/getandset";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
 let initialValue={
     program:"",
     module:"",
@@ -70,7 +73,24 @@ let initialValue={
 function ViewModule(probs) {
     let {moduleProb,name}=probs;
     const [open, setOpen] = useState(false);
-
+    const classesPromise=()=>get_classRooms_promise(moduleProb.Deprartment_id);
+    const {
+      data: classrooms=[],
+      isLoading:isLoadingAssesments,
+      error:iserror3,
+    isFetching:isFetching3, 
+     refetch:refetch3
+    } = useQuery(`Department_id:${moduleProb.Deprartment_id}`, classesPromise, {
+     enabled:( open ),
+      refetchOnWindowFocus:false,
+    
+      select:(data)=>{
+          return data ? data.docs.map((doc)=>({...doc.data(),id:doc.id})) :[]
+      }
+    }
+    );
+    console.log(moduleProb);
+    console.log(classrooms);
     let initialValue={
         program: moduleProb.program || "",
     module: moduleProb.module || "",
@@ -173,7 +193,7 @@ function ViewModule(probs) {
           
         </Tabs>
       </Box>
-      {(value === "1") && <ModuleInfo moduleProb={module}  />}
+      {(value === "1") && <ModuleInfo classrooms={classrooms} moduleProb={module}  />}
     {(value === "2" ) && <ModuleTheory moduleProb={module}  />}
     {(value === "3" ) && <ModuleLab moduleProb={module}  />}
     {(value === "4" ) && <ModuleTheory moduleProb={module}  />}
@@ -196,7 +216,7 @@ function ViewModule(probs) {
 export default ViewModule;
 
 const ModuleInfo=(probs)=>{
-    let {moduleProb}=probs;
+    let {moduleProb,classrooms}=probs;
     console.log(moduleProb);
     let initialValue={
         program: moduleProb.program || "",
@@ -215,7 +235,14 @@ const ModuleInfo=(probs)=>{
         <List sx={{display:"flex",flexDirection:"row",flexWrap:"wrap"}}>
             {Object.entries(initialValue).map(([key, value]) => (
         <ListItem key={key} sx={{width:"30%",minWidth:"200px"}}>
+          {(key!=="manager" && key!== "revisor" && key !== "online" && key !== "lab" && key !== "theory")?
             <ListItemText primary={key} secondary={value}/>
+            : (key == "online" || key == "lab" || key == "theory")?
+            <ListItemText primary={key} secondary={ classrooms.filter((c)=>c.id===value).length>0?classrooms.filter((c)=>c.id===value)[0].name:"-"}/>
+           
+            :
+            <ListItemText primary={key} secondary={<Link target="_blank" href={`/ViewProfessorProfile?id=${value}`}>{value}</Link>}/>
+          }
         </ListItem>
       ))}
         </List>

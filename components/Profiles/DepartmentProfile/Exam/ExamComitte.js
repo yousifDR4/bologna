@@ -328,6 +328,8 @@ const ExamComitte = () => {
                           (prog) => prog.id === committe["program"]
                         )[0]
                       }
+                      isFetching={isFetching}
+                      refetch={refetch}
                     />
                   </ListItem>
                 );

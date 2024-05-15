@@ -107,7 +107,7 @@ export const onLogin = (profile) => {
       );
     };
   }
-  if (profile.accountType === "Department" && !profile?.role ) {
+  if (profile.accountType === "Department"  ) {
     const {
       name,
       accountType,
@@ -156,7 +156,7 @@ export const onLogin = (profile) => {
       );
     };
   }
-  if (profile.role === "Professor") {
+  if (profile.accountType === "Professor") {
     const {
       name,
       accountType,
@@ -175,7 +175,7 @@ export const onLogin = (profile) => {
       Country
     } = profile;
     return async (dispatch) => {
-      dispatch(authSlice.actions.logIn({ accountType:role, uid }));
+      dispatch(authSlice.actions.logIn({ accountType:accountType, uid }));
       dispatch(
         profileActions.setProfile({
           name: name ? name : "",
@@ -187,7 +187,7 @@ export const onLogin = (profile) => {
           University_id:University_id? University_id:"",
           College_id:College_id?College_id:"",
           Department_id:Department_id?Department_id:uid,
-          role:role?role:"",
+          role:role?role:[],
           Degree:Degree ? Degree:"",
           sex:sex?sex:"",
           Country:Country?Country:"",
@@ -212,6 +212,9 @@ export const onLogin = (profile) => {
       College_id,
       Department_id,
       registerdModules,
+      passedModules,
+      failedModules,
+      secondTryModules,
       sex,
       program,
     } = profile;
@@ -233,7 +236,10 @@ export const onLogin = (profile) => {
           Department_id:Department_id?Department_id:uid,
           sex:sex?sex:"",
           program:program?program:"",
-          registerdModules:registerdModules ? registerdModules:[]
+          registerdModules:registerdModules ? registerdModules:[],
+          secondTryModules:secondTryModules?secondTryModules:[],
+          failedModules:failedModules?failedModules:[],
+          passedModules:passedModules?passedModules:[],
         })
       );
     };

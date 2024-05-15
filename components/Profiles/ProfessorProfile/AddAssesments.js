@@ -17,14 +17,14 @@ import { messageActions } from "../../../store/message-slice";
 
 export default function AddAssesment(probs) {
   const [open, setOpen] = React.useState(false);
-  let { modules, edit = false, selectedModule, initialValues } = probs;
+  let { modules, edit = false, selectedModule,disabled, initialValues } = probs;
   const [selectedType, setSelectedType] = React.useState(
     edit ? initialValues["type"] || "" : ""
   );
   const dispatch=useDispatch();
   const profile = useSelector((state) => state.profile.profile);
   const Department_id = profile.Department_id;
-  
+  console.log(disabled);
   const [selectedDate, setSelectedDate] = React.useState(
     edit ? initialValues["date"] || "" : ""
   );
@@ -50,7 +50,7 @@ export default function AddAssesment(probs) {
   return (
     <React.Fragment>
       <Button
-        disabled={selectedModule === ""}
+        disabled={selectedModule === "" || disabled}
         startIcon={edit ? <Edit /> : <AddOutlined />}
         variant={edit ? "contained" : "outlined"}
         sx={

@@ -27,8 +27,10 @@ import {
   get_Subjects,
   get_active_modules,
   get_classRooms,
+  get_commite_exams_promise,
   get_exams_grade,
   get_exams_promise,
+  get_professor_committe,
   get_progs,
 } from "../../../../store/getandset";
 import Loader from "../../../UI/Loader/Loader";
@@ -40,7 +42,6 @@ import {
 } from "../../../../store/getandset";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import Exams from "./Exams";
 import { addDoc, arrayUnion, collection, doc, setDoc } from "firebase/firestore";
 import { displayMessage, messageActions } from "../../../../store/message-slice";
 let initexams = [
@@ -67,12 +68,13 @@ const data = [
   },
 ];
 
-export default function Grades() {
+export default function ProfessorCommitte() {
   const dispatch=useDispatch();
   const [programs, setPrograms] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
   const [rows, setRows] = React.useState(data);
   const [subjects, setsubjects] = React.useState([]);
+  const [committee, setcommittee] = React.useState({});
   const [selectedProgram, setSelectedProgram] = React.useState("");
   const [selectedLevel, setSelectedLevel] = React.useState("");
   const [selectedExam, setSelectedExam] = React.useState("");
@@ -97,10 +99,12 @@ export default function Grades() {
         // Access data for each document snapshot in the array
         // fetch exams
         const p2 = get_Subjects(Department_id);
-        const [progs, sub] = await Promise.all([p1, p2]);
+        const p3= get_professor_committe(Department_id,auth.currentUser.uid,profile.role.includes("examCommitte")?"examCommitte":"checkingCommitte");
+        const [progs, sub,comm] = await Promise.all([p1, p2,p3]);
         setsubjects(sub);
-        console.log(progs);
         setPrograms(progs ? progs : []);
+        setcommittee(comm);
+        setSelectedProgram(comm?.program?comm.program:"");
         setLoading(false);
       } catch (e) {
         console.log(e);
@@ -121,17 +125,17 @@ export default function Grades() {
       event.defaultMuiPrevented = true;
     }
   };
-  const promise3 = () => get_exams_promise(Department_id, selectedProgram);
+  const promise3 = () => get_commite_exams_promise(Department_id,committee?.program?committee.program:"",committee?.id?committee.id:"",selectedLevel); //getting the exams********************
   const {
     data: exams = [],
     isLoading: isLoading3,
     error: iserrorExam,
     isFetching: isFetchingExam,
   } = useQuery(
-    `exams:${selectedProgram}department:${Department_id}`,
+    `exams:${committee?.program?committee.program:""}committe${committee?.id?committee.id:""}department:${Department_id}`,
     promise3,
     {
-      enabled: !!selectedProgram,
+      enabled: (!!committee.id && !!committee.program && selectedLevel !== ""),
       refetchOnWindowFocus: false,
 
       select: (data) => {
@@ -141,7 +145,7 @@ export default function Grades() {
       },
     }
   );
-  const promise = () =>
+  const promise = () =>       //getting the modules******************************
     get_active_modules(
       Department_id,
       selectedProgram !== ""
@@ -172,7 +176,7 @@ export default function Grades() {
       },
     }
   );
-  const studentPromise = () =>
+  const studentPromise = () =>  //getting the students***************************************
     get_module_students(
       Department_id,
       selectedExam !== ""
@@ -203,7 +207,7 @@ export default function Grades() {
       },
     }
   );
-  const moduleAssesmentPromise = () =>
+  const moduleAssesmentPromise = () =>  //getting the assesments*******************************
     get_module_assesments(
       selectedExam !== ""
         ? exams.filter((e) => e.id === selectedExam)[0].module
@@ -233,7 +237,7 @@ export default function Grades() {
       },
     }
   );
-  const gradepromise = () => get_assesments_grade(moduleAssesments);
+  const gradepromise = () => get_assesments_grade(moduleAssesments);  //getting the asesments grades****************
   const {
     data: assesmentsGrades = [],
     isLoading: isLoadingGrades,
@@ -250,7 +254,7 @@ export default function Grades() {
         : [];
     },
   });
-  const exampromise = () => get_exams_grade(selectedExam);
+  const exampromise = () => get_exams_grade(selectedExam); //getting the exams grades****************
   const {
     data: examsGrade = [],
     isLoading: isLoadingExamsGrades,
@@ -711,6 +715,7 @@ else{
             className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
+            disabled={profile.role.includes("checkingCommitte") || !profile.role.includes("examCommitte")}
           />,
         ];
       },
@@ -769,7 +774,7 @@ else{
                 marginRight: "0.8rem",
               }}
             >
-              Students Grades List
+              Committee 
             </Typography>
           </Typography>
           <Typography
@@ -781,41 +786,6 @@ else{
               gap: "0.5rem",
             }}
           >
-            <FormControl
-              sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
-              size="small"
-            >
-              <InputLabel
-                id="program"
-                sx={{ color: "var(--styling1) !important" }}
-              >
-                Program
-              </InputLabel>
-              <Select
-                id="program"
-                label="Program"
-                labelId="program"
-                name="Program"
-                onChange={handleChange}
-                value={selectedProgram}
-                sx={{
-                  height: "2.5rem",
-                  bgcolor: "#fff",
-                  color: "var(--styling1)",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "var(--styling1) !important",
-                  },
-                  "& .MuiSvgIcon-root": {
-                    color: "var(--styling1)",
-                  },
-                }}
-                variant="outlined"
-              >
-                {programs.map((p) => (
-                  <MenuItem value={p.id}>{p.name}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
             <FormControl
               sx={{ minWidth: "8rem", width: "15%", paddingLeft: "0" }}
               size="small"
@@ -874,7 +844,7 @@ else{
                 label="Exam"
                 labelId="exam"
                 onChange={handleChange}
-                disabled={!selectedProgramObject?.type}
+                disabled={selectedLevel === ""}
                 value={selectedExam}
                 sx={{
                   height: "2.5rem",

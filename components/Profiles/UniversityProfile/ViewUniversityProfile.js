@@ -2,7 +2,7 @@ import classes from "./UniversityProfile.module.css";
 import AddCollege from "./AddCollege.js";
 import defaultProfilePicture from "../../../Images/profilePicutre.jpg";
 import alkawarizmiPicture from "../../../Images/Alkhawarzimi.jpg";
-import location from "../../../Images/location.png";
+import locationIcon from "../../../Images/location.png";
 import website from "../../../Images/website.png";
 import facebook from "../../../Images/facebook.png";
 import twitter from "../../../Images/twitter.png";
@@ -28,11 +28,20 @@ import {
 import { useFetch } from "../../../hooks/useFetch.jsx";
 import { useStudensts } from "../../../hooks/useStudents.jsx";
 import Loader from "../../UI/Loader/Loader.js";
-import { Button } from "@mui/material";
+import { Box, Button, ListItem, Typography } from "@mui/material";
 import { Edit } from "@mui/icons-material";
-const UniversityProfile = () => {
-  const profile = useSelector((state) => state.profile.profile);
-  const loaded=useSelector((state)=>state.profile.loaded);
+import { get_users } from "../../../store/getandset.js";
+import { Link, useLocation,useSearchParams } from "react-router-dom";
+const validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+const ViewUniversityProfile = () => {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const id = (queryParams.get('id') || ''); //getting module id from url
+    const [profile, setprofile] = useState({});
   const [reload,setReload]=useState(false);
   const [activatedList, setActivatedList] = useState("colleges");
   const [activatedSection, setActivatedSection] = useState("overview");
@@ -43,8 +52,25 @@ const UniversityProfile = () => {
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
-  const {data:colleges,load,error,setData}=useFetch(profile.Colleges_id,reload);
-  if(!loaded){
+  const {data:colleges,load,error,setData}=useFetch(profile?.Colleges_id?profile.Colleges_id:[],reload);
+  const [loading, setloading] = useState(true);
+  useEffect(()=>{
+    if(!id)return;
+    const f=async()=>{
+        try{
+      const p= await get_users([id]);  
+      console.log(p[0]);
+      setprofile(p[0]);
+      setloading(false);
+      setReload(true);
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+    f();
+  },[id]);
+  if(loading ){
     return(
       <Loader/>
     )
@@ -55,33 +81,10 @@ const UniversityProfile = () => {
     {showAddCollege && <div className={`${showAddCollege?classes.active:""} ${classes.addCollege}`}>
     <AddCollege setReload={setReload} showAdd={setShowAddCollege}/>
     </div>}
-    {showAddCollege && (
-        <div
-          className={classes.backDrop}
-          onClick={() => setShowAddCollege(false)}
-        ></div>
-      )}
-      {showEdit && (
-        <div className={classes.editProfile}>
-          <EditProfile
-            showEdit={setShowEdit}
-            profilePicture={
-              profile.profilePicture ? profile.profilePicture : ""
-            }
-            bannerPicture={profile.bannerPicture ? profile.bannerPicture : ""}
-          />
-        </div>
-      )}
-      {showEdit && (
-        <div
-          className={classes.backDrop}
-          onClick={() => setShowEdit(false)}
-        ></div>
-      )}
       <div className={classes.firstContainer}>
         <div className={classes.container}>
           <div className={classes.upperBanner}>
-            {profile.bannerPicture ? (
+            {profile?.bannerPicture ? (
               profile.bannerPicture.length > 0 ? (
                 <img
                   className={classes.upperBanner}
@@ -98,7 +101,7 @@ const UniversityProfile = () => {
           <div className={classes.mainInfo}>
             <img
               src={
-                profile.profilePicture
+                profile?.profilePicture
                   ? profile.profilePicture.length > 0
                     ? profile.profilePicture
                     : defaultProfilePicture
@@ -111,11 +114,6 @@ const UniversityProfile = () => {
               <h2>{profile.name}</h2>
               <p>@{profile.uid}</p>
             </div>
-            <Button variant="outlined" sx={{fontFamily:"GraphikLight !important"}} startIcon={<Edit/>} onClick={() => setShowEdit((prev) => !prev)}>Edit Profile</Button>
-            {/* <button onClick={() => setShowEdit((prev) => !prev)}>
-              <img src={edit} alt="" />
-              edit profile
-            </button> */}
           </div>
 
           <div className={classes.info}>
@@ -136,12 +134,13 @@ const UniversityProfile = () => {
             {isCollegeActivated && (
               <div className={classes.collegesContainer}>
                 <ul className={classes.colleges}>
-                <li title="add a college!" onClick={()=>setShowAddCollege(true)}>+</li>
-                  {colleges.map((college) => (
+                <ListItem hidden sx={{display:"none !important"}}></ListItem>
+                   {colleges.length <1 ? <Typography textAlign="center" width="100%" color="text.secondary">No Colleges were found!</Typography>:
+                 colleges.map((college) => (
                     <li key={college.uid}>
                       <img src={alkawarizmiPicture} alt="" />
                       <div>
-                        <p>{college.name}</p> <span>@{college.uid}</span>
+                      <Link to={`/ViewCollegeProfile?id=${college.uid}`}> <p>{college.name}</p></Link>  <span>@{college.uid}</span> 
                       </div>
                     </li>
                   ))}
@@ -149,7 +148,7 @@ const UniversityProfile = () => {
               </div>
             )}
             {isAboutActivated && (
-              <div className={classes.aboutContainer}>
+              <Box sx={{boxShadow:"1"}} className={classes.aboutContainer}>
                 <ul>
                   <li
                     onClick={() => setActivatedSection("overview")}
@@ -170,10 +169,7 @@ const UniversityProfile = () => {
                       <div className={classes.details}>
                         <h3>Details</h3>
                         <div>
-                          {profile.details.length === 0 && (
-                            <CustomInput type="details" />
-                          )}
-                          {(profile.details.length > 0 ? true : false) && (
+                          {(profile?.details  ? true : false) && (
                             <AboutComponent
                               type="details"
                               value={profile.details}
@@ -183,14 +179,11 @@ const UniversityProfile = () => {
                         </div>
                       </div>
                       <div className={classes.location}>
-                        {profile.location.length === 0 && (
-                          <CustomInput type="location" />
-                        )}
-                        {(profile.location.length > 0 ? true : false) && (
+                        {(profile?.location  ? true : false) && (
                           <AboutComponent
                             type="location"
                             value={profile.location}
-                            icon={location}
+                            icon={locationIcon}
                           />
                         )}
                       </div>
@@ -201,55 +194,53 @@ const UniversityProfile = () => {
                       <div className={classes.contact}>
                         <h3>Contact</h3>
                         <span>
-                          <img src={email} alt="" /> <p>example@mail.com</p>
+                          <img src={email} alt="" /> <p>{validateEmail(profile.email)?profile.email:""}</p>
                         </span>
                       </div>
                       <div className={classes.socials}>
                         <h3>Website and Social links</h3>
-                        {profile.website.length === 0 && (
-                          <CustomInput type="website" />
-                        )}
-                        {(profile.website.length > 0 ? true : false) && (
+                        {(profile?.website  ? true : false) && (
                           <AboutComponent
                             type="website"
                             value={profile.website}
                             icon={website}
+                            edit={false}
                           />
                         )}
-                        {(profile.instagram.length > 0 ? true : false) && (
+                        {(profile?.instagram  ? true : false) && (
                           <AboutComponent
                             type="social"
                             value={profile.instagram}
                             icon={instagram}
                             socialType="instagram"
+                            edit={false}
+
                           />
                         )}
-                        {(profile.facebook.length > 0 ? true : false) && (
+                        {(profile?.facebook  ? true : false) && (
                           <AboutComponent
                             type="social"
                             value={profile.facebook}
                             icon={facebook}
                             socialType="facebook"
+                            edit={false}
+
                           />
                         )}
-                        {(profile.twitter.length > 0 ? true : false) && (
+                        {(profile?.twitter ? true : false) && (
                           <AboutComponent
                             type="social"
                             value={profile.twitter}
                             icon={twitter}
+                            edit={false}
                             socialType="twitter"
                           />
-                        )}
-                        {(profile.facebook.length === 0 ||
-                          profile.instagram.length === 0 ||
-                          profile.twitter.length === 0) && (
-                          <CustomInput type="social" />
                         )}
                       </div>
                     </section>
                   )}
                 </div>
-              </div>
+              </Box>
             )}
           </div>
         </div>
@@ -257,4 +248,4 @@ const UniversityProfile = () => {
     </>
   );
 };}
-export default UniversityProfile;
+export default ViewUniversityProfile;

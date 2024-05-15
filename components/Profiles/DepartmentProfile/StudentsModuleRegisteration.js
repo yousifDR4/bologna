@@ -69,7 +69,7 @@ console.log(progs);
     }
   }
   );
-
+  console.log(control);
   const promise2=()=> get_students_promise(Department_id,selectedProgram,selectedLevel);
   const {
     data: Students=[],
@@ -109,7 +109,7 @@ console.log(progs);
         const id = await addDoc(collection(db, "Control"), {
           Department_id: Department_id,
           program: selectedProgramObject.type,
-          enabledRegistration: true
+          enabledRegistration: {[+selectedLevel]:true}
         });
       }
       catch(e){
@@ -123,9 +123,12 @@ console.log(progs);
     else{
     try{
       setUploading(true);
+      let obj=control.hasOwnProperty("enabledRegistration")?control.enabledRegistration:{};
+      let value=obj.hasOwnProperty(+selectedLevel)?!obj[+selectedLevel]:true;
     await setDoc(doc(db, "Control",control.id), {
       ...control,
-      enabledRegistration: !control.enabledRegistration
+      enabledRegistration: 
+        {...obj,[+selectedLevel]:value}
     });
   }
   catch(e){
@@ -189,7 +192,15 @@ if (loading){
 }
   return (
     <>
-    <Confirm open={confirmOpen} setOpen={setConfirmOpen} message={`are you sure you want to ${control?.enabledRegistration ? control.enabledRegistration : false ?"disable":"enable"} registartion`} title={`${control?.enabledRegistration ? control.enabledRegistration : false?"Disable":"Enable"} Confirmation`} handleResult={(res)=>{if(res){HandleConfirmation()}}}/>
+    <Confirm open={confirmOpen} setOpen={setConfirmOpen} message={`are you sure you want to ${control?.enabledRegistration ? 
+    control.enabledRegistration.hasOwnProperty(+selectedLevel)?
+    control.enabledRegistration[+selectedLevel]?
+       "Disable": "enable":"enable":"enable"} registartion`}
+        title={`${(control?.enabledRegistration ? 
+          control.enabledRegistration.hasOwnProperty(+selectedLevel)?
+          control.enabledRegistration[+selectedLevel]:false : false) ?
+          "Disable":"enable"} Confirmation`} 
+        handleResult={(res)=>{if(res){HandleConfirmation()}}}/>
     <Box sx={{ display:"flex",flexDirection:"column",boxSizing:"border-box",flexGrow: "1",width:"100%",padding:"0 0.8rem",marginTop:"0.8rem"}}>
     <AppBar position="static" sx={{borderTopLeftRadius:"10px",borderTopRightRadius:"10px",bgcolor:"transparent",boxShadow:"none",}}>
       <Toolbar sx={{paddingLeft:"0!important",display:"flex",flexWrap:"wrap",gap:"0.9rem",width:"100%"}}>
@@ -281,7 +292,7 @@ if (loading){
               </Select>
             </FormControl>
             <FormControl  size='small' sx={{display:"grid",alignItems:"center",justifyItems:"center",padding:"0rem 0.3rem",marginBottom:"8px",border:"1px solid rgba(25, 118, 210, 0.5)",borderColor:selectedLevel === ""?"text.secondary":"var(--styling1)",borderRadius:"4px",color:"#1976d2"}}>
-      <FormControlLabel sx={{margin:"0"}} control={<Checkbox  checked={control?.enabledRegistration ? control.enabledRegistration : false} onClick={()=>setConfirmOpen(true)} sx={{padding:"0",color:'var(--styling1)'}} disabled={selectedProgram === "" || Uploading || isFetching} />} title='Enable Students to register for modules' label=" Enable Registration" />
+      <FormControlLabel sx={{margin:"0"}} control={<Checkbox  checked={control?.enabledRegistration ? control.enabledRegistration.hasOwnProperty(+selectedLevel)? control.enabledRegistration[+selectedLevel]:false: false} onClick={()=>setConfirmOpen(true)} sx={{padding:"0",color:'var(--styling1)'}} disabled={selectedProgram === "" || Uploading || isFetching} />} title='Enable Students to register for modules' label=" Enable Registration" />
       </FormControl>
             </Typography>
       </Toolbar>

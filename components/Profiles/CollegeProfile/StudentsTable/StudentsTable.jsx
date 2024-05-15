@@ -30,6 +30,9 @@ import Options from "./Options";
 import { displayMessage } from "../../../../store/message-slice";
 import { Typography } from "@mui/material";
 import Loader from "../../../UI/Loader/Loader";
+import BasicMenu from "../../../UI/Menu";
+import { MoreHoriz } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 const key = "Compact Table";
 
 const StudentsTable = () => {
@@ -38,6 +41,7 @@ const StudentsTable = () => {
   const College_id = profile.College_id;
   const [loading, setloading] = useState(true);
   const [modules, setModules] = useState([]);
+  const navigate=useNavigate();
   useEffect(() => {
     //fetch
     setModules([]);
@@ -197,7 +201,8 @@ img{
                    <Cell>{module.departmentName}</Cell>
                     <Cell>{module.name}</Cell>
                     <Cell>{module.password}</Cell>
-                    <Cell><div className='relative'><Options id={module.id} code={module}/></div></Cell>
+                    <Cell> <BasicMenu menuItems={[{title:"Delete",handleClick:()=>{}},{title:"Change Username",handleClick:()=>{ navigate(`/ChangeUsername?id=${module.id}`)}},{title:"Edit",handleClick:()=>{navigate(`/EditStudent?id=${module.id}`)}},{title:"Profile",handleClick:()=>{navigate(`/ViewProfessorProfile?id=${module.id}`)}}]} menuTitle={<MoreHoriz sx={{color:"#000"}}/>}/>
+</Cell>
                   </Row>
                 ))
 }

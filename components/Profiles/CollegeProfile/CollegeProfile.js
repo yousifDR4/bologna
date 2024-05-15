@@ -47,7 +47,7 @@ const CollegeProfile = () => {
   const isAboutActivated = activatedList === "about";
   const isOverviewSelected = activatedSection === "overview";
   const isContactSelected = activatedSection === "contact";
-  const {data:departments,load,error}=useFetch(profile.Department_id);
+  const {data:departments,load,error}=useFetch(profile?.Department_id?profile.Department_id:[]);
   const promise=()=> get_posts_promise(College_id);
   const {
     data: posts,

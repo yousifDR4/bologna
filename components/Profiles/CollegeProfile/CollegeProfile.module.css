@@ -307,6 +307,10 @@ min-height: 4rem;
     margin-right: 1rem;
     margin-left: 2rem;
 }
+.depts a{
+    font-style: none;
+    color:#000;
+}
 .depts div{
     display: flex;
     justify-content: flex-start;

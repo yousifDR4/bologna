@@ -24,7 +24,7 @@ export default function AssesmentGradesTable(probs) {
   const profile = useSelector((state) => state.profile.profile);
   const uid = useSelector((state) => state.auth.uid);
   const Department_id = profile.Department_id;
-    let {module,assesment}=probs;
+    let {module,disabled,assesment}=probs;
     console.log(module);
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
@@ -88,7 +88,7 @@ export default function AssesmentGradesTable(probs) {
             }}>
             <Box sx={{ width: '100%',minWidth:"25rem" }}>
 
-                <StudentsTable isLoading={isLoading || isLoadingStudents} refetch={refetch2}  grade={gradeRow}students={students} assesment={assesment} module={module}/>
+                <StudentsTable disabled={disabled} isLoading={isLoading || isLoadingStudents} refetch={refetch2}  grade={gradeRow}students={students} assesment={assesment} module={module}/>
     </Box>
     
             </DialogContent>
@@ -111,7 +111,7 @@ const dispathc=useDispatch();
   const profile = useSelector((state) => state.profile.profile);
   const uid = useSelector((state) => state.auth.uid);
   const Department_id = profile.Department_id;
-    const {assesment,students,module,grade,refetch,isLoading}=probs;
+    const {assesment,students,module,grade,refetch,disabled,isLoading}=probs;
 
     const dispatch=useDispatch();
     const [rows, setRows] = useState([{id:"1",name:"snow",grade:"10"}]);
@@ -290,7 +290,7 @@ namedStudents=namedStudents.map((s)=>{
               <GridActionsCellItem
                 icon={<Edit />}
                 label="Edit"
-                disabled={false}
+                disabled={disabled}
                 className="textPrimary"
                 onClick={handleEditClick(id)}
                 color="inherit"

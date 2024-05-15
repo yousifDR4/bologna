@@ -8,6 +8,7 @@ import {
   count,
   deleteDoc,
   doc,
+  documentId,
   getAggregateFromServer,
   getCountFromServer,
   getDoc,
@@ -76,8 +77,7 @@ export const get_Sujects = async (Deprartment_id) => {
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({
     label: doc.data().name,
-    value: doc.data().name,
-    id: doc.id,
+    value: doc.id,
   }));
   return data;
 };
@@ -113,6 +113,14 @@ export const get_classRooms = async (Deprartment_id) => {
   const data = docs.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   console.log(data);
   return data;
+};
+export const get_classRooms_promise = async (Deprartment_id) => {
+  const userRef = doc(db, "users", Deprartment_id);
+  console.log("works");
+  const docs =  getDocs(
+    query(collection(userRef, "classRooms"), orderBy("namelower", "asc"))
+  );
+  return docs;
 };
 export const setreport = async (reportinfo, Department_id) => {
   console.log(Department_id);
@@ -181,7 +189,7 @@ export const get_active_modules = async (Deprartment_id,program,level) => {
     and(
       where("Deprartment_id", "==", Deprartment_id),
       where("level", "==", level),
-      where("type","==",program)
+      where("type","==",program),
 
     ),
   );
@@ -191,7 +199,6 @@ export const get_active_modules = async (Deprartment_id,program,level) => {
     value: doc.data().name,
     id: doc.id,
   }));
-  console.log(data);
   return data ? data :[];
 };
 export const get_student_active_modules = async (registeredModule) => {
@@ -221,8 +228,28 @@ export const get_active_completed_modules = async (Deprartment_id,program,level)
       where("Deprartment_id", "==", Deprartment_id),
       where("level", "==", level),
       where("type","==",program),
-      where("progress", "==", 100),
+      where("activated", "==", true),
+      
 
+    ),
+  );
+  const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({
+    ...doc.data(),
+    value: doc.data().name,
+    id: doc.id,
+  }));
+  console.log(data);
+  return data ? data :[];
+};
+export const get_previous_active_completed_modules = async (Deprartment_id,program,level) => {
+  console.log(Deprartment_id,program,level);
+  const q = query(
+    collection(db, "activemodule"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("level", "<", level),
+      where("type","==",program),
     ),
   );
   const docs = await getDocs(q);
@@ -240,7 +267,7 @@ export const get_professor_modules = async (Deprartment_id,Professor_id) => {
     collection(db, "activemodule"),
     and(
       where("Deprartment_id", "==", Deprartment_id),
-      where("progress", "==", 100),
+      where("activated", "==", true),
       where("manager","==",Professor_id)
 
     ),
@@ -291,7 +318,6 @@ export const get_module_students = async (Deprartment_id,module_id) => {
     ),
   );
   const docs = await getDocs(q);
-  console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
 export const get_students_grade = async (id) => {
@@ -335,7 +361,6 @@ export const get_students_Attendance_byModule = async (module) => {
       where("module", "==", module),
   );
   const docs = await getDocs(q);
-  console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
 export const get_assesments_grade = async (ids) => {
@@ -378,7 +403,6 @@ export const get_module_assesments = async (id) => {
       where("module", "==", id),
   );
   const docs = await getDocs(q);
-  console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
 
@@ -399,8 +423,8 @@ export const get_users= async(ids)=>{
   console.log(ids);
   const q = query(
     collection(db, "users"),
-      where("username", "in", ids)
-    );
+    where(documentId(), "in", ids)
+  );
     const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({
     ...doc.data(),
@@ -408,6 +432,22 @@ export const get_users= async(ids)=>{
     id: doc.id,
   }));
   return data ? data :[];
+}
+export const get_professor_committe= async(DepartmentId,professorId,role)=>{
+  const q = query(
+    collection(db, "Committe"),
+      where("Department_id", "==", DepartmentId)
+    );
+    const docs = await getDocs(q);
+  const data = docs.docs.map((doc) => ({
+    ...doc.data(),
+    value: doc.data().name,
+    id: doc.id,
+  }));
+  console.log(data);
+  let committes=[];
+ committes=data.filter((data)=>data.hasOwnProperty(role)?data[role].length>0?data[role].some((c)=>c.id===professorId):false:false);
+  return committes[0] ? committes[0] :{};
 }
 export const get_All_professor_assesments= async(professorsoid)=>{
   const q = query(
@@ -501,9 +541,6 @@ export const get_control = async (Deprartment_id,program) => {
   );
 
 return getDocs(q);
-
- 
-
 };
 export const get_students_promise = async (Deprartment_id,program,level) => {
   console.log(Deprartment_id,level,program);
@@ -631,6 +668,7 @@ export const get_student_schedule_Adv= async(program,levels,study,division,modul
       where("module", "in", modules)
     )
   );
+  
   const docs = await getDocs(q);
   const data = docs.docs.map((doc) => ({
     ...doc.data(),
@@ -713,19 +751,32 @@ export const get_Subjects_prog_promise =  (type,Deprartment_id) => {
   return  getDocs(q);
 };
 export const get_active_Subjects_prog_promise =  (type,Deprartment_id) => {
+  console.log(type,Deprartment_id);
   const q = query(
     collection(db, "activemodule"),
     and(
     where("Deprartment_id", "==", Deprartment_id),where(
       "type","==",type
     ),
-    where("progress", "==", 100)
+    where("activated", "==", true)
     )
   );
   return  getDocs(q);
 };
-export const get_commite_exams_promise=(Department_id)=>{
+export const get_commite_exams_promise=(Department_id,program,committe,level)=>{
+  const q = query(
+    collection(db, "Exams"),
+    and(
+      where("Deprartment_id", "==", Department_id),
+      where("program","==",program),
+      where("committe","==",committe),
+      where("level","==",level)
 
+    )
+  );
+  return getDocs(q);
+}
+export const get_committees=(Department_id)=>{
   const q = query(
     collection(db, "Committe"),
     and(
@@ -735,7 +786,7 @@ export const get_commite_exams_promise=(Department_id)=>{
   return getDocs(q);
 }
 export const get_exams_promise=(Deprartment_id,program)=>{
-
+console.log(Deprartment_id,program);
   const q = query(
     collection(db, "Exams"),
     and(
@@ -746,3 +797,25 @@ export const get_exams_promise=(Deprartment_id,program)=>{
   );
   return getDocs(q);
 }
+export const get_committte_exams_promise=(Deprartment_id,program,committe)=>{
+
+  const q = query(
+    collection(db, "Exams"),
+    and(
+      where("Deprartment_id", "==", Deprartment_id),
+      where("program","==",program),
+      where("committe","==",committe)
+    
+    )
+  );
+  return getDocs(q);
+}
+
+
+
+
+
+
+
+
+

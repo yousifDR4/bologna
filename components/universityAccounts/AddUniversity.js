@@ -115,7 +115,7 @@ const AddUniversity = (probs) => {
   return (
     <div className={`${classes.container} ${probs.className}`}>
       <form action="" className=" form">
-        <h3>Add University</h3>
+        <h3>Add a University</h3>
         <label htmlFor="email">
           Email or Username<span className={classes.star}>*</span>
         </label>

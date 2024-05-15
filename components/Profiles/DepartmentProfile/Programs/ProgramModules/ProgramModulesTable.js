@@ -16,9 +16,9 @@ import {
 import { getTheme } from '@table-library/react-table-library/baseline';
 import { HeaderCellSort, useSort } from '@table-library/react-table-library/sort';
 import { get_Sujects,get_active_modules,get_modules, get_prof, get_progs } from '../../../../../store/getandset';
-import { auth } from '../../../../../store/fire';
-import { useSelector } from 'react-redux';
-import { Box, MenuItem, Skeleton, Stack, Typography } from '@mui/material';
+import { auth, db } from '../../../../../store/fire';
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Checkbox, FormControlLabel, MenuItem, Skeleton, Stack, Toolbar, Typography } from '@mui/material';
 import { useQuery } from "react-query";
 import Loader from '../../../../UI/Loader/Loader';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -30,6 +30,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditProgramModule from "../add_program_module/EditProgramModule"
+import { displayMessage } from '../../../../../store/message-slice';
+import { doc, setDoc } from 'firebase/firestore';
 
 const ProgramModulesTable = () => {
   const [modules,setModules]=useState([]);
@@ -115,6 +117,12 @@ const promise=()=> get_active_modules(Department_id,selectedProgram !== "" ?   p
   width: 160,
 },
 {
+  field:"progress",
+  headerName:"Progress",
+  width:150,
+  type:"number"
+},
+{
   field:"activated",
   headerName:"Activated",
   width:150,
@@ -145,7 +153,7 @@ if(activeMod){
 activeMod.map((act)=>{
 console.log(professors);
 console.log(professors.filter(mod=>mod.username === act.manager).length > 0?professors.filter(mod=>mod.username === act.manager)[0]:"Module Not Found",);
-rows.push({...act,activated:+act.progress === 100,
+rows.push({...act,progress:Math.round(act.progress),
   manager:professors.filter(mod=>mod.username === act.manager).length > 0?professors.filter(mod=>mod.username === act.manager)[0].username:"Module Not Found",
   revisor:professors.filter(mod=>mod.username === act.revisor).length > 0?professors.filter(mod=>mod.username === act.revisor)[0].username:"Module Not Found",
   name:modules.filter(mod=>mod.id === act.module).length > 0?modules.filter(mod=>mod.id === act.module)[0].name:"Module Not Found",
@@ -285,6 +293,7 @@ export const TableLoader=()=>{
 export  function EditProgramModuleDialogue(probs) {
     let {moduleProp,refetch,modules}=probs;
     console.log(moduleProp);
+    const dispatchRedux=useDispatch();
     const [open, setOpen] = useState(false);
     const [value,setValue]=useState("1");
     const handleClickOpen = () => {
@@ -296,6 +305,28 @@ export  function EditProgramModuleDialogue(probs) {
       const handleChange = (event, newValue) => {
         setValue(newValue);
       };
+      const handleModuleActivation= async()=>{
+        if(+moduleProp.progress === 100){
+        try {
+          
+          await setDoc(doc(db, "activemodule", moduleProp.id), {
+            activated:moduleProp?.activated ? !moduleProp.activated : true, 
+          }, { merge: true });
+          dispatchRedux(displayMessage("Module was activated successfully"));
+        } catch (e) {
+          console.log("Error for ID:", moduleProp.id, e);
+          dispatchRedux(displayMessage("An error occurred","error"));
+
+        }
+        finally{
+          refetch();
+        }
+      }else{
+        dispatchRedux(displayMessage("Progress must be equal to 100","error"));
+
+      }
+
+      }
     return (
         <>
           <Button   variant="outlined" onClick={handleClickOpen} sx={{border:"none",borderRadius:"50%",width:"50%",height:"inherit",padding:"10px 5px"}}>
@@ -310,11 +341,18 @@ export  function EditProgramModuleDialogue(probs) {
             maxWidth
 
           >
-            <DialogTitle sx={{paddingBottom:0}} id="alert-dialog-title">
+          
+          <Toolbar sx={{display:"flex",height:"fit-content",width:"100%",minHeight:"45px !important"}}>
+            <DialogTitle sx={{paddingBottom:0,margin:0,padding:0,flex:"1",color:"#1976d2"}} id="alert-dialog-title">
              Edit
             </DialogTitle>
+            <FormControl  size='small' sx={{color:"#1976d2"}}>
+      <FormControlLabel sx={{margin:"0"}} control={<Checkbox  checked={moduleProp?.activated? moduleProp.activated:false} onClick={handleModuleActivation} sx={{padding:"0",marginRight:"0.2rem",color:'var(--styling1)'}}/>}  title='Enable Students to register for modules' label="Activate Module" />
+      </FormControl>
+      </Toolbar>
             <DialogContent  sx={{
-                minHeight:"15rem !important"
+                minHeight:"15rem !important",
+                paddingTop:"0"
             }}>
             <Box sx={{ width: '100%',minWidth:"25rem" }}>
                 <EditProgramModule refetch={refetch} setOpen={setOpen} moduleProb={moduleProp} progress={moduleProp.progress} completion={moduleProp.completedSections}/>
