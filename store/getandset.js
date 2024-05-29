@@ -352,7 +352,6 @@ export const get_students_Attendance = async (module,day,month) => {
       where("M", "==", month),
   );
   const docs = await getDocs(q);
-  console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
 export const get_students_Attendance_byModule = async (module) => {
@@ -372,7 +371,6 @@ export const get_assesments_grade = async (ids) => {
       where("assessmentId", "in", idsArr),
   );
   const docs = await getDocs(q);
-  console.log(docs.docs[0].data());
   return docs ? docs :[];
 };
 export const get_exams_grade = async (id) => {

@@ -71,21 +71,21 @@ const ProfessorModules=()=>{
             </Toolbar>
         </AppBar>
         <Box sx={{width:"100%",border:"none",borderTop:"none",flexGrow:"1",marginBottom:"0.4rem"}}>
-          <Grid  container sx={{width:"100%", gridTemplateColumns:"1fr 1fr 1fr 1fr",display:"grid"}} gridTemplateColumns={{xs:"1fr",sm:"1fr 1fr",lg:"1fr 1fr 1fr",xl:"1fr 1fr 1fr 1fr"}} spacing={{xs:1,sm:2,lg:3,xl:8}}>
-            <Grid item>
+          <CardsContainer>
+            <CustomGridItem>
             <CustomCard title="Modules" subtitle="Number of modules." value={locMod.length}/>
-            </Grid>
-            <Grid item>
+            </CustomGridItem>
+            <CustomGridItem>
             <CustomCard title="Core" subtitle="Number of Core type modules." value={locMod.filter((mod)=>mod.type === "core").length}/>
-            </Grid>
-            <Grid item>
+            </CustomGridItem>
+            <CustomGridItem >
             <CustomCard title="Support" subtitle="Number of Support type modules." value={locMod.filter((mod)=>mod.type === "support").length}/>
-            </Grid>
-            <Grid item>
+            </CustomGridItem>
+            <CustomGridItem >
             <CustomCard title="Elective" subtitle="Number of Elective type modules." value={locMod.filter((mod)=>mod.type === "elective").length}/>
-            </Grid>
-          </Grid>
-        <List sx={{display:"flex",marginTop:"1rem",gap:"0.5rem",padding:"1rem 0"}}>
+            </CustomGridItem>
+            </CardsContainer>
+        <List sx={{display:"flex",marginTop:"1rem",gap:"0.5rem",padding:"1rem 0",flexWrap:"wrap"}}>
         { 
          professorModules.length < 1 ? <Typography variant="h6" sx={{fontFamily:"Graphik",color:"var(--styling1)",width:"100%",textAlign:"center"}}>No Modules were Found!</Typography>:
             professorModules.map((mod)=>{
@@ -132,7 +132,11 @@ const StyledListItemText=styled(ListItemText)(({theme})=>({
 const CustomCard=(probs)=>{
   const {title="",subtitle="",value}=probs;
   return(
-    <Card sx={{ width:"100%",maxWidth:"300px",minWidth: 275,height:"160px",color:"var(--styling1)",bgcolor:"#d1e5f7",fontFamily:"GraphikLight" }}>
+    <Card sx={{ width:"100%",
+    height:"160px",
+    color:"var(--styling1)",
+    bgcolor:"#d1e5f7",
+    fontFamily:"GraphikLight" }}>
     <CardContent>
       <Typography sx={{ fontSize: 14 ,fontFamily:"GraphikLight"}}  gutterBottom>
         {title}
@@ -145,6 +149,30 @@ const CustomCard=(probs)=>{
       </Typography>
     </CardContent>
   </Card>
+  )
+}
+export const CardsContainer=(props)=>{
+  return(
+    <Grid  container 
+    sx={{display:"grid",width:"100%",gridTemplateColumns:"repeat(auto-fit, minmax(300px, 1fr))"}}
+    // sx={{width:"100%",display:"flex",}} 
+    spacing={{xs:1,sm:2,lg:3,xl:8}}>
+    {props.children}
+    </Grid>
+  )
+}
+export const CustomGridItem=(props)=>{
+  return(
+    <Grid item
+
+    // sx={{
+    //   flexGrow:"1",
+    //   flexShrink:"1",
+    //   flexBasis:"35ch",
+    // }}
+    >
+      {props.children}
+    </Grid>
   )
 }
 export default ProfessorModules;

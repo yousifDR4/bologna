@@ -36,6 +36,7 @@ import { TableLoader } from '../DepartmentProfile/Programs/ProgramModules/Progra
 
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { displayMessage } from '../../../store/message-slice';
+import { CardsContainer } from './Modules/ProfessorModules';
 
 
 export default function StudentsAttendance() {
@@ -67,7 +68,7 @@ export default function StudentsAttendance() {
     isFetching, 
     refetch 
     } = useQuery(`Department_id:${Department_id}module:${selectedModules}day:${selectedDate !== "" ?selectedDate.$d.getDay():""}`, promise, {
-     enabled:((!!Department_id ) && (selectedModules !== "") && (selectedDate !== "")), 
+     enabled:((!!Department_id ) && (selectedModules !== "") ), 
       refetchOnWindowFocus:false,
     
       select:(data)=>{
@@ -85,7 +86,7 @@ export default function StudentsAttendance() {
     isFetching2, 
     refetch2 
     } = useQuery(`Department_id:${Department_id}module:${selectedModules}`, promise2, {
-     enabled: ((!!Department_id) && (selectedModules !== "")), 
+     enabled: ((!!Department_id) && (selectedModules !== "") && (selectedLectureCode !== "")), 
       refetchOnWindowFocus:false,
     
       select:(data)=>{
@@ -104,7 +105,7 @@ export default function StudentsAttendance() {
     isFetching:isFetching3, 
     refetch:refetch3 
     } = useQuery(`module:${selectedModules}day:${selectedDate.$D}month:${selectedDate.$M}`, promise3, {
-     enabled: ((!!Department_id) && (selectedModules !== "")), 
+     enabled: ((!!Department_id) && (selectedModules !== "") && (selectedDate !== "")), 
       refetchOnWindowFocus:false,
     
       select:(data)=>{
@@ -430,8 +431,8 @@ functionMap[funcName](event.target.value);
         </Typography>
         <Typography component="span" sx={{width:"100%",display:"flex",flexWrap:"wrap",gap:"0.5rem"}}>
         <FormControl
-              sx={{minWidth: "8rem", paddingLeft: "0" }}
-              size="small"
+              sx={{minWidth: "10rem", paddingLeft: "0" }}
+              size="medium"
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
@@ -466,7 +467,7 @@ functionMap[funcName](event.target.value);
               />
               </LocalizationProvider>
             </FormControl>
-        <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="medium" >
+        <FormControl sx={{minWidth:"10rem",width:"15%",paddingLeft:"0"}} size="medium" >
         <InputLabel id="module" sx={{color:"var(--styling1) !important"}}>Module</InputLabel>
         <Select
       id="module"
@@ -490,7 +491,7 @@ variant="outlined"
      {professorModules.map((p)=> <MenuItem key={p.id} value={p.id}>{p.name}</MenuItem>)}
     </Select>
     </FormControl>
-    <FormControl sx={{minWidth:"8rem",width:"15%",paddingLeft:"0"}} size="medium">
+    <FormControl sx={{minWidth:"10rem",width:"15%",paddingLeft:"0"}} size="medium">
         <InputLabel id="lectureCode" sx={{color:"var(--styling1) !important"}}>Lecture Code</InputLabel>
             <Select
           id="lectureCode"
@@ -516,9 +517,9 @@ variant="outlined"
           
         </Select></FormControl>
         </Typography>
-        <Grid  container sx={{width:"100%", gridTemplateColumns:"1fr 1fr 1fr",display:"grid"}} gridTemplateColumns={{xs:"1fr",sm:"1fr 1fr",lg:"1fr 1fr 1fr",xl:"1fr 1fr 1fr "}} spacing={{xs:1,sm:2,lg:3,xl:8}}>
+        <CardsContainer>
            <Grid item>
-           <List sx={{ width: '100%', maxWidth: 360,bgcolor:"#d1e5f7",borderRadius:"5px"  }}>
+           <List sx={{ width: '100%',bgcolor:"#d1e5f7",borderRadius:"5px"  }}>
       <ListItem sx={{padding:"0px 8px"}}>
         <ListItemAvatar>
           <Avatar sx={{bgcolor:"#fff"}}>
@@ -530,7 +531,7 @@ variant="outlined"
       </List>
            </Grid>
            <Grid item>
-           <List sx={{ width: '100%', maxWidth: 360,bgcolor:"#d1e5f7",borderRadius:"5px"  }}>
+           <List sx={{ width: '100%',bgcolor:"#d1e5f7",borderRadius:"5px"  }}>
       <ListItem sx={{padding:"0px 8px"}}>
         <ListItemAvatar>
           <Avatar sx={{bgcolor:"#fff"}}>
@@ -542,7 +543,7 @@ variant="outlined"
       </List>
            </Grid>
            <Grid item>
-           <List sx={{ width: '100%', maxWidth: 360,bgcolor:"#d1e5f7",borderRadius:"5px"  }}>
+           <List sx={{ width: '100%', bgcolor:"#d1e5f7",borderRadius:"5px"  }}>
       <ListItem sx={{padding:"0px 8px"}}>
         <ListItemAvatar>
           <Avatar sx={{bgcolor:"#fff"}}>
@@ -553,7 +554,7 @@ variant="outlined"
       </ListItem>
       </List>
            </Grid>
-           </Grid>
+           </CardsContainer>
       </Toolbar>
     </AppBar>
     <Box sx={{ height: "600px", width: '100%',maxWidth:"100vw",overflow:"auto",marginTop:"0.7rem" }}>
